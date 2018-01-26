@@ -10,13 +10,14 @@ import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 /**
- *
+ * TODO: Write haiku
  */
 public class Lift extends Subsystem {
 	private static final int SLOTIDX = 0;
 	private static final int TIMEOUTMS = 0;
 	private static final int FORWARDLIMIT = 0;
 	private static final int REVERSELIMIT = 0;
+	// TODO Add constants for lift positions
 	private TalonSRX liftTalon;
 	private VictorSPX rightwing;
 
@@ -31,6 +32,9 @@ public class Lift extends Subsystem {
 		liftTalon.configReverseSoftLimitThreshold(REVERSELIMIT, TIMEOUTMS);
 		liftTalon.configReverseSoftLimitEnable(true, TIMEOUTMS);
 
+		// TODO configure for position based closed loop control using
+		//      motion magic capability of TalonSRX
+		
 		rightwing.set(ControlMode.Follower, RobotMap.liftTalon);
 
 	}
