@@ -23,7 +23,10 @@ public class RobotMap {
 
 	
 	// Intake
-	
+	public static int intakeLeftTalon = 5;
+	public static int intakeRightTalon = 6;
+	public static int intakeLeftIR = 0;	
+	public static int intakeRightIR = 1;	
 	
 	// Other
 	
