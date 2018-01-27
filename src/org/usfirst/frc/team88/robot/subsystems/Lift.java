@@ -10,7 +10,8 @@ import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 /**
- * TODO: Write haiku
+ * Rookies
+ * TODO Write haiku
  */
 public class Lift extends Subsystem {
 	private static final int SLOTIDX = 0;

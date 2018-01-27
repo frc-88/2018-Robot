@@ -16,8 +16,14 @@ package org.usfirst.frc.team88.robot;
 public class RobotMap {
 	//Drive
 	//TODO change numbers for new roboto.
-	public static final int[] rightTalons = {13, 9, 15, 10};
-	public static final int[] leftTalons = {14, 11, 12, 8};
+	//public static final int[] rightMotorControl = {13, 9, 15, 10};
+	//public static final int[] leftMototControl = {14, 11, 12, 8};
+	
+	public static final int leftTalonMaster = 14;
+	public static final int[] leftVictors = {11, 12, 8};
+	
+	public static final int rightTalonMaster = 13;
+	public static int[] rightVictors = {9,15,10};
 	
 	// Lift
 	public static int liftTalon = 4;
