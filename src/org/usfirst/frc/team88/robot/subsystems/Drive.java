@@ -140,9 +140,9 @@ public class Drive extends Subsystem implements PIDOutput {
 				
 				rightVictors[i].set(ControlMode.Follower, RobotMap.rightVictors[0]);
 				
-				((IMotorController) rightVictors[i]).configNeutralDeadband(0.04, TIMEOUTMS);
-				((IMotorController) rightVictors[i]).configClosedloopRamp(RAMPRATE, TIMEOUTMS);
-				((IMotorController) rightVictors[i]).setNeutralMode(NeutralMode.Brake);
+				rightVictors[i].configNeutralDeadband(0.04, TIMEOUTMS);
+				rightVictors[i].configClosedloopRamp(RAMPRATE, TIMEOUTMS);
+				rightVictors[i].setNeutralMode(NeutralMode.Brake);
 			}
 		}
 		else { // open loop
@@ -155,8 +155,8 @@ public class Drive extends Subsystem implements PIDOutput {
 			leftTalon.setNeutralMode(NeutralMode.Brake);
 			for (int i = 0; i < RobotMap.leftVictors.length; i++) {
 				leftVictors[i].set(ControlMode.Follower, RobotMap.leftVictors[0]);
-				((IMotorController) leftVictors[i]).setSensorPhase(true);
-				((IMotorController) leftVictors[i]).setNeutralMode(NeutralMode.Brake);
+				leftVictors[i].setSensorPhase(true);
+				leftVictors[i].setNeutralMode(NeutralMode.Brake);
 			}
 			rightTalon.configNominalOutputForward(0.0, 0);
 			rightTalon.configNominalOutputReverse(0.0, 0);
@@ -165,8 +165,8 @@ public class Drive extends Subsystem implements PIDOutput {
 			rightTalon.configOpenloopRamp(RAMPRATE, 0);
 			for (int i = 0; i < RobotMap.rightVictors.length; i++) {
 				rightVictors[i].set(ControlMode.Follower, RobotMap.rightVictors[0]);
-				((IMotorController) rightVictors[i]).setSensorPhase(false);
-				((IMotorController) rightVictors[i]).setNeutralMode(NeutralMode.Brake);
+				rightVictors[i].setSensorPhase(false);
+				rightVictors[i].setNeutralMode(NeutralMode.Brake);
 			}
 		}
 
