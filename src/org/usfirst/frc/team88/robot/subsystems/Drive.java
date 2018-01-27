@@ -89,9 +89,6 @@ public class Drive extends Subsystem implements PIDOutput {
 		}
 		
 		if(CAN_CLOSED_LOOP) {  // closed loop
-			// leftTalons[i].changeControlMode(TalonControlMode.PercentVbus);
-			//We prob need to remember our control mode since they nuked the controlMode method. ):
-			// leftTalons[i].configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, SLOTIDX, 0);
 			leftTalon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, SLOTIDX, TIMEOUTMS);
 			
 			leftTalon.config_kP(SLOTIDX, P, TIMEOUTMS);
@@ -115,9 +112,6 @@ public class Drive extends Subsystem implements PIDOutput {
 				leftVictors[i].configClosedloopRamp(RAMPRATE, TIMEOUTMS);
 				leftVictors[i].setNeutralMode(NeutralMode.Brake);
 			}
-			//rightTalons[i].changeControlMode(TalonControlMode.Speed);
-			// rightTalons[i].changeControlMode(TalonControlMode.PercentVbus);
-			// rightTalons[i].configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, SLOTIDX,0);
 			rightTalon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, SLOTIDX, TIMEOUTMS);
 			
 			rightTalon.config_kP(SLOTIDX, P, TIMEOUTMS);
@@ -340,8 +334,6 @@ public class Drive extends Subsystem implements PIDOutput {
 
 		SmartDashboard.putNumber("AvgPosition", getAvgPosition());
 		SmartDashboard.putNumber("Yaw", navX.getYaw());
-		
-		//SmartDashboard.putNumber("Lift Height", Robot.lift.getHeight());
 
 		for (int i = 0; i < RobotMap.leftVictors.length; i++) {
 			SmartDashboard.putNumber("LeftCurrent" + i, leftVictors[i].getOutputCurrent());
