@@ -14,30 +14,22 @@ package org.usfirst.frc.team88.robot;
  * floating around.
  */
 public class RobotMap {
-	//Drive
-	//TODO change numbers for new roboto.
-	//public static final int[] rightMotorControl = {13, 9, 15, 10};
-	//public static final int[] leftMototControl = {14, 11, 12, 8};
-	
-	public static final int leftTalonMaster = 14;
-	public static final int[] leftVictors = {11, 12, 8};
-	
-	public static final int rightTalonMaster = 13;
-	public static int[] rightVictors = {9,15,10};
-	
-	// Lift
-	public static int liftTalon = 4;
-	public static int rightwing = 6;
+	// Drive
+	public static final int driveLeftMaster = 14;
+	public static final int[] driveLeftFollowers = { 11, 12, 8 };
+	public static final int driveRightMaster = 13;
+	public static int[] driveRightFollowers = { 9, 15, 10 };
 
-	
+	// Lift
+	public static int liftMaster = 4;
+	public static int liftFollower = 6;
+
 	// Intake
-	public static int intakeLeftTalon = 5;
-	public static int intakeRightTalon = 6;
-	public static int intakeLeftIR = 0;	
-	public static int intakeRightIR = 1;	
-	
+	public static int intakeLeft = 5;
+	public static int intakeRight = 6;
+	public static int intakeLeftIR = 0;
+	public static int intakeRightIR = 1;
+
 	// Other
-	
-	
-	
+
 }
