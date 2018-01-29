@@ -62,6 +62,9 @@ public class Robot extends TimedRobot {
 	@Override
 	public void disabledPeriodic() {
 		Scheduler.getInstance().run();
+		
+		// TODO add code to write selected auto command and other data to dashboard
+		
 	}
 
 	/**
@@ -98,6 +101,8 @@ public class Robot extends TimedRobot {
 	@Override
 	public void autonomousPeriodic() {
 		Scheduler.getInstance().run();
+
+		// TODO add code to write selected auto command and other data to dashboard
 	}
 
 	@Override
@@ -117,6 +122,8 @@ public class Robot extends TimedRobot {
 	@Override
 	public void teleopPeriodic() {
 		Scheduler.getInstance().run();
+
+		// TODO add code to write selected auto command and other data to dashboard
 	}
 
 	/**

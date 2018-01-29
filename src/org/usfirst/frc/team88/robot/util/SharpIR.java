@@ -4,7 +4,6 @@
 package org.usfirst.frc.team88.robot.util;
 
 import edu.wpi.first.wpilibj.AnalogInput;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * @author TJ2
@@ -26,16 +25,7 @@ private static final double K = 5.12;
 	}
 	
 	public double getDistance() {
-		double distance = 0;
-		double voltage = getAverageVoltage();
-
-		distance = (K / voltage) - 0.42;
-		
-		// For testing to calculate K:
-		// SmartDashboard.putNumber("IR Sensor Distance", distance );
-		// SmartDashboard.putNumber("IR Sensor Voltage", voltage);
-
-		return distance;
+		return (K / getAverageVoltage()) - 0.42;
 	}
 	
 	public double pidGet() {
