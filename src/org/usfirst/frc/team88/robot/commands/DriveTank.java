@@ -28,7 +28,6 @@ public class DriveTank extends Command {
     protected void execute() {
     	Robot.drive.wheelSpeed(TJUtility.polynomial(Robot.oi.driver.getLeftStickY(), POLY_A, POLY_B, POLY_C, DEADZONE),
     			TJUtility.polynomial(Robot.oi.driver.getRightStickY(), POLY_A, POLY_B, POLY_C, DEADZONE));
-    	Robot.drive.updateDashboard();
     }
 
     // Make this return true when this Command no longer needs to run execute()

@@ -360,8 +360,6 @@ public class Drive extends Subsystem implements PIDOutput {
 		}
 
 		wheelSpeed(output, -output);
-
-		updateDashboard();
 	}
 
 	public void initDefaultCommand() {

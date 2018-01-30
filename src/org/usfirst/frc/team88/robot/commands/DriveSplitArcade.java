@@ -52,7 +52,6 @@ public class DriveSplitArcade extends Command {
 		}
 
 		Robot.drive.driveCurve(magnitude, curve, SENSITIVITY);
-		Robot.drive.updateDashboard();
 	}
 
 	// Make this return true when this Command no longer needs to run execute()
