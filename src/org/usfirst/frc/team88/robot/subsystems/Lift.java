@@ -59,13 +59,13 @@ public class Lift extends Subsystem {
 
 	public void updateDashboard() {
 		//waiting to be fixed
-		SmartDashboard.putNumber("Lift/Position: ", master.getSelectedSensorPosition(SLOTIDX));
-		SmartDashboard.putNumber("Lift/Velocity: ", master.getSelectedSensorVelocity(SLOTIDX));
-		SmartDashboard.putNumber("Lift/Error: ", master.getClosedLoopError(SLOTIDX));
-		SmartDashboard.putNumber("Lift/Master Current", master.getOutputCurrent());
-		SmartDashboard.putNumber("Lift/Master Voltage", master.getMotorOutputVoltage());
-		SmartDashboard.putNumber("Lift/Follower Current", follower.getOutputCurrent());
-		SmartDashboard.putNumber("Lift/Follower Voltage", follower.getMotorOutputVoltage());
+		SmartDashboard.putNumber("Lift/Master/Position", master.getSelectedSensorPosition(SLOTIDX));
+		SmartDashboard.putNumber("Lift/Master/Velocity", master.getSelectedSensorVelocity(SLOTIDX));
+		SmartDashboard.putNumber("Lift/Master/Error", master.getClosedLoopError(SLOTIDX));
+		SmartDashboard.putNumber("Lift/Master/Current", master.getOutputCurrent());
+		SmartDashboard.putNumber("Lift/Master/Voltage", master.getMotorOutputVoltage());
+		SmartDashboard.putNumber("Lift/Follower/Current", follower.getOutputCurrent());
+		SmartDashboard.putNumber("Lift/Follower/Voltage", follower.getMotorOutputVoltage());
 	}
 	
 	public void initDefaultCommand() {
