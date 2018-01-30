@@ -18,17 +18,17 @@ public class RobotMap {
 	public static final int driveLeftMaster = 14;
 	public static final int[] driveLeftFollowers = { 11, 12, 8 };
 	public static final int driveRightMaster = 13;
-	public static int[] driveRightFollowers = { 9, 15, 10 };
+	public static final int[] driveRightFollowers = { 9, 15, 10 };
 
 	// Lift
-	public static int liftMaster = 4;
-	public static int liftFollower = 6;
+	public static final int liftMaster = 4;
+	public static final int liftFollower = 6;
 
 	// Intake
-	public static int intakeLeft = 5;
-	public static int intakeRight = 6;
-	public static int intakeLeftIR = 0;
-	public static int intakeRightIR = 1;
+	public static final int intakeLeft = 5;
+	public static final int intakeRight = 6;
+	public static final int intakeLeftIR = 0;
+	public static final int intakeRightIR = 1;
 
 	// Other
 
