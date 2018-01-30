@@ -1,7 +1,7 @@
 package org.usfirst.frc.team88.robot.commands;
 
 import org.usfirst.frc.team88.robot.Robot;
-import org.usfirst.frc.team88.robot.util.InputShaping;
+import org.usfirst.frc.team88.robot.util.TJUtility;
 
 import edu.wpi.first.wpilibj.command.Command;
 
@@ -10,7 +10,11 @@ import edu.wpi.first.wpilibj.command.Command;
  */
 public class DriveSplitArcade extends Command {
 	public final static double SENSITIVITY = 0.25;
-
+	private static final double DEADZONE = 0.1;
+	private static final double POLY_A = 0.35;
+	private static final double POLY_B = 0.5;
+	private static final double POLY_C = 0.15;
+	
 	public DriveSplitArcade() {
 		requires(Robot.drive);
 	}
@@ -25,9 +29,8 @@ public class DriveSplitArcade extends Command {
 
 		// below for rocket league style
 		// magnitude = InputShaping.applyPoly(Robot.oi.driver.getZ());
-		magnitude = InputShaping.applyPoly(Robot.oi.driver.getLeftStickY());
-
-		curve = InputShaping.applyPoly(Robot.oi.driver.getRightStickX());
+		magnitude = TJUtility.polynomial(Robot.oi.driver.getLeftStickY(), POLY_A, POLY_B, POLY_C, DEADZONE);
+		curve = TJUtility.polynomial(Robot.oi.driver.getRightStickX(), POLY_A, POLY_B, POLY_C, DEADZONE);
 
 		if ((curve == 0) && (magnitude != 0)) {
 			if (Robot.oi.driver.isButtonAPressed()) {
@@ -42,28 +45,13 @@ public class DriveSplitArcade extends Command {
 				targetHeading = 999;
 			}
 
-      if (targetHeading != 999) {
-				error = targetHeading - Robot.drive.getYaw();
-
-				if (error > 180) {
-					error = error - 360;
-				} else if (error < -180) {
-					error = error + 360;
-				}
-
-				curve = error * 0.013;
-
-				if (curve > 1) {
-					curve = 1;
-				} else if (curve < -1) {
-					curve = -1;
-				}
+			if (targetHeading != 999) {
+				error = TJUtility.normalizeAngle(targetHeading - Robot.drive.getYaw());
+				curve = TJUtility.maxValue(error * 0.013, 1.0);
 			}
 		}
 
 		Robot.drive.driveCurve(magnitude, curve, SENSITIVITY);
-
-		Robot.drive.updateDashboard();
 	}
 
 	// Make this return true when this Command no longer needs to run execute()

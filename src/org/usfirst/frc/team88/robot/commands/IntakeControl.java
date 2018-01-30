@@ -1,16 +1,20 @@
 package org.usfirst.frc.team88.robot.commands;
 
 import org.usfirst.frc.team88.robot.Robot;
-import org.usfirst.frc.team88.robot.util.InputShaping;
+import org.usfirst.frc.team88.robot.util.TJUtility;
 
 import edu.wpi.first.wpilibj.command.Command;
 
 /**
  *
  */
-public class IntakeCommand extends Command {
-
-    public IntakeCommand() {
+public class IntakeControl extends Command {
+	private static final double DEADZONE = 0.1;
+	private static final double POLY_A = 0.35;
+	private static final double POLY_B = 0.5;
+	private static final double POLY_C = 0.15;
+	
+    public IntakeControl() {
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
     	requires(Robot.intake);
@@ -22,8 +26,7 @@ public class IntakeCommand extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	Robot.intake.intakeWheelSpeed(InputShaping.applyPoly(Robot.oi.driver.getZ()));
-    	Robot.intake.updateDashboard();
+    	Robot.intake.intakeWheelSpeed(TJUtility.polynomial(Robot.oi.driver.getZ(), POLY_A, POLY_B, POLY_C, DEADZONE));
     }
 
     // Make this return true when this Command no longer needs to run execute()

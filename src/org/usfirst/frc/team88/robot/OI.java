@@ -17,6 +17,14 @@ public class OI {
 	public TJController driver = new TJController(0);
 	public TJController operator = new TJController(1);
 
+	// !!! DO NOT ADD COMMANDS TO DRIVER BUTTONS !!!
+	// The A, B, X, and Y buttons on the driver controlled are used in the
+	// DriveSplitArcade command to provide field oriented options. Commands
+	// should not be assigned to them.
+	
+	
+	
+	
 	//// CREATING BUTTONS
 	// One type of button is a joystick button which is any button on a
 	//// joystick.

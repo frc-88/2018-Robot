@@ -1,15 +1,17 @@
 package org.usfirst.frc.team88.robot.subsystems;
 
-import org.usfirst.frc.team88.robot.Robot;
 import org.usfirst.frc.team88.robot.RobotMap;
-import org.usfirst.frc.team88.robot.commands.IntakeCommand;
+import org.usfirst.frc.team88.robot.commands.IntakeControl;
 import org.usfirst.frc.team88.robot.util.SharpIR;
 
-import edu.wpi.first.wpilibj.Talon;
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
+ * <pre>
  * Kyle Hackett
  * 
  * Intake Haiku v2.
@@ -17,56 +19,54 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * The green wheels spin fast
  * The cube is now ours to use
  * And now we will win
- *
+ * </pre>
  */
 public class Intake extends Subsystem {
-	final double MAXSPEED = .75;
-	final double LOWERSPEED = .50;
-	private Talon leftSide, rightSide; 
-	private SharpIR leftDistanceSensor, rightDistanceSensor;
-	// Put methods for controlling this subsystem
-	// here. Call these from Commands.
+	private static final double TIMEOUT = 0;
+	private static final double MAXSPEED = .75;
 
-	public Intake () {
-		leftSide = new Talon(RobotMap.intakeLeftTalon);
-		rightSide = new Talon(RobotMap.intakeRightTalon);
+	private TalonSRX leftSide, rightSide;
+	private SharpIR leftDistanceSensor, rightDistanceSensor;
+
+	public Intake() {
+		leftSide = new TalonSRX(RobotMap.intakeLeft);
+		rightSide = new TalonSRX(RobotMap.intakeRight);
+
+		// TODO set up current limiting
 		
 		leftDistanceSensor = new SharpIR(RobotMap.intakeLeftIR);
 		rightDistanceSensor = new SharpIR(RobotMap.intakeRightIR);
 	}
 
-	public void intakeWheelSpeed (double speed) {
-
-		if (Robot.oi.driver.getZ() > 0){
-			rightSide.set(speed * LOWERSPEED);
-			leftSide.set(speed * MAXSPEED);
-		} else { 
-			rightSide.set(speed * MAXSPEED);
-			leftSide.set(speed * MAXSPEED);
-		}
-
+	public void intakeWheelSpeed(double speed) {
+			rightSide.set(ControlMode.PercentOutput, speed * MAXSPEED, TIMEOUT);
+			leftSide.set(ControlMode.PercentOutput, speed * MAXSPEED, TIMEOUT);
 	}
 
-	public double getLeftDistance(){
+	public double getLeftDistance() {
 		return leftDistanceSensor.getDistance();
 	}
 
-	public double getRightDistance(){
+	public double getRightDistance() {
 		return rightDistanceSensor.getDistance();
 	}
 
 	public void updateDashboard() {
-		SmartDashboard.putNumber("Intake/Left Distance", leftDistanceSensor.getDistance());
-		SmartDashboard.putNumber("Intake/Right Distance", rightDistanceSensor.getDistance());		
+		SmartDashboard.putNumber("Intake/Left/Sensor Distance", leftDistanceSensor.getDistance());
+		SmartDashboard.putNumber("Intake/Left/Sensor Voltage", leftDistanceSensor.getAverageVoltage());
+		SmartDashboard.putNumber("Intake/Right/Sensor Distance", rightDistanceSensor.getDistance());
+		SmartDashboard.putNumber("Intake/Right/Sensor Voltage", rightDistanceSensor.getAverageVoltage());
+
+		SmartDashboard.putNumber("Intake/Left/Motor Current", leftSide.getOutputCurrent());
+		SmartDashboard.putNumber("Intake/Left/Motor Voltage", leftSide.getMotorOutputVoltage());
+		SmartDashboard.putNumber("Intake/Right/Motor Current", rightSide.getOutputCurrent());
+		SmartDashboard.putNumber("Intake/Right/Motor Voltage", rightSide.getMotorOutputVoltage());
 	}
 
 	public void initDefaultCommand() {
 		// Set the default command for a subsystem here.
-		//setDefaultCommand(new MySpecialCommand());
-		setDefaultCommand(new IntakeCommand());
+		// setDefaultCommand(new MySpecialCommand());
+		setDefaultCommand(new IntakeControl());
 	}
 
-
-
 }
-

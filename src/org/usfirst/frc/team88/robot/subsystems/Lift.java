@@ -2,12 +2,14 @@ package org.usfirst.frc.team88.robot.subsystems;
 
 import org.usfirst.frc.team88.robot.RobotMap;
 
+import com.ctre.phoenix.ParamEnum;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * Rookies
@@ -16,22 +18,27 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 public class Lift extends Subsystem {
 	private static final int SLOTIDX = 0;
 	private static final int TIMEOUTMS = 0;
-	private static final int FORWARDLIMIT = 0;
+	private static final int FORWARDLIMIT = 1023;
 	private static final int REVERSELIMIT = 0;
 	// TODO Add constants for lift positions
-	private TalonSRX liftTalon;
-	private VictorSPX rightwing;
+	private TalonSRX master;
+	private VictorSPX follower;
 
 	public Lift() {
-		liftTalon = new TalonSRX(RobotMap.liftTalon);
-		rightwing = new VictorSPX(RobotMap.rightwing);
+		master = new TalonSRX(RobotMap.liftMaster);
+		follower = new VictorSPX(RobotMap.liftFollower);
 
-		liftTalon.configSelectedFeedbackSensor(FeedbackDevice.Analog, SLOTIDX, TIMEOUTMS);
-		liftTalon.configForwardSoftLimitThreshold(FORWARDLIMIT, TIMEOUTMS);
-		liftTalon.configForwardSoftLimitEnable(true, TIMEOUTMS);
+		/* analog signal with no wrap-around (0-3.3V) */
+		master.configSelectedFeedbackSensor(FeedbackDevice.Analog, SLOTIDX, TIMEOUTMS);
+		
+		/* eFeedbackNotContinuous = 1, subValue/ordinal/timeoutMs = 0 */
+		master.configSetParameter(ParamEnum.eFeedbackNotContinuous, 1, 0x00, 0x00, TIMEOUTMS);
+		
+		master.configForwardSoftLimitThreshold(FORWARDLIMIT, TIMEOUTMS);
+		master.configForwardSoftLimitEnable(true, TIMEOUTMS);
 
-		liftTalon.configReverseSoftLimitThreshold(REVERSELIMIT, TIMEOUTMS);
-		liftTalon.configReverseSoftLimitEnable(true, TIMEOUTMS);
+		master.configReverseSoftLimitThreshold(REVERSELIMIT, TIMEOUTMS);
+		master.configReverseSoftLimitEnable(true, TIMEOUTMS);
 
 		// TODO configure for position based closed loop control using
 		//      motion magic capability of TalonSRX
@@ -42,14 +49,25 @@ public class Lift extends Subsystem {
 		// http://www.ctr-electronics.com/downloads/api/java/html/com/ctre/phoenix/motorcontrol/can/BaseMotorController.html#configMotionAcceleration-int-int-
 		// https://github.com/CrossTheRoadElec/Phoenix-Examples-Languages/tree/master/Java/MotionMagic
 		
-		rightwing.set(ControlMode.Follower, RobotMap.liftTalon);
+		follower.set(ControlMode.Follower, RobotMap.liftMaster);
 
 	}
 
 	public void levitate(double velocity) {
-		liftTalon.set(ControlMode.PercentOutput, velocity);
+		master.set(ControlMode.PercentOutput, velocity);
 	}
 
+	public void updateDashboard() {
+		//waiting to be fixed
+		SmartDashboard.putNumber("Lift/Master/Position", master.getSelectedSensorPosition(SLOTIDX));
+		SmartDashboard.putNumber("Lift/Master/Velocity", master.getSelectedSensorVelocity(SLOTIDX));
+		SmartDashboard.putNumber("Lift/Master/Error", master.getClosedLoopError(SLOTIDX));
+		SmartDashboard.putNumber("Lift/Master/Current", master.getOutputCurrent());
+		SmartDashboard.putNumber("Lift/Master/Voltage", master.getMotorOutputVoltage());
+		SmartDashboard.putNumber("Lift/Follower/Current", follower.getOutputCurrent());
+		SmartDashboard.putNumber("Lift/Follower/Voltage", follower.getMotorOutputVoltage());
+	}
+	
 	public void initDefaultCommand() {
 		// Set the default command for a subsystem here.
 		// setDefaultCommand(new MySpecialCommand());
