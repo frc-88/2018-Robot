@@ -1,7 +1,7 @@
 package org.usfirst.frc.team88.robot.commands;
 
 import org.usfirst.frc.team88.robot.Robot;
-import org.usfirst.frc.team88.robot.util.InputShaping;
+import org.usfirst.frc.team88.robot.util.TJUtility;
 
 import edu.wpi.first.wpilibj.command.Command;
 
@@ -9,7 +9,11 @@ import edu.wpi.first.wpilibj.command.Command;
  *
  */
 public class DriveTank extends Command {
-
+	private static final double DEADZONE = 0.1;
+	private static final double POLY_A = 0.35;
+	private static final double POLY_B = 0.5;
+	private static final double POLY_C = 0.15;
+	
     public DriveTank() {
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
@@ -22,8 +26,8 @@ public class DriveTank extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	Robot.drive.wheelSpeed(InputShaping.applyPoly(Robot.oi.driver.getLeftStickY()),
-    			InputShaping.applyPoly(Robot.oi.driver.getRightStickY()));
+    	Robot.drive.wheelSpeed(TJUtility.polynomial(Robot.oi.driver.getLeftStickY(), POLY_A, POLY_B, POLY_C, DEADZONE),
+    			TJUtility.polynomial(Robot.oi.driver.getRightStickY(), POLY_A, POLY_B, POLY_C, DEADZONE));
     	Robot.drive.updateDashboard();
     }
 
