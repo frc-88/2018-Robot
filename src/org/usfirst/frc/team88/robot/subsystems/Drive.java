@@ -99,14 +99,12 @@ public class Drive extends Subsystem implements PIDOutput {
 		leftTalon.configNominalOutputReverse(0.0, TIMEOUTMS);
 		leftTalon.configPeakOutputForward(+0.83, TIMEOUTMS);
 		leftTalon.configPeakOutputReverse(-0.83, TIMEOUTMS);
-		leftTalon.setSensorPhase(false);
 		leftTalon.configNeutralDeadband(0.04, TIMEOUTMS);
 		leftTalon.configClosedloopRamp(RAMPRATE, TIMEOUTMS);
+		leftTalon.setSensorPhase(false);
 		leftTalon.setNeutralMode(NeutralMode.Brake);
 
 		for (int i = 0; i < RobotMap.driveLeftFollowers.length; i++) {
-			leftVictors[i].configNeutralDeadband(0.04, TIMEOUTMS);
-			leftVictors[i].configClosedloopRamp(RAMPRATE, TIMEOUTMS);
 			leftVictors[i].setNeutralMode(NeutralMode.Brake);
 			leftVictors[i].set(ControlMode.Follower, RobotMap.driveLeftMaster);
 		}
@@ -120,14 +118,12 @@ public class Drive extends Subsystem implements PIDOutput {
 		rightTalon.configNominalOutputReverse(0.0, TIMEOUTMS);
 		rightTalon.configPeakOutputForward(+0.83, TIMEOUTMS);
 		rightTalon.configPeakOutputReverse(-0.83, TIMEOUTMS);
-		rightTalon.setSensorPhase(false);
 		rightTalon.configNeutralDeadband(0.04, TIMEOUTMS);
 		rightTalon.configClosedloopRamp(RAMPRATE, TIMEOUTMS);
+		rightTalon.setSensorPhase(false);
 		rightTalon.setNeutralMode(NeutralMode.Brake);
 
 		for (int i = 0; i < RobotMap.driveRightFollowers.length; i++) {
-			rightVictors[i].configNeutralDeadband(0.04, TIMEOUTMS);
-			rightVictors[i].configClosedloopRamp(RAMPRATE, TIMEOUTMS);
 			rightVictors[i].setNeutralMode(NeutralMode.Brake);
 			rightVictors[i].set(ControlMode.Follower, RobotMap.driveRightFollowers[0]);
 		}
