@@ -280,7 +280,7 @@ public class Drive extends Subsystem implements PIDOutput {
 				/ 2.0;
 	}
 
-	public double getAvgSpeed() {
+	public double getAvgVelocity() {
 		double speed = (-leftTalon.getSelectedSensorVelocity(SLOTIDX)
 				+ rightTalon.getSelectedSensorVelocity(SLOTIDX)) / 2;
 
@@ -289,6 +289,7 @@ public class Drive extends Subsystem implements PIDOutput {
 
 	public void updateDashboard() {
 		SmartDashboard.putNumber("Drive/AvgPosition", getAvgPosition());
+		SmartDashboard.putNumber("Drive/AvgVelocity", getAvgVelocity());
 		SmartDashboard.putNumber("Drive/Yaw", navX.getYaw());
 
 		SmartDashboard.putNumber("Drive/Left/Master/Position", leftTalon.getSelectedSensorPosition(SLOTIDX));
