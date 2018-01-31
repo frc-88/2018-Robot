@@ -7,6 +7,8 @@
 
 package org.usfirst.frc.team88.robot;
 
+import org.usfirst.frc.team88.robot.commands.AutoCenterToSwitch;
+import org.usfirst.frc.team88.robot.commands.AutoDriveDistanceAngle;
 import org.usfirst.frc.team88.robot.subsystems.Drive;
 import org.usfirst.frc.team88.robot.subsystems.Intake;
 import org.usfirst.frc.team88.robot.subsystems.Lift;
@@ -30,8 +32,8 @@ public class Robot extends TimedRobot {
 	public static Lift lift;
 	public static OI oi;
 
-	Command m_autonomousCommand;
-	SendableChooser<Command> m_chooser = new SendableChooser<>();
+	private Command autonomousCommand;
+	private SendableChooser<Command> chooser = new SendableChooser<>();
 
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -44,9 +46,10 @@ public class Robot extends TimedRobot {
 		
 		oi = new OI();
 		
-		//m_chooser.addDefault("Default Auto", new ExampleCommand());
-		// chooser.addObject("My Auto", new MyAutoCommand());
-		SmartDashboard.putData("Auto mode", m_chooser);
+		// Autonomous modes
+		chooser.addDefault("Cross the Line", new AutoDriveDistanceAngle(100, 0));
+		chooser.addObject("Center Switch", new AutoCenterToSwitch());
+		SmartDashboard.putData("Auto mode", chooser);
 	}
 
 	/**
@@ -79,18 +82,11 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void autonomousInit() {
-		m_autonomousCommand = m_chooser.getSelected();
-
-		/*
-		 * String autoSelected = SmartDashboard.getString("Auto Selector",
-		 * "Default"); switch(autoSelected) { case "My Auto": autonomousCommand
-		 * = new MyAutoCommand(); break; case "Default Auto": default:
-		 * autonomousCommand = new ExampleCommand(); break; }
-		 */
+		autonomousCommand = chooser.getSelected();
 
 		// schedule the autonomous command (example)
-		if (m_autonomousCommand != null) {
-			m_autonomousCommand.start();
+		if (autonomousCommand != null) {
+			autonomousCommand.start();
 		}
 	}
 
@@ -110,8 +106,8 @@ public class Robot extends TimedRobot {
 		// teleop starts running. If you want the autonomous to
 		// continue until interrupted by another command, remove
 		// this line or comment it out.
-		if (m_autonomousCommand != null) {
-			m_autonomousCommand.cancel();
+		if (autonomousCommand != null) {
+			autonomousCommand.cancel();
 		}
 	}
 
@@ -133,6 +129,8 @@ public class Robot extends TimedRobot {
 	}
 	
 	private void updateDashboard() {
+		SmartDashboard.putString("Auto Command",chooser.getName());
+		
 		drive.updateDashboard();
 		intake.updateDashboard();
 		lift.updateDashboard();
