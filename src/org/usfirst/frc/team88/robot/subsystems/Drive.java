@@ -8,7 +8,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-import com.ctre.phoenix.motorcontrol.can.VictorSPX;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.PIDController;
@@ -21,9 +21,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * <pre>
  * Brodie B., Sam R.
  * 
- * Forward and backward
- * Took us an hour to write
- * Fixed with three letters
+ * Took an hour to write
+ * Fixed it all with three letters
+ * Had to change it back.
  * </pre>
  */
 public class Drive extends Subsystem implements PIDOutput {
@@ -51,8 +51,8 @@ public class Drive extends Subsystem implements PIDOutput {
 	private final static double ROTATE_MIN = 0.05;
 
 	private AHRS navX;
-	private VictorSPX[] leftVictors;
-	private VictorSPX[] rightVictors;
+	private TalonSRX[] leftTalons;
+	private TalonSRX[] rightTalons;
 
 	private TalonSRX leftTalon;
 	private TalonSRX rightTalon;
@@ -78,15 +78,15 @@ public class Drive extends Subsystem implements PIDOutput {
 		leftTalon = new TalonSRX(RobotMap.driveLeftMaster);
 		rightTalon = new TalonSRX(RobotMap.driveRightMaster);
 
-		leftVictors = new VictorSPX[RobotMap.driveLeftFollowers.length];
-		rightVictors = new VictorSPX[RobotMap.driveRightFollowers.length];
+		leftTalons = new TalonSRX[RobotMap.driveLeftFollowers.length];
+		rightTalons = new TalonSRX[RobotMap.driveRightFollowers.length];
 
 		for (int i = 0; i < RobotMap.driveLeftFollowers.length; i++) {
-			leftVictors[i] = new VictorSPX(RobotMap.driveLeftFollowers[i]);
+			leftTalons[i] = new TalonSRX(RobotMap.driveLeftFollowers[i]);
 		}
 
 		for (int i = 0; i < RobotMap.driveRightFollowers.length; i++) {
-			rightVictors[i] = new VictorSPX(RobotMap.driveRightFollowers[i]);
+			rightTalons[i] = new TalonSRX(RobotMap.driveRightFollowers[i]);
 		}
 
 		// configure motor controllers
@@ -105,8 +105,8 @@ public class Drive extends Subsystem implements PIDOutput {
 		leftTalon.setNeutralMode(NeutralMode.Brake);
 
 		for (int i = 0; i < RobotMap.driveLeftFollowers.length; i++) {
-			leftVictors[i].setNeutralMode(NeutralMode.Brake);
-			leftVictors[i].set(ControlMode.Follower, RobotMap.driveLeftMaster);
+			leftTalons[i].setNeutralMode(NeutralMode.Brake);
+			leftTalons[i].set(ControlMode.Follower, RobotMap.driveLeftMaster);
 		}
 
 		rightTalon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, SLOTIDX, TIMEOUTMS);
@@ -124,8 +124,8 @@ public class Drive extends Subsystem implements PIDOutput {
 		rightTalon.setNeutralMode(NeutralMode.Brake);
 
 		for (int i = 0; i < RobotMap.driveRightFollowers.length; i++) {
-			rightVictors[i].setNeutralMode(NeutralMode.Brake);
-			rightVictors[i].set(ControlMode.Follower, RobotMap.driveRightFollowers[0]);
+			rightTalons[i].setNeutralMode(NeutralMode.Brake);
+			rightTalons[i].set(ControlMode.Follower, RobotMap.driveRightFollowers[0]);
 		}
 
 		resetEncoders();
@@ -305,12 +305,12 @@ public class Drive extends Subsystem implements PIDOutput {
 		SmartDashboard.putNumber("Drive/Right/Master/Voltage", rightTalon.getMotorOutputVoltage());
 
 		for (int i = 0; i < RobotMap.driveLeftFollowers.length; i++) {
-			SmartDashboard.putNumber("Drive/Left/Follower"+i+"/Current", leftVictors[i].getOutputCurrent());
-			SmartDashboard.putNumber("Drive/Left/Follower"+i+"/Voltage", leftVictors[i].getMotorOutputVoltage());
+			SmartDashboard.putNumber("Drive/Left/Follower"+i+"/Current", leftTalons[i].getOutputCurrent());
+			SmartDashboard.putNumber("Drive/Left/Follower"+i+"/Voltage", leftTalons[i].getMotorOutputVoltage());
 		}
 		for (int i = 0; i < RobotMap.driveRightFollowers.length; i++) {
-			SmartDashboard.putNumber("Drive/Right/Follower"+i+"/Current", rightVictors[i].getOutputCurrent());
-			SmartDashboard.putNumber("Drive/Right/Follower"+i+"/Voltage", rightVictors[i].getMotorOutputVoltage());
+			SmartDashboard.putNumber("Drive/Right/Follower"+i+"/Current", rightTalons[i].getOutputCurrent());
+			SmartDashboard.putNumber("Drive/Right/Follower"+i+"/Voltage", rightTalons[i].getMotorOutputVoltage());
 		}
 	}
 
