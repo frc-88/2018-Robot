@@ -5,6 +5,7 @@ import org.usfirst.frc.team88.robot.RobotMap;
 import com.ctre.phoenix.ParamEnum;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
@@ -18,6 +19,15 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Lift extends Subsystem {
 	private static final int SLOTIDX = 0;
 	private static final int TIMEOUTMS = 0;
+	private final static double RAMPRATE = .30;
+	private final static double MAX_SPEED = 13000;
+	private final static int CRUISE_VELOCITY = 13000;
+	private final static int ACCELERATION = 6000;
+	private final static double P = 0.0;
+	private final static double I = 0.0;
+	private final static double D = 0.0;
+	private final static double F = 1023 / MAX_SPEED;
+	
 	private static final int FORWARDLIMIT = 1023;
 	private static final int REVERSELIMIT = 0;
 	// TODO Add constants for lift positions
@@ -33,6 +43,22 @@ public class Lift extends Subsystem {
 		
 		/* eFeedbackNotContinuous = 1, subValue/ordinal/timeoutMs = 0 */
 		master.configSetParameter(ParamEnum.eFeedbackNotContinuous, 1, 0x00, 0x00, TIMEOUTMS);
+
+		master.config_kP(SLOTIDX, P, TIMEOUTMS);
+		master.config_kI(SLOTIDX, I, TIMEOUTMS);
+		master.config_kD(SLOTIDX, D, TIMEOUTMS);
+		master.config_kF(SLOTIDX, F, TIMEOUTMS);
+		master.configNominalOutputForward(0.0, TIMEOUTMS);
+		master.configNominalOutputReverse(0.0, TIMEOUTMS);
+		master.configPeakOutputForward(+1.0, TIMEOUTMS);
+		master.configPeakOutputReverse(-1.0, TIMEOUTMS);
+		master.configNeutralDeadband(0.04, TIMEOUTMS);
+		master.configClosedloopRamp(RAMPRATE, TIMEOUTMS);
+		master.setSensorPhase(false);
+		master.setNeutralMode(NeutralMode.Brake);
+
+		master.configMotionCruiseVelocity(CRUISE_VELOCITY, TIMEOUTMS);
+		master.configMotionAcceleration(ACCELERATION, TIMEOUTMS);
 		
 		master.configForwardSoftLimitThreshold(FORWARDLIMIT, TIMEOUTMS);
 		master.configForwardSoftLimitEnable(true, TIMEOUTMS);
@@ -55,6 +81,10 @@ public class Lift extends Subsystem {
 
 	public void levitate(double velocity) {
 		master.set(ControlMode.PercentOutput, velocity);
+	}
+	
+	public void setPosition(double position) {
+		master.set(ControlMode.MotionMagic, position);
 	}
 
 	public void updateDashboard() {

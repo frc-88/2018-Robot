@@ -8,7 +8,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-import com.ctre.phoenix.motorcontrol.can.VictorSPX;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.PIDController;
@@ -21,9 +21,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * <pre>
  * Brodie B., Sam R.
  * 
- * Forward and backward
- * Took us an hour to write
- * Fixed with three letters
+ * Took an hour to write
+ * Fixed it all with three letters
+ * Had to change it back.
  * </pre>
  */
 public class Drive extends Subsystem implements PIDOutput {
@@ -51,11 +51,11 @@ public class Drive extends Subsystem implements PIDOutput {
 	private final static double ROTATE_MIN = 0.05;
 
 	private AHRS navX;
-	private VictorSPX[] leftVictors;
-	private VictorSPX[] rightVictors;
 
-	private TalonSRX leftTalon;
-	private TalonSRX rightTalon;
+	private TalonSRX leftMaster;
+	private TalonSRX rightMaster;
+	private TalonSRX[] leftFollower;
+	private TalonSRX[] rightFollower;
 
 	private int count;
 	private double heading;
@@ -75,57 +75,55 @@ public class Drive extends Subsystem implements PIDOutput {
 		rotateController.setContinuous(true);
 
 		// init motor controllers
-		leftTalon = new TalonSRX(RobotMap.driveLeftMaster);
-		rightTalon = new TalonSRX(RobotMap.driveRightMaster);
+		leftMaster = new TalonSRX(RobotMap.driveLeftMaster);
+		rightMaster = new TalonSRX(RobotMap.driveRightMaster);
 
-		leftVictors = new VictorSPX[RobotMap.driveLeftFollowers.length];
-		rightVictors = new VictorSPX[RobotMap.driveRightFollowers.length];
-
+		leftFollower = new TalonSRX[RobotMap.driveLeftFollowers.length];
+		rightFollower = new TalonSRX[RobotMap.driveRightFollowers.length];
 		for (int i = 0; i < RobotMap.driveLeftFollowers.length; i++) {
-			leftVictors[i] = new VictorSPX(RobotMap.driveLeftFollowers[i]);
+			leftFollower[i] = new TalonSRX(RobotMap.driveLeftFollowers[i]);
 		}
-
 		for (int i = 0; i < RobotMap.driveRightFollowers.length; i++) {
-			rightVictors[i] = new VictorSPX(RobotMap.driveRightFollowers[i]);
+			rightFollower[i] = new TalonSRX(RobotMap.driveRightFollowers[i]);
 		}
 
 		// configure motor controllers
-		leftTalon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, SLOTIDX, TIMEOUTMS);
-		leftTalon.config_kP(SLOTIDX, P, TIMEOUTMS);
-		leftTalon.config_kI(SLOTIDX, I, TIMEOUTMS);
-		leftTalon.config_kD(SLOTIDX, D, TIMEOUTMS);
-		leftTalon.config_kF(SLOTIDX, F, TIMEOUTMS);
-		leftTalon.configNominalOutputForward(0.0, TIMEOUTMS);
-		leftTalon.configNominalOutputReverse(0.0, TIMEOUTMS);
-		leftTalon.configPeakOutputForward(+0.83, TIMEOUTMS);
-		leftTalon.configPeakOutputReverse(-0.83, TIMEOUTMS);
-		leftTalon.configNeutralDeadband(0.04, TIMEOUTMS);
-		leftTalon.configClosedloopRamp(RAMPRATE, TIMEOUTMS);
-		leftTalon.setSensorPhase(false);
-		leftTalon.setNeutralMode(NeutralMode.Brake);
+		leftMaster.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, SLOTIDX, TIMEOUTMS);
+		leftMaster.config_kP(SLOTIDX, P, TIMEOUTMS);
+		leftMaster.config_kI(SLOTIDX, I, TIMEOUTMS);
+		leftMaster.config_kD(SLOTIDX, D, TIMEOUTMS);
+		leftMaster.config_kF(SLOTIDX, F, TIMEOUTMS);
+		leftMaster.configNominalOutputForward(0.0, TIMEOUTMS);
+		leftMaster.configNominalOutputReverse(0.0, TIMEOUTMS);
+		leftMaster.configPeakOutputForward(+0.83, TIMEOUTMS);
+		leftMaster.configPeakOutputReverse(-0.83, TIMEOUTMS);
+		leftMaster.configNeutralDeadband(0.04, TIMEOUTMS);
+		leftMaster.configClosedloopRamp(RAMPRATE, TIMEOUTMS);
+		leftMaster.setSensorPhase(false);
+		leftMaster.setNeutralMode(NeutralMode.Brake);
 
 		for (int i = 0; i < RobotMap.driveLeftFollowers.length; i++) {
-			leftVictors[i].setNeutralMode(NeutralMode.Brake);
-			leftVictors[i].set(ControlMode.Follower, RobotMap.driveLeftMaster);
+			leftFollower[i].setNeutralMode(NeutralMode.Brake);
+			leftFollower[i].set(ControlMode.Follower, RobotMap.driveLeftMaster);
 		}
 
-		rightTalon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, SLOTIDX, TIMEOUTMS);
-		rightTalon.config_kP(SLOTIDX, P, TIMEOUTMS);
-		rightTalon.config_kI(SLOTIDX, I, TIMEOUTMS);
-		rightTalon.config_kD(SLOTIDX, D, TIMEOUTMS);
-		rightTalon.config_kF(SLOTIDX, F, TIMEOUTMS);
-		rightTalon.configNominalOutputForward(0.0, TIMEOUTMS);
-		rightTalon.configNominalOutputReverse(0.0, TIMEOUTMS);
-		rightTalon.configPeakOutputForward(+0.83, TIMEOUTMS);
-		rightTalon.configPeakOutputReverse(-0.83, TIMEOUTMS);
-		rightTalon.configNeutralDeadband(0.04, TIMEOUTMS);
-		rightTalon.configClosedloopRamp(RAMPRATE, TIMEOUTMS);
-		rightTalon.setSensorPhase(false);
-		rightTalon.setNeutralMode(NeutralMode.Brake);
+		rightMaster.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, SLOTIDX, TIMEOUTMS);
+		rightMaster.config_kP(SLOTIDX, P, TIMEOUTMS);
+		rightMaster.config_kI(SLOTIDX, I, TIMEOUTMS);
+		rightMaster.config_kD(SLOTIDX, D, TIMEOUTMS);
+		rightMaster.config_kF(SLOTIDX, F, TIMEOUTMS);
+		rightMaster.configNominalOutputForward(0.0, TIMEOUTMS);
+		rightMaster.configNominalOutputReverse(0.0, TIMEOUTMS);
+		rightMaster.configPeakOutputForward(+0.83, TIMEOUTMS);
+		rightMaster.configPeakOutputReverse(-0.83, TIMEOUTMS);
+		rightMaster.configNeutralDeadband(0.04, TIMEOUTMS);
+		rightMaster.configClosedloopRamp(RAMPRATE, TIMEOUTMS);
+		rightMaster.setSensorPhase(false);
+		rightMaster.setNeutralMode(NeutralMode.Brake);
 
 		for (int i = 0; i < RobotMap.driveRightFollowers.length; i++) {
-			rightVictors[i].setNeutralMode(NeutralMode.Brake);
-			rightVictors[i].set(ControlMode.Follower, RobotMap.driveRightFollowers[0]);
+			rightFollower[i].setNeutralMode(NeutralMode.Brake);
+			rightFollower[i].set(ControlMode.Follower, RobotMap.driveRightFollowers[0]);
 		}
 
 		resetEncoders();
@@ -145,14 +143,14 @@ public class Drive extends Subsystem implements PIDOutput {
 			SmartDashboard.putNumber("Drive/Left/Input", -left * MAX_SPEED);
 			SmartDashboard.putNumber("Drive/Right/Input", right * MAX_SPEED);
 
-			leftTalon.set(ControlMode.Velocity, -left * MAX_SPEED);
-			rightTalon.set(ControlMode.Velocity, right * MAX_SPEED);
+			leftMaster.set(ControlMode.Velocity, -left * MAX_SPEED);
+			rightMaster.set(ControlMode.Velocity, right * MAX_SPEED);
 		} else {
 			SmartDashboard.putNumber("Drive/Left/Input", left);
 			SmartDashboard.putNumber("Drive/Right/Input", right);
 
-			leftTalon.set(ControlMode.PercentOutput, -left);
-			rightTalon.set(ControlMode.PercentOutput, right);
+			leftMaster.set(ControlMode.PercentOutput, -left);
+			rightMaster.set(ControlMode.PercentOutput, right);
 		}
 	}
 
@@ -186,7 +184,6 @@ public class Drive extends Subsystem implements PIDOutput {
 	 */
 	public void driveCurve(double outputMagnitude, double curve) {
 		driveCurve(outputMagnitude, curve, DFT_SENSITIVITY);
-
 	}
 
 	public void driveCurve(double outputMagnitude, double curve, double sensitivity) {
@@ -253,36 +250,36 @@ public class Drive extends Subsystem implements PIDOutput {
 	}
 
 	public void resetEncoders() {
-		leftTalon.getSensorCollection().setQuadraturePosition(0, TIMEOUTMS);
-		rightTalon.getSensorCollection().setQuadraturePosition(0, TIMEOUTMS);
+		leftMaster.getSensorCollection().setQuadraturePosition(0, TIMEOUTMS);
+		rightMaster.getSensorCollection().setQuadraturePosition(0, TIMEOUTMS);
 	}
 
 	public void enableRampRate() {
-		leftTalon.configClosedloopRamp(RAMPRATE, TIMEOUTMS);
-		rightTalon.configClosedloopRamp(RAMPRATE, TIMEOUTMS);
+		leftMaster.configClosedloopRamp(RAMPRATE, TIMEOUTMS);
+		rightMaster.configClosedloopRamp(RAMPRATE, TIMEOUTMS);
 	}
 
 	public void disableRampRate() {
-		leftTalon.configClosedloopRamp(0, TIMEOUTMS);
-		rightTalon.configClosedloopRamp(0, TIMEOUTMS);
+		leftMaster.configClosedloopRamp(0, TIMEOUTMS);
+		rightMaster.configClosedloopRamp(0, TIMEOUTMS);
 	}
 
 	public int getLeftPosition() {
-		return leftTalon.getSelectedSensorPosition(SLOTIDX);
+		return leftMaster.getSelectedSensorPosition(SLOTIDX);
 	}
 
 	public int getRightPosition() {
-		return rightTalon.getSelectedSensorPosition(SLOTIDX);
+		return rightMaster.getSelectedSensorPosition(SLOTIDX);
 	}
 
 	public double getAvgPosition() {
-		return (-leftTalon.getSelectedSensorPosition(SLOTIDX) + rightTalon.getSelectedSensorPosition(SLOTIDX))
+		return (-leftMaster.getSelectedSensorPosition(SLOTIDX) + rightMaster.getSelectedSensorPosition(SLOTIDX))
 				/ 2.0;
 	}
 
 	public double getAvgVelocity() {
-		double speed = (-leftTalon.getSelectedSensorVelocity(SLOTIDX)
-				+ rightTalon.getSelectedSensorVelocity(SLOTIDX)) / 2;
+		double speed = (-leftMaster.getSelectedSensorVelocity(SLOTIDX)
+				+ rightMaster.getSelectedSensorVelocity(SLOTIDX)) / 2;
 
 		return speed;
 	}
@@ -292,25 +289,25 @@ public class Drive extends Subsystem implements PIDOutput {
 		SmartDashboard.putNumber("Drive/AvgVelocity", getAvgVelocity());
 		SmartDashboard.putNumber("Drive/Yaw", navX.getYaw());
 
-		SmartDashboard.putNumber("Drive/Left/Master/Position", leftTalon.getSelectedSensorPosition(SLOTIDX));
-		SmartDashboard.putNumber("Drive/Left/Master/Velocity", leftTalon.getSelectedSensorVelocity(SLOTIDX));
-		SmartDashboard.putNumber("Drive/Left/Master/Error", leftTalon.getClosedLoopError(SLOTIDX));
-		SmartDashboard.putNumber("Drive/Left/Master/Current", leftTalon.getOutputCurrent());
-		SmartDashboard.putNumber("Drive/Left/Master/Voltage", leftTalon.getMotorOutputVoltage());
+		SmartDashboard.putNumber("Drive/Left/Master/Position", leftMaster.getSelectedSensorPosition(SLOTIDX));
+		SmartDashboard.putNumber("Drive/Left/Master/Velocity", leftMaster.getSelectedSensorVelocity(SLOTIDX));
+		SmartDashboard.putNumber("Drive/Left/Master/Error", leftMaster.getClosedLoopError(SLOTIDX));
+		SmartDashboard.putNumber("Drive/Left/Master/Current", leftMaster.getOutputCurrent());
+		SmartDashboard.putNumber("Drive/Left/Master/Voltage", leftMaster.getMotorOutputVoltage());
 
-		SmartDashboard.putNumber("Drive/Right/Master/Position", rightTalon.getSelectedSensorPosition(SLOTIDX));
-		SmartDashboard.putNumber("Drive/Right/Master/Velocity", rightTalon.getSelectedSensorVelocity(SLOTIDX));
-		SmartDashboard.putNumber("Drive/Right/Master/Error", rightTalon.getClosedLoopError(SLOTIDX));
-		SmartDashboard.putNumber("Drive/Right/Master/Current", rightTalon.getOutputCurrent());
-		SmartDashboard.putNumber("Drive/Right/Master/Voltage", rightTalon.getMotorOutputVoltage());
+		SmartDashboard.putNumber("Drive/Right/Master/Position", rightMaster.getSelectedSensorPosition(SLOTIDX));
+		SmartDashboard.putNumber("Drive/Right/Master/Velocity", rightMaster.getSelectedSensorVelocity(SLOTIDX));
+		SmartDashboard.putNumber("Drive/Right/Master/Error", rightMaster.getClosedLoopError(SLOTIDX));
+		SmartDashboard.putNumber("Drive/Right/Master/Current", rightMaster.getOutputCurrent());
+		SmartDashboard.putNumber("Drive/Right/Master/Voltage", rightMaster.getMotorOutputVoltage());
 
 		for (int i = 0; i < RobotMap.driveLeftFollowers.length; i++) {
-			SmartDashboard.putNumber("Drive/Left/Follower"+i+"/Current", leftVictors[i].getOutputCurrent());
-			SmartDashboard.putNumber("Drive/Left/Follower"+i+"/Voltage", leftVictors[i].getMotorOutputVoltage());
+			SmartDashboard.putNumber("Drive/Left/Follower"+i+"/Current", leftFollower[i].getOutputCurrent());
+			SmartDashboard.putNumber("Drive/Left/Follower"+i+"/Voltage", leftFollower[i].getMotorOutputVoltage());
 		}
 		for (int i = 0; i < RobotMap.driveRightFollowers.length; i++) {
-			SmartDashboard.putNumber("Drive/Right/Follower"+i+"/Current", rightVictors[i].getOutputCurrent());
-			SmartDashboard.putNumber("Drive/Right/Follower"+i+"/Voltage", rightVictors[i].getMotorOutputVoltage());
+			SmartDashboard.putNumber("Drive/Right/Follower"+i+"/Current", rightFollower[i].getOutputCurrent());
+			SmartDashboard.putNumber("Drive/Right/Follower"+i+"/Voltage", rightFollower[i].getMotorOutputVoltage());
 		}
 	}
 
