@@ -28,7 +28,7 @@ public class DriveSplitArcade extends Command {
 		double magnitude, curve, targetHeading, error;
 
 		// below for rocket league style
-		// magnitude = InputShaping.applyPoly(Robot.oi.driver.getZ());
+		// magnitude = TJUtility.polynomial(Robot.oi.driver.getZ(), POLY_A, POLY_B, POLY_C, DEADZONE);
 		magnitude = TJUtility.polynomial(Robot.oi.driver.getLeftStickY(), POLY_A, POLY_B, POLY_C, DEADZONE);
 		curve = TJUtility.polynomial(Robot.oi.driver.getRightStickX(), POLY_A, POLY_B, POLY_C, DEADZONE);
 
