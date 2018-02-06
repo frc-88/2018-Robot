@@ -63,10 +63,9 @@ public class Drive extends Subsystem implements PIDOutput {
 	private TalonSRX[] rightFollower;
 
 	private int count;
-	private double heading;
-	private boolean stabilize;
 
-	public PIDController rotateController, headingController;
+	public PIDController rotateController;
+	private PIDController headingController;
 	private PIDHeadingCorrection headingCorrection;
 
 	public Drive() {
@@ -89,6 +88,9 @@ public class Drive extends Subsystem implements PIDOutput {
 		headingController.setAbsoluteTolerance(HEADING_TOLERANCE);
 		headingController.setContinuous(true);
 
+		headingController.reset();
+		headingController.disable();
+		
 		// init motor controllers
 		leftMaster = new TalonSRX(RobotMap.driveLeftMaster);
 		rightMaster = new TalonSRX(RobotMap.driveRightMaster);
@@ -144,7 +146,7 @@ public class Drive extends Subsystem implements PIDOutput {
 		resetEncoders();
 		navX.zeroYaw();
 		count = 0;
-		stabilize = false;
+
 	}
 
 	public void wheelSpeed(double left, double right) {
@@ -208,16 +210,14 @@ public class Drive extends Subsystem implements PIDOutput {
 		SmartDashboard.putNumber("Drive/Curve", curve);
 		SmartDashboard.putNumber("Drive/Magnitude", outputMagnitude);
 		SmartDashboard.putNumber("Drive/Count", count);
-		SmartDashboard.putBoolean("Drive/Stabilize", stabilize);
+		SmartDashboard.putBoolean("Drive/Stabilize", headingController.isEnabled());
 
 		if (outputMagnitude == 0) {
-			stabilize = false;
 			headingController.disable();
 			count = 0;
-		} else if (stabilize && curve == 0) {
+		} else if (headingController.isEnabled() && curve == 0) {
 			curve = headingCorrection.getHeadingCorrection();
-		} else if (stabilize) {
-			stabilize = false;
+		} else if (headingController.isEnabled()) {
 			headingController.disable();
 			count = 0;
 		}
@@ -226,7 +226,7 @@ public class Drive extends Subsystem implements PIDOutput {
 			curve = curve * Math.signum(outputMagnitude);
 		}
 
-		if (Math.abs(outputMagnitude) < 0.10) {
+		if ((outputMagnitude == 0) && (Math.abs(getAvgVelocity()) < 0.1 * MAX_SPEED)) {
 			leftOutput = curve * 0.5;
 			rightOutput = -curve * 0.5;
 		} else if (curve < 0) {
@@ -247,12 +247,10 @@ public class Drive extends Subsystem implements PIDOutput {
 			rightOutput = outputMagnitude / ratio;
 		} else {
 			if (count++ > 4) {
-				stabilize = true;
 				headingController.reset();
 				headingController.enable();
 				headingController.setSetpoint(getYaw());
 			}
-
 			leftOutput = outputMagnitude;
 			rightOutput = outputMagnitude;
 		}
