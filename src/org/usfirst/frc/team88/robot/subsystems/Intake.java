@@ -7,6 +7,8 @@ import org.usfirst.frc.team88.robot.util.SharpIR;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
+import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -28,19 +30,22 @@ public class Intake extends Subsystem {
 	private TalonSRX leftSide, rightSide;
 	private SharpIR leftDistanceSensor, rightDistanceSensor;
 
+	//Pneumatics
+	DoubleSolenoid  intakeUpDown;
+
 	public Intake() {
 		leftSide = new TalonSRX(RobotMap.intakeLeft);
 		rightSide = new TalonSRX(RobotMap.intakeRight);
 
 		// TODO set up current limiting
-		
+
 		leftDistanceSensor = new SharpIR(RobotMap.intakeLeftIR);
 		rightDistanceSensor = new SharpIR(RobotMap.intakeRightIR);
 	}
 
 	public void intakeWheelSpeed(double speed) {
-			rightSide.set(ControlMode.PercentOutput, speed * MAXSPEED, TIMEOUT);
-			leftSide.set(ControlMode.PercentOutput, speed * MAXSPEED, TIMEOUT);
+		rightSide.set(ControlMode.PercentOutput, speed * MAXSPEED, TIMEOUT);
+		leftSide.set(ControlMode.PercentOutput, speed * MAXSPEED, TIMEOUT);
 	}
 
 	public double getLeftDistance() {
@@ -50,6 +55,25 @@ public class Intake extends Subsystem {
 	public double getRightDistance() {
 		return rightDistanceSensor.getDistance();
 	}
+
+	private void intakePneumatics(){
+
+		intakeUpDown = new DoubleSolenoid(RobotMap.intakeSolenoidIn, RobotMap.intakeSolenoidOut);
+		intakeUpDown.set(Value.kOff);
+
+
+	}
+	public void intakeCradleUp(){
+		intakeUpDown.set(Value.kForward);
+
+	}
+
+	public void intakeCradleDown(){
+		intakeUpDown.set(Value.kReverse);
+
+	}
+
+
 
 	public void updateDashboard() {
 		SmartDashboard.putNumber("Intake/Left/Sensor Distance", leftDistanceSensor.getDistance());
@@ -61,6 +85,8 @@ public class Intake extends Subsystem {
 		SmartDashboard.putNumber("Intake/Left/Motor Voltage", leftSide.getMotorOutputVoltage());
 		SmartDashboard.putNumber("Intake/Right/Motor Current", rightSide.getOutputCurrent());
 		SmartDashboard.putNumber("Intake/Right/Motor Voltage", rightSide.getMotorOutputVoltage());
+		
+		SmartDashboard.putBoolean("Intake/CradleUp", intakeUpDown.get()== Value.kForward);
 	}
 
 	public void initDefaultCommand() {

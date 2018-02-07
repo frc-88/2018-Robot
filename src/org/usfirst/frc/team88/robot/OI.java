@@ -7,6 +7,8 @@
 
 package org.usfirst.frc.team88.robot;
 
+import org.usfirst.frc.team88.robot.commands.intakePneumaticsDown;
+import org.usfirst.frc.team88.robot.commands.intakePneumaticsUp;
 import org.usfirst.frc.team88.robot.util.TJController;
 
 /**
@@ -22,7 +24,10 @@ public class OI {
 	// DriveSplitArcade command to provide field oriented options. Commands
 	// should not be assigned to them.
 	
-	
+	public OI() {
+		operator.buttonRightBumper.whenPressed(new intakePneumaticsUp());
+		operator.buttonLeftBumper.whenPressed(new intakePneumaticsDown());
+	}
 	
 	
 	//// CREATING BUTTONS

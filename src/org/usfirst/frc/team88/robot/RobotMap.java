@@ -29,6 +29,10 @@ public class RobotMap {
 	public static final int intakeRight = 6;
 	public static final int intakeLeftIR = 0;
 	public static final int intakeRightIR = 1;
+		//Pneumatics
+		public static int intakeSolenoidIn;
+		public static int intakeSolenoidOut;
+	
 
 	// Other
 
