@@ -3,6 +3,7 @@ package org.usfirst.frc.team88.robot.subsystems;
 import org.usfirst.frc.team88.robot.RobotMap;
 import org.usfirst.frc.team88.robot.commands.DriveSplitArcade;
 import org.usfirst.frc.team88.robot.commands.DriveTank;
+import org.usfirst.frc.team88.robot.util.PIDHeadingCorrection;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
@@ -49,7 +50,11 @@ public class Drive extends Subsystem implements PIDOutput {
 	private final static double ROTATE_TOLERANCE = 3.0;
 	private final static double ROTATE_MAX = 0.15;
 	private final static double ROTATE_MIN = 0.05;
-
+	private final static double HEADING_P = 0.008;
+	private final static double HEADING_I = 0.0;
+	private final static double HEADING_D = 0.0;
+	private final static double HEADING_F = 0.0;
+	private final static double HEADING_TOLERANCE = 0.5;
 	private AHRS navX;
 
 	private TalonSRX leftMaster;
@@ -58,10 +63,10 @@ public class Drive extends Subsystem implements PIDOutput {
 	private TalonSRX[] rightFollower;
 
 	private int count;
-	private double heading;
-	private boolean stabilize;
 
 	public PIDController rotateController;
+	private PIDController headingController;
+	private PIDHeadingCorrection headingCorrection;
 
 	public Drive() {
 		// init navX
@@ -74,6 +79,18 @@ public class Drive extends Subsystem implements PIDOutput {
 		rotateController.setAbsoluteTolerance(ROTATE_TOLERANCE);
 		rotateController.setContinuous(true);
 
+		// init headingController
+		headingCorrection = new PIDHeadingCorrection();
+		
+		headingController = new PIDController(HEADING_P, HEADING_I, HEADING_D, HEADING_F, navX, headingCorrection);
+		headingController.setInputRange(-180.0f, 180.0f);
+		headingController.setOutputRange(-1.0, 1.0);
+		headingController.setAbsoluteTolerance(HEADING_TOLERANCE);
+		headingController.setContinuous(true);
+
+		headingController.reset();
+		headingController.disable();
+		
 		// init motor controllers
 		leftMaster = new TalonSRX(RobotMap.driveLeftMaster);
 		rightMaster = new TalonSRX(RobotMap.driveRightMaster);
@@ -129,7 +146,7 @@ public class Drive extends Subsystem implements PIDOutput {
 		resetEncoders();
 		navX.zeroYaw();
 		count = 0;
-		stabilize = false;
+
 	}
 
 	public void wheelSpeed(double left, double right) {
@@ -193,15 +210,15 @@ public class Drive extends Subsystem implements PIDOutput {
 		SmartDashboard.putNumber("Drive/Curve", curve);
 		SmartDashboard.putNumber("Drive/Magnitude", outputMagnitude);
 		SmartDashboard.putNumber("Drive/Count", count);
-		SmartDashboard.putBoolean("Drive/Stabilize", stabilize);
+		SmartDashboard.putBoolean("Drive/Stabilize", headingController.isEnabled());
 
 		if (outputMagnitude == 0) {
-			stabilize = false;
+			headingController.disable();
 			count = 0;
-		} else if (stabilize && curve == 0) {
-			curve = (heading - getYaw()) * 0.008;
-		} else if (stabilize) {
-			stabilize = false;
+		} else if (headingController.isEnabled() && curve == 0) {
+			curve = headingCorrection.getHeadingCorrection();
+		} else if (headingController.isEnabled()) {
+			headingController.disable();
 			count = 0;
 		}
 
@@ -209,7 +226,7 @@ public class Drive extends Subsystem implements PIDOutput {
 			curve = curve * Math.signum(outputMagnitude);
 		}
 
-		if (Math.abs(outputMagnitude) < 0.10) {
+		if ((outputMagnitude == 0) && (Math.abs(getAvgVelocity()) < 0.1 * MAX_SPEED)) {
 			leftOutput = curve * 0.5;
 			rightOutput = -curve * 0.5;
 		} else if (curve < 0) {
@@ -230,10 +247,10 @@ public class Drive extends Subsystem implements PIDOutput {
 			rightOutput = outputMagnitude / ratio;
 		} else {
 			if (count++ > 4) {
-				stabilize = true;
-				heading = getYaw();
+				headingController.reset();
+				headingController.enable();
+				headingController.setSetpoint(getYaw());
 			}
-
 			leftOutput = outputMagnitude;
 			rightOutput = outputMagnitude;
 		}
