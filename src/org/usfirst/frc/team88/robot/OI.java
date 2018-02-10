@@ -7,6 +7,11 @@
 
 package org.usfirst.frc.team88.robot;
 
+import org.usfirst.frc.team88.robot.commands.LiftGotoBottom;
+import org.usfirst.frc.team88.robot.commands.LiftGotoHighScale;
+import org.usfirst.frc.team88.robot.commands.LiftGotoLowScale;
+import org.usfirst.frc.team88.robot.commands.LiftGotoMidScale;
+import org.usfirst.frc.team88.robot.commands.LiftGotoSwitch;
 import org.usfirst.frc.team88.robot.commands.intakePneumaticsDown;
 import org.usfirst.frc.team88.robot.commands.intakePneumaticsUp;
 import org.usfirst.frc.team88.robot.util.TJController;
@@ -27,6 +32,18 @@ public class OI {
 	public OI() {
 		operator.buttonRightBumper.whenPressed(new intakePneumaticsUp());
 		operator.buttonLeftBumper.whenPressed(new intakePneumaticsDown());
+		
+		operator.buttonB.cancelWhenPressed(new LiftGotoSwitch());
+		operator.buttonB.whenReleased(new LiftGotoBottom());
+		
+		operator.buttonA.whenPressed(new LiftGotoLowScale());
+		operator.buttonA.whenReleased(new LiftGotoBottom());
+		
+		operator.buttonX.whenPressed(new LiftGotoMidScale());
+		operator.buttonX.whenReleased(new LiftGotoBottom());
+		
+		operator.buttonY.whenPressed(new LiftGotoHighScale());
+		operator.buttonY.whenReleased(new LiftGotoBottom());
 	}
 	
 	
