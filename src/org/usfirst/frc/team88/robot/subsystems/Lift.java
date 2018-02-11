@@ -13,8 +13,11 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
- * Rookies
- * TODO Write haiku
+ * <pre>
+ * high up in the air
+ * placing cubes like we don't care
+ * scale tips scoring points
+ *  * </pre>
  */
 public class Lift extends Subsystem {
 	private static final int SLOTIDX = 0;
@@ -28,15 +31,21 @@ public class Lift extends Subsystem {
 	private final static double D = 0.0;
 	private final static double F = 1023 / MAX_SPEED;
 	
+	public final static int POS_BOTTOM = 0;
+	public final static int POS_SWITCH = 0;
+	public final static int POS_LOW_SCALE = 0;
+	public final static int POS_MID_SCALE = 0;
+	public final static int POS_HI_SCALE = 0;
+		
 	private static final int FORWARDLIMIT = 1023;
 	private static final int REVERSELIMIT = 0;
 	// TODO Add constants for lift positions
 	private TalonSRX master;
-	private VictorSPX follower;
+	private TalonSRX follower;
 
 	public Lift() {
 		master = new TalonSRX(RobotMap.liftMaster);
-		follower = new VictorSPX(RobotMap.liftFollower);
+		follower = new TalonSRX(RobotMap.liftFollower);
 
 		/* analog signal with no wrap-around (0-3.3V) */
 		master.configSelectedFeedbackSensor(FeedbackDevice.Analog, SLOTIDX, TIMEOUTMS);
@@ -75,7 +84,7 @@ public class Lift extends Subsystem {
 		// http://www.ctr-electronics.com/downloads/api/java/html/com/ctre/phoenix/motorcontrol/can/BaseMotorController.html#configMotionAcceleration-int-int-
 		// https://github.com/CrossTheRoadElec/Phoenix-Examples-Languages/tree/master/Java/MotionMagic
 		
-		follower.set(ControlMode.Follower, RobotMap.liftMaster);
+		follower.follow(master);
 
 	}
 
