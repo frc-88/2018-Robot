@@ -36,7 +36,9 @@ public class Lift extends Subsystem {
 	public final static int POS_LOW_SCALE = 0;
 	public final static int POS_MID_SCALE = 0;
 	public final static int POS_HI_SCALE = 0;
-		
+	public final static int DISTANCE_THRESHOLD = 50;
+	
+	
 	private static final int FORWARDLIMIT = 1023;
 	private static final int REVERSELIMIT = 0;
 	// TODO Add constants for lift positions
@@ -110,5 +112,9 @@ public class Lift extends Subsystem {
 	public void initDefaultCommand() {
 		// Set the default command for a subsystem here.
 		// setDefaultCommand(new MySpecialCommand());
+	}
+	
+	public boolean onTarget(int target) {
+		return Math.abs(master.getSelectedSensorPosition(SLOTIDX) - target) > DISTANCE_THRESHOLD;
 	}
 }

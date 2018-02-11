@@ -14,6 +14,7 @@ public class IntakeControl extends Command {
 	private static final double POLY_A = 0.35;
 	private static final double POLY_B = 0.5;
 	private static final double POLY_C = 0.15;
+	private static final int CUBEIN = 4;
 	double maxSpeed;
 	
 	
@@ -30,12 +31,16 @@ public class IntakeControl extends Command {
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
     	
-    	maxSpeed = TJUtility.polynomial(Robot.oi.operator.getZ(), POLY_A, POLY_B, POLY_C, DEADZONE); 
-    	Robot.intake.intakeWheelSpeed(maxSpeed);
-    	Robot.intake.cubePullIn(maxSpeed);
+    	maxSpeed = TJUtility.polynomial(-Robot.oi.operator.getZ(), POLY_A, POLY_B, POLY_C, DEADZONE); 
     	
-    	if(Robot.intake.getLeftDistance() < 2 && Robot.intake.getRightDistance() < 2){
-    		Robot.oi.operator.rumble(3);
+    	if (maxSpeed > 0) {
+    		Robot.intake.intakeWheelSpeed(maxSpeed);
+    	} else {
+    		Robot.intake.cubePullIn(maxSpeed);
+    	}
+    	
+    	if(Robot.intake.getLeftDistance() < CUBEIN  && Robot.intake.getRightDistance() <  CUBEIN){
+    		Robot.oi.operator.rumble(1);
     	}
     }
 

@@ -15,18 +15,18 @@ package org.usfirst.frc.team88.robot;
  */
 public class RobotMap {
 	// Drive
-	public static final int driveLeftMaster = 14;
-	public static final int[] driveLeftFollowers = { 11, 12, 8 };
-	public static final int driveRightMaster = 13;
-	public static final int[] driveRightFollowers = { 9, 15, 10 };
+	public static final int driveLeftMaster = 11;
+	public static final int[] driveLeftFollowers = { 8, 9, 10 };
+	public static final int driveRightMaster = 6;
+	public static final int[] driveRightFollowers = { 4, 5, 7};
 
 	// Lift
-	public static final int liftMaster = 4;
-	public static final int liftFollower = 6;
+	public static final int liftMaster = 13;
+	public static final int liftFollower = 12;
 
 	// Intake
-	public static final int intakeLeft = 5;
-	public static final int intakeRight = 6;
+	public static final int intakeLeft = 2;
+	public static final int intakeRight = 3;
 	public static final int intakeLeftIR = 0;
 	public static final int intakeRightIR = 1;
 		//Pneumatics

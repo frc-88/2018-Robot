@@ -85,13 +85,11 @@ public class Intake extends Subsystem {
 	//Pulls the cube in if Sideways
 	public void cubePullIn(double maxSpeed){
 		
-		double rightPullSpeed = 0;
-		double leftPullSpeed = 0;
+		double rightPullSpeed = maxSpeed;
+		double leftPullSpeed = maxSpeed;
 		final double MAX_DIFF = 5;
-		double leftDistance = 0;
-		double rightDistance = 0;
-		leftDistance = leftDistanceSensor.getDistance();
-		rightDistance =  rightDistanceSensor.getDistance();
+		double leftDistance = leftDistanceSensor.getDistance();
+		double rightDistance =  rightDistanceSensor.getDistance();
 		double difference = leftDistance - rightDistance;
 		double adjustment = 1 - ( 0.50 * Math.abs(difference)/MAX_DIFF);
 		double slowSide = adjustment * maxSpeed;
@@ -100,15 +98,11 @@ public class Intake extends Subsystem {
 		//Right Side Closer
 		if( leftDistance > rightDistance ){
 			rightPullSpeed = slowSide;
-			leftPullSpeed = maxSpeed;
-			
 		}
 
 		// Left Side Closer
 		if(rightDistance > leftDistance ){
 			leftPullSpeed = slowSide;
-			rightPullSpeed = maxSpeed;
-			
 		}
 
 		rightSide.set(ControlMode.PercentOutput,rightPullSpeed, TIMEOUT);
