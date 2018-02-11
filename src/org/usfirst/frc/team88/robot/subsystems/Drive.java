@@ -30,7 +30,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Drive extends Subsystem implements PIDOutput {
 
 	private final static boolean CAN_CLOSED_LOOP = false;
-	private final static boolean SPLIT_ARCADE = true;
+	private final static boolean SPLIT_ARCADE = false;
 
 	private final static int SLOTIDX = 0;
 	private final static int TIMEOUTMS = 0;
@@ -121,7 +121,7 @@ public class Drive extends Subsystem implements PIDOutput {
 
 		for (int i = 0; i < RobotMap.driveLeftFollowers.length; i++) {
 			leftFollower[i].setNeutralMode(NeutralMode.Brake);
-			leftFollower[i].set(ControlMode.Follower, RobotMap.driveLeftMaster);
+			leftFollower[i].follow(leftMaster);
 		}
 
 		rightMaster.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, SLOTIDX, TIMEOUTMS);
@@ -140,7 +140,7 @@ public class Drive extends Subsystem implements PIDOutput {
 
 		for (int i = 0; i < RobotMap.driveRightFollowers.length; i++) {
 			rightFollower[i].setNeutralMode(NeutralMode.Brake);
-			rightFollower[i].set(ControlMode.Follower, RobotMap.driveRightFollowers[0]);
+			rightFollower[i].follow(rightMaster);
 		}
 
 		resetEncoders();

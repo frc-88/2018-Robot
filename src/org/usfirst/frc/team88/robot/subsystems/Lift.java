@@ -1,6 +1,7 @@
 package org.usfirst.frc.team88.robot.subsystems;
 
 import org.usfirst.frc.team88.robot.RobotMap;
+import org.usfirst.frc.team88.robot.commands.LiftMove;
 
 import com.ctre.phoenix.ParamEnum;
 import com.ctre.phoenix.motorcontrol.ControlMode;
@@ -87,6 +88,7 @@ public class Lift extends Subsystem {
 		// https://github.com/CrossTheRoadElec/Phoenix-Examples-Languages/tree/master/Java/MotionMagic
 		
 		follower.follow(master);
+		follower.setInverted(true);
 
 	}
 
@@ -111,7 +113,7 @@ public class Lift extends Subsystem {
 	
 	public void initDefaultCommand() {
 		// Set the default command for a subsystem here.
-		// setDefaultCommand(new MySpecialCommand());
+		setDefaultCommand(new LiftMove());
 	}
 	
 	public boolean onTarget(int target) {

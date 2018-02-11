@@ -32,16 +32,16 @@ public class IntakeControl extends Command {
     protected void execute() {
     	
     	maxSpeed = TJUtility.polynomial(-Robot.oi.operator.getZ(), POLY_A, POLY_B, POLY_C, DEADZONE); 
-    	
-    	if (maxSpeed > 0) {
-    		Robot.intake.intakeWheelSpeed(maxSpeed);
-    	} else {
-    		Robot.intake.cubePullIn(maxSpeed);
-    	}
-    	
-    	if(Robot.intake.getLeftDistance() < CUBEIN  && Robot.intake.getRightDistance() <  CUBEIN){
-    		Robot.oi.operator.rumble(1);
-    	}
+    	Robot.intake.intakeWheelSpeed(maxSpeed);
+//    	if (maxSpeed > 0) {
+//    		Robot.intake.intakeWheelSpeed(maxSpeed);
+//    	} else {
+//    		Robot.intake.cubePullIn(maxSpeed);
+//    	}
+//    	
+//    	if(Robot.intake.getLeftDistance() < CUBEIN  && Robot.intake.getRightDistance() <  CUBEIN){
+//    		Robot.oi.operator.rumble(1);
+//    	}
     }
 
     // Make this return true when this Command no longer needs to run execute()
