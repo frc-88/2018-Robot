@@ -1,6 +1,5 @@
 package org.usfirst.frc.team88.robot.subsystems;
 
-import org.usfirst.frc.team88.robot.Robot;
 import org.usfirst.frc.team88.robot.RobotMap;
 import org.usfirst.frc.team88.robot.commands.IntakeControl;
 import org.usfirst.frc.team88.robot.util.SharpIR;
@@ -34,82 +33,74 @@ public class Intake extends Subsystem {
 	private static final double MAXSPEED = .75;
 	private TalonSRX leftSide, rightSide;
 	private SharpIR leftDistanceSensor, rightDistanceSensor;
-	//Pneumatics
-	DoubleSolenoid  intakeUpDown;
+	// pneumatics
+	DoubleSolenoid upDown;
 
 	public Intake() {
 		leftSide = new TalonSRX(RobotMap.intakeLeft);
 		rightSide = new TalonSRX(RobotMap.intakeRight);
 
-		// TODO set up current limiting
-
 		leftDistanceSensor = new SharpIR(RobotMap.intakeLeftIR);
 		rightDistanceSensor = new SharpIR(RobotMap.intakeRightIR);
+
+//		upDown = new DoubleSolenoid(RobotMap.intakeSolenoidIn, RobotMap.intakeSolenoidOut);
+//		upDown.set(Value.kOff);
 	}
 
-	//Sets intake wheel speed
+	// Sets intake wheel speed
 	public void intakeWheelSpeed(double speed) {
 		rightSide.set(ControlMode.PercentOutput, speed * MAXSPEED, TIMEOUT);
 		leftSide.set(ControlMode.PercentOutput, -speed * MAXSPEED, TIMEOUT);
 	}
 
-
-	//Gets the cube distance from left sensor
+	// Gets the cube distance from left sensor
 	public double getLeftDistance() {
 		return leftDistanceSensor.getDistance();
 	}
 
-	//Gets the cube distance from right sensor
+	// Gets the cube distance from right sensor
 	public double getRightDistance() {
 		return rightDistanceSensor.getDistance();
 	}
 
-
-	private void intakePneumatics(){
-		intakeUpDown = new DoubleSolenoid(RobotMap.intakeSolenoidIn, RobotMap.intakeSolenoidOut);
-		intakeUpDown.set(Value.kOff);
-	}
-
-	//Pneumaticly puts cradle up
-	public void intakeCradleUp(){
-		intakeUpDown.set(Value.kForward);
+	// Pneumaticly puts cradle up
+	public void intakeCradleUp() {
+		upDown.set(Value.kForward);
 
 	}
 
-	//Pneumaticly puts cradle down
-	public void intakeCradleDown(){
-		intakeUpDown.set(Value.kReverse);
+	// Pneumaticly puts cradle down
+	public void intakeCradleDown() {
+		upDown.set(Value.kReverse);
 
 	}
 
-	//Pulls the cube in if Sideways
-	public void cubePullIn(double maxSpeed){
-		
+	// Pulls the cube in if Sideways
+	public void cubePullIn(double maxSpeed) {
+
 		double rightPullSpeed = maxSpeed;
 		double leftPullSpeed = maxSpeed;
 		final double MAX_DIFF = 5;
 		double leftDistance = leftDistanceSensor.getDistance();
-		double rightDistance =  rightDistanceSensor.getDistance();
+		double rightDistance = rightDistanceSensor.getDistance();
 		double difference = leftDistance - rightDistance;
-		double adjustment = 1 - ( 0.50 * Math.abs(difference)/MAX_DIFF);
+		double adjustment = 1 - (0.50 * Math.abs(difference) / MAX_DIFF);
 		double slowSide = adjustment * maxSpeed;
-		
-		
-		//Right Side Closer
-		if( leftDistance > rightDistance ){
+
+		// Right Side Closer
+		if (leftDistance > rightDistance) {
 			rightPullSpeed = slowSide;
 		}
 
 		// Left Side Closer
-		if(rightDistance > leftDistance ){
+		if (rightDistance > leftDistance) {
 			leftPullSpeed = slowSide;
 		}
 
-		rightSide.set(ControlMode.PercentOutput,rightPullSpeed, TIMEOUT);
-		leftSide.set(ControlMode.PercentOutput,leftPullSpeed, TIMEOUT);
-		
-	}
+		rightSide.set(ControlMode.PercentOutput, rightPullSpeed, TIMEOUT);
+		leftSide.set(ControlMode.PercentOutput, leftPullSpeed, TIMEOUT);
 
+	}
 
 	public void updateDashboard() {
 		SmartDashboard.putNumber("Intake/Left/Sensor Distance", leftDistanceSensor.getDistance());
@@ -122,7 +113,7 @@ public class Intake extends Subsystem {
 		SmartDashboard.putNumber("Intake/Right/Motor Current", rightSide.getOutputCurrent());
 		SmartDashboard.putNumber("Intake/Right/Motor Voltage", rightSide.getMotorOutputVoltage());
 
-		//SmartDashboard.putBoolean("Intake/CradleUp", intakeUpDown.get()== Value.kForward);
+//		 SmartDashboard.putBoolean("Intake/CradleUp", intakeUpDown.get() == Value.kForward);
 	}
 
 	public void initDefaultCommand() {

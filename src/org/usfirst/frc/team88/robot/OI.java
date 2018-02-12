@@ -12,8 +12,8 @@ import org.usfirst.frc.team88.robot.commands.LiftGotoHighScale;
 import org.usfirst.frc.team88.robot.commands.LiftGotoLowScale;
 import org.usfirst.frc.team88.robot.commands.LiftGotoMidScale;
 import org.usfirst.frc.team88.robot.commands.LiftGotoSwitch;
-import org.usfirst.frc.team88.robot.commands.intakePneumaticsDown;
-import org.usfirst.frc.team88.robot.commands.intakePneumaticsUp;
+import org.usfirst.frc.team88.robot.commands.IntakePneumaticsDown;
+import org.usfirst.frc.team88.robot.commands.IntakePneumaticsUp;
 import org.usfirst.frc.team88.robot.util.TJController;
 
 /**
@@ -30,8 +30,8 @@ public class OI {
 	// should not be assigned to them.
 	
 	public OI() {
-		operator.buttonRightBumper.whenPressed(new intakePneumaticsUp());
-		operator.buttonLeftBumper.whenPressed(new intakePneumaticsDown());
+//		operator.buttonRightBumper.whenPressed(new IntakePneumaticsUp());
+//		operator.buttonLeftBumper.whenPressed(new IntakePneumaticsDown());
 		
 		operator.buttonB.whenPressed(new LiftGotoSwitch());
 		operator.buttonB.whenReleased(new LiftGotoBottom());

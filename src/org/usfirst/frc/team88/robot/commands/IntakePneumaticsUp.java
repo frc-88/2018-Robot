@@ -7,9 +7,9 @@ import edu.wpi.first.wpilibj.command.InstantCommand;
 /**
  *
  */
-public class intakePneumaticsUp extends InstantCommand {
+public class IntakePneumaticsUp extends InstantCommand {
 
-    public intakePneumaticsUp() {
+    public IntakePneumaticsUp() {
         super();
        
         requires(Robot.intake);
