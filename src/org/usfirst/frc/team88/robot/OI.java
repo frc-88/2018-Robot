@@ -33,7 +33,7 @@ public class OI {
 		operator.buttonRightBumper.whenPressed(new intakePneumaticsUp());
 		operator.buttonLeftBumper.whenPressed(new intakePneumaticsDown());
 		
-		operator.buttonB.cancelWhenPressed(new LiftGotoSwitch());
+		operator.buttonB.whenPressed(new LiftGotoSwitch());
 		operator.buttonB.whenReleased(new LiftGotoBottom());
 		
 		operator.buttonA.whenPressed(new LiftGotoLowScale());
