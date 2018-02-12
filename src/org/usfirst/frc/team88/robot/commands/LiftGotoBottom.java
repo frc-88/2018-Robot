@@ -1,6 +1,7 @@
 package org.usfirst.frc.team88.robot.commands;
 
 import org.usfirst.frc.team88.robot.Robot;
+import org.usfirst.frc.team88.robot.subsystems.Lift;
 
 import edu.wpi.first.wpilibj.command.Command;
 
@@ -21,12 +22,12 @@ public class LiftGotoBottom extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	Robot.lift.setPosition(Robot.lift.POS_BOTTOM);
+    	Robot.lift.setPosition(Lift.POS_BOTTOM);
     }
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return false;
+       	return Robot.lift.onTarget(Lift.POS_BOTTOM);
     }
 
     // Called once after isFinished returns true

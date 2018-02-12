@@ -18,7 +18,7 @@ public class IntakePneumaticsUp extends InstantCommand {
     // Called once when the command executes
     protected void initialize() {
     	
-    	Robot.intake.intakeCradleUp();
+    	Robot.intake.cradleUp();
     	
     }
 

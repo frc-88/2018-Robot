@@ -27,7 +27,7 @@ public class IntakeControl extends Command {
 	// Called repeatedly when this Command is scheduled to run
 	protected void execute() {
 
-		Robot.intake.intakeWheelSpeed(TJUtility.polynomial(-Robot.oi.operator.getZ(), POLY_A, POLY_B, POLY_C, DEADZONE));
+		Robot.intake.wheelSpeed(TJUtility.polynomial(-Robot.oi.operator.getZ(), POLY_A, POLY_B, POLY_C, DEADZONE));
 		
 		if (Robot.intake.haveCube()) {
 			Robot.oi.operator.rumble(1);
@@ -46,6 +46,6 @@ public class IntakeControl extends Command {
 	// Called when another command which requires one or more of the same
 	// subsystems is scheduled to run
 	protected void interrupted() {
-		Robot.intake.intakeWheelSpeed(0.0);
+		Robot.intake.wheelSpeed(0.0);
 	}
 }

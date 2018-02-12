@@ -55,7 +55,7 @@ public class Intake extends Subsystem {
 
 	// Sets intake wheel speed
 	@SuppressWarnings("unused")
-	public void intakeWheelSpeed(double speed) {
+	public void wheelSpeed(double speed) {
 		double leftSpeed = speed * MAX_SPEED;
 		double rightSpeed = speed * MAX_SPEED;
 		double leftDistance = leftDistanceSensor.getDistance();
@@ -86,22 +86,22 @@ public class Intake extends Subsystem {
 	}
 
 	// Gets the cube distance from left sensor
-	public double getLeftDistance() {
+	private double getLeftDistance() {
 		return leftDistanceSensor.getDistance();
 	}
 
 	// Gets the cube distance from right sensor
-	public double getRightDistance() {
+	private double getRightDistance() {
 		return rightDistanceSensor.getDistance();
 	}
 
 	// Pneumaticly puts cradle up
-	public void intakeCradleUp() {
+	public void cradleUp() {
 		upDown.set(Value.kForward);
 	}
 
 	// Pneumaticly puts cradle down
-	public void intakeCradleDown() {
+	public void cradleDown() {
 		upDown.set(Value.kReverse);
 	}
 
@@ -116,10 +116,10 @@ public class Intake extends Subsystem {
 		SmartDashboard.putNumber("Intake/Right/Motor Current", rightSide.getOutputCurrent());
 		SmartDashboard.putNumber("Intake/Right/Motor Voltage", rightSide.getMotorOutputVoltage());
 
-		// SmartDashboard.putBoolean("Intake/CradleUp", intakeUpDown.get() ==
+		// SmartDashboard.putBoolean("Intake/Cradle Up?", intakeUpDown.get() ==
 		// Value.kForward);
 
-		SmartDashboard.putBoolean("Intake/Have Cube", haveCube());
+		SmartDashboard.putBoolean("Intake/Have Cube?", haveCube());
 	}
 
 	public void initDefaultCommand() {
