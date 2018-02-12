@@ -21,8 +21,8 @@ import org.usfirst.frc.team88.robot.util.TJController;
  * interface to the commands and command groups that allow control of the robot.
  */
 public class OI {
-	public TJController driver;
-	public TJController operator;
+	public final TJController driver;
+	public final TJController operator;
 
 	public OI() {
 		driver = new TJController(0);
