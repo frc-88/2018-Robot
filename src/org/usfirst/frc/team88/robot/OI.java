@@ -21,15 +21,18 @@ import org.usfirst.frc.team88.robot.util.TJController;
  * interface to the commands and command groups that allow control of the robot.
  */
 public class OI {
-	public TJController driver = new TJController(0);
-	public TJController operator = new TJController(1);
+	public TJController driver;
+	public TJController operator;
 
-	// !!! DO NOT ADD COMMANDS TO DRIVER BUTTONS !!!
-	// The A, B, X, and Y buttons on the driver controlled are used in the
-	// DriveSplitArcade command to provide field oriented options. Commands
-	// should not be assigned to them.
-	
 	public OI() {
+		driver = new TJController(0);
+		operator = new TJController(1);
+
+		// !!! DO NOT ADD COMMANDS TO DRIVER BUTTONS !!!
+		// The A, B, X, and Y buttons on the driver controlled are used in the
+		// DriveSplitArcade command to provide field oriented options. Commands
+		// should not be assigned to them.
+		
 //		operator.buttonRightBumper.whenPressed(new IntakePneumaticsUp());
 //		operator.buttonLeftBumper.whenPressed(new IntakePneumaticsDown());
 		
