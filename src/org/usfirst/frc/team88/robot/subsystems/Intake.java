@@ -50,7 +50,7 @@ public class Intake extends Subsystem {
 	//Sets intake wheel speed
 	public void intakeWheelSpeed(double speed) {
 		rightSide.set(ControlMode.PercentOutput, speed * MAXSPEED, TIMEOUT);
-		leftSide.set(ControlMode.PercentOutput, speed * MAXSPEED, TIMEOUT);
+		leftSide.set(ControlMode.PercentOutput, -speed * MAXSPEED, TIMEOUT);
 	}
 
 
@@ -122,7 +122,7 @@ public class Intake extends Subsystem {
 		SmartDashboard.putNumber("Intake/Right/Motor Current", rightSide.getOutputCurrent());
 		SmartDashboard.putNumber("Intake/Right/Motor Voltage", rightSide.getMotorOutputVoltage());
 
-		SmartDashboard.putBoolean("Intake/CradleUp", intakeUpDown.get()== Value.kForward);
+		//SmartDashboard.putBoolean("Intake/CradleUp", intakeUpDown.get()== Value.kForward);
 	}
 
 	public void initDefaultCommand() {

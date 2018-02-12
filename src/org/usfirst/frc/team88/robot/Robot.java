@@ -49,6 +49,7 @@ public class Robot extends TimedRobot {
 		lift = new Lift();
 		drive = new Drive();
 		
+		SmartDashboard.putData("Drive", drive);
 
 		oi = new OI();
 
