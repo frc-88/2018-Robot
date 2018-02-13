@@ -34,14 +34,14 @@ public class Lift extends Subsystem {
 	private final static double D = 0.0;
 	private final static double F = 1023 / MAX_SPEED;
 
-	public final static int POS_BOTTOM = 0;
-	public final static int POS_SWITCH = 0;
-	public final static int POS_LOW_SCALE = 0;
-	public final static int POS_MID_SCALE = 0;
-	public final static int POS_HI_SCALE = 0;
-	public final static int DISTANCE_THRESHOLD = 50;
-	private static final int FORWARDLIMIT = 1023;
-	private static final int REVERSELIMIT = 0;
+	public final static int POS_BOTTOM = 50;
+	public final static int POS_SWITCH = 200;
+	public final static int POS_LOW_SCALE = 400;
+	public final static int POS_MID_SCALE = 500;
+	public final static int POS_HI_SCALE = 600;
+	public final static int DISTANCE_THRESHOLD = 10;
+	private static final int FORWARDLIMIT = 750;
+	private static final int REVERSELIMIT = 48;
 
 	private TalonSRX master;
 	private TalonSRX follower;
