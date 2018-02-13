@@ -1,6 +1,5 @@
 package org.usfirst.frc.team88.robot.subsystems;
 
-import org.usfirst.frc.team88.robot.Robot;
 import org.usfirst.frc.team88.robot.RobotMap;
 import org.usfirst.frc.team88.robot.commands.IntakeControl;
 import org.usfirst.frc.team88.robot.util.SharpIR;
@@ -30,86 +29,81 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * </pre>
  */
 public class Intake extends Subsystem {
+	private static final boolean DYNAMIC = false;
 	private static final double TIMEOUT = 0;
-	private static final double MAXSPEED = .75;
+	private static final double MAX_SPEED = 0.75;
+	private static final double MIN_SPEED = 0.40;
+	private static final double MAX_DISTANCE = 16;
+	private static final double MIN_DISTANCE = 4;
+	private static final double MAX_DIFF = 5.0;
+
 	private TalonSRX leftSide, rightSide;
 	private SharpIR leftDistanceSensor, rightDistanceSensor;
-	//Pneumatics
-	DoubleSolenoid  intakeUpDown;
+	private DoubleSolenoid upDown;
 
 	public Intake() {
 		leftSide = new TalonSRX(RobotMap.intakeLeft);
 		rightSide = new TalonSRX(RobotMap.intakeRight);
 
-		// TODO set up current limiting
-
 		leftDistanceSensor = new SharpIR(RobotMap.intakeLeftIR);
 		rightDistanceSensor = new SharpIR(RobotMap.intakeRightIR);
+
+		// upDown = new DoubleSolenoid(RobotMap.intakeSolenoidIn,
+		// RobotMap.intakeSolenoidOut);
+		// upDown.set(Value.kOff);
 	}
 
-	//Sets intake wheel speed
-	public void intakeWheelSpeed(double speed) {
-		rightSide.set(ControlMode.PercentOutput, speed * MAXSPEED, TIMEOUT);
-		leftSide.set(ControlMode.PercentOutput, -speed * MAXSPEED, TIMEOUT);
+	// Sets intake wheel speed
+	@SuppressWarnings("unused")
+	public void wheelSpeed(double speed) {
+		double leftSpeed = speed * MAX_SPEED;
+		double rightSpeed = speed * MAX_SPEED;
+		double leftDistance = leftDistanceSensor.getDistance();
+		double rightDistance = rightDistanceSensor.getDistance();
+
+		if ((leftDistance > MIN_DISTANCE) && (leftDistance < MAX_DISTANCE) && (rightDistance > MIN_DISTANCE)
+				&& (rightDistance < MAX_DISTANCE) && (speed < 0) && DYNAMIC) {
+			double slowSide = (MAX_SPEED
+					- ((MAX_SPEED - MIN_SPEED) * Math.abs(leftDistance - rightDistance) / MAX_DIFF)) * speed;
+
+			// Right Side Closer
+			if (leftDistance > rightDistance) {
+				rightSpeed = slowSide;
+			}
+
+			// Left Side Closer
+			if (rightDistance > leftDistance) {
+				leftSpeed = slowSide;
+			}
+		}
+
+		rightSide.set(ControlMode.PercentOutput, rightSpeed, TIMEOUT);
+		leftSide.set(ControlMode.PercentOutput, -leftSpeed, TIMEOUT);
 	}
 
+	public boolean haveCube() {
+		return (getLeftDistance() < MIN_DISTANCE) && (getRightDistance() < MIN_DISTANCE);
+	}
 
-	//Gets the cube distance from left sensor
-	public double getLeftDistance() {
+	// Gets the cube distance from left sensor
+	private double getLeftDistance() {
 		return leftDistanceSensor.getDistance();
 	}
 
-	//Gets the cube distance from right sensor
-	public double getRightDistance() {
+	// Gets the cube distance from right sensor
+	private double getRightDistance() {
 		return rightDistanceSensor.getDistance();
 	}
 
-
-	private void intakePneumatics(){
-		intakeUpDown = new DoubleSolenoid(RobotMap.intakeSolenoidIn, RobotMap.intakeSolenoidOut);
-		intakeUpDown.set(Value.kOff);
+	// Pneumaticly puts cradle up
+	public void cradleUp() {
+		upDown.set(Value.kForward);
 	}
 
-	//Pneumaticly puts cradle up
-	public void intakeCradleUp(){
-		intakeUpDown.set(Value.kForward);
-
+	// Pneumaticly puts cradle down
+	public void cradleDown() {
+		upDown.set(Value.kReverse);
 	}
-
-	//Pneumaticly puts cradle down
-	public void intakeCradleDown(){
-		intakeUpDown.set(Value.kReverse);
-
-	}
-
-	//Pulls the cube in if Sideways
-	public void cubePullIn(double maxSpeed){
-		
-		double rightPullSpeed = maxSpeed;
-		double leftPullSpeed = maxSpeed;
-		final double MAX_DIFF = 5;
-		double leftDistance = leftDistanceSensor.getDistance();
-		double rightDistance =  rightDistanceSensor.getDistance();
-		double difference = leftDistance - rightDistance;
-		double adjustment = 1 - ( 0.50 * Math.abs(difference)/MAX_DIFF);
-		double slowSide = adjustment * maxSpeed;
-		
-		
-		//Right Side Closer
-		if( leftDistance > rightDistance ){
-			rightPullSpeed = slowSide;
-		}
-
-		// Left Side Closer
-		if(rightDistance > leftDistance ){
-			leftPullSpeed = slowSide;
-		}
-
-		rightSide.set(ControlMode.PercentOutput,rightPullSpeed, TIMEOUT);
-		leftSide.set(ControlMode.PercentOutput,leftPullSpeed, TIMEOUT);
-		
-	}
-
 
 	public void updateDashboard() {
 		SmartDashboard.putNumber("Intake/Left/Sensor Distance", leftDistanceSensor.getDistance());
@@ -122,7 +116,10 @@ public class Intake extends Subsystem {
 		SmartDashboard.putNumber("Intake/Right/Motor Current", rightSide.getOutputCurrent());
 		SmartDashboard.putNumber("Intake/Right/Motor Voltage", rightSide.getMotorOutputVoltage());
 
-		//SmartDashboard.putBoolean("Intake/CradleUp", intakeUpDown.get()== Value.kForward);
+		// SmartDashboard.putBoolean("Intake/Cradle Up?", intakeUpDown.get() ==
+		// Value.kForward);
+
+		SmartDashboard.putBoolean("Intake/Have Cube?", haveCube());
 	}
 
 	public void initDefaultCommand() {

@@ -49,20 +49,22 @@ public class Robot extends TimedRobot {
 		lift = new Lift();
 		drive = new Drive();
 		
-		SmartDashboard.putData("Drive", drive);
-
 		oi = new OI();
 
-		// Autonomous modes
+		// Show subsystem commands
+		SmartDashboard.putData("Robot/Drive", drive);
+		SmartDashboard.putData("Robot/Intake", intake);
+		SmartDashboard.putData("Robot/Lift", lift);
+
+		// Autonomous mode selector
 		chooser.addDefault("Cross the Line", new AutoDriveDistanceAngle(100, 0));
 		chooser.addObject("Center Switch", new AutoCenterToSwitch());
 		SmartDashboard.putData("Auto mode", chooser);
 		
 		// Buttons to test commands
-		SmartDashboard.putData("Auto/Cross the Line", new AutoDriveDistanceAngle(100, 0));
-		SmartDashboard.putData("Auto/Center Switch", new AutoCenterToSwitch());
-
-		SmartDashboard.putData("Drive/Zero Yaw", new DriveZeroYaw());
+		SmartDashboard.putData("Command/Cross the Line", new AutoDriveDistanceAngle(100, 0));
+		SmartDashboard.putData("Command/Center Switch", new AutoCenterToSwitch());
+		SmartDashboard.putData("Command/Zero Yaw", new DriveZeroYaw());
 	}
 
 	/**
@@ -143,7 +145,7 @@ public class Robot extends TimedRobot {
 	}
 
 	private void updateDashboard() {
-		SmartDashboard.putString("Auto Command", chooser.getName());
+		SmartDashboard.putString("Robot/Auto Command", chooser.getName());
 
 		drive.updateDashboard();
 		intake.updateDashboard();

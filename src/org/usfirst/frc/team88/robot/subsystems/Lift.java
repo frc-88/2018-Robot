@@ -8,7 +8,6 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -18,9 +17,12 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * high up in the air
  * placing cubes like we don't care
  * scale tips scoring points
- *  * </pre>
+ *  *
+ * </pre>
  */
 public class Lift extends Subsystem {
+	private static final boolean CLOSED_LOOP = false;
+
 	private static final int SLOTIDX = 0;
 	private static final int TIMEOUTMS = 0;
 	private final static double RAMPRATE = .30;
@@ -31,18 +33,16 @@ public class Lift extends Subsystem {
 	private final static double I = 0.0;
 	private final static double D = 0.0;
 	private final static double F = 1023 / MAX_SPEED;
-	
+
 	public final static int POS_BOTTOM = 0;
 	public final static int POS_SWITCH = 0;
 	public final static int POS_LOW_SCALE = 0;
 	public final static int POS_MID_SCALE = 0;
 	public final static int POS_HI_SCALE = 0;
 	public final static int DISTANCE_THRESHOLD = 50;
-	
-	
 	private static final int FORWARDLIMIT = 1023;
 	private static final int REVERSELIMIT = 0;
-	// TODO Add constants for lift positions
+
 	private TalonSRX master;
 	private TalonSRX follower;
 
@@ -52,7 +52,7 @@ public class Lift extends Subsystem {
 
 		/* analog signal with no wrap-around (0-3.3V) */
 		master.configSelectedFeedbackSensor(FeedbackDevice.Analog, SLOTIDX, TIMEOUTMS);
-		
+
 		/* eFeedbackNotContinuous = 1, subValue/ordinal/timeoutMs = 0 */
 		master.configSetParameter(ParamEnum.eFeedbackNotContinuous, 1, 0x00, 0x00, TIMEOUTMS);
 
@@ -71,7 +71,7 @@ public class Lift extends Subsystem {
 
 		master.configMotionCruiseVelocity(CRUISE_VELOCITY, TIMEOUTMS);
 		master.configMotionAcceleration(ACCELERATION, TIMEOUTMS);
-		
+
 		master.configForwardSoftLimitThreshold(FORWARDLIMIT, TIMEOUTMS);
 		master.configForwardSoftLimitEnable(true, TIMEOUTMS);
 
@@ -79,29 +79,36 @@ public class Lift extends Subsystem {
 		master.configReverseSoftLimitEnable(true, TIMEOUTMS);
 
 		// TODO configure for position based closed loop control using
-		//      motion magic capability of TalonSRX
+		// motion magic capability of TalonSRX
 		//
 		// Interesting links:
 		// https://github.com/CrossTheRoadElec/Phoenix-Documentation/raw/master/Talon%20SRX%20Victor%20SPX%20-%20Software%20Reference%20Manual.pdf
 		// http://www.ctr-electronics.com/downloads/api/java/html/com/ctre/phoenix/motorcontrol/can/BaseMotorController.html#configMotionCruiseVelocity-int-int-
 		// http://www.ctr-electronics.com/downloads/api/java/html/com/ctre/phoenix/motorcontrol/can/BaseMotorController.html#configMotionAcceleration-int-int-
 		// https://github.com/CrossTheRoadElec/Phoenix-Examples-Languages/tree/master/Java/MotionMagic
-		
+
 		follower.follow(master);
 		follower.setInverted(true);
 
 	}
 
 	public void levitate(double velocity) {
-		master.set(ControlMode.PercentOutput, velocity);
+		if (CLOSED_LOOP) {
+			master.set(ControlMode.Velocity, velocity);
+		} else {
+			master.set(ControlMode.PercentOutput, velocity);
+		}
 	}
-	
+
 	public void setPosition(double position) {
 		master.set(ControlMode.MotionMagic, position);
 	}
 
+	public boolean onTarget(int target) {
+		return Math.abs(master.getSelectedSensorPosition(SLOTIDX) - target) < DISTANCE_THRESHOLD;
+	}
+
 	public void updateDashboard() {
-		//waiting to be fixed
 		SmartDashboard.putNumber("Lift/Master/Position", master.getSelectedSensorPosition(SLOTIDX));
 		SmartDashboard.putNumber("Lift/Master/Velocity", master.getSelectedSensorVelocity(SLOTIDX));
 		SmartDashboard.putNumber("Lift/Master/Error", master.getClosedLoopError(SLOTIDX));
@@ -109,14 +116,16 @@ public class Lift extends Subsystem {
 		SmartDashboard.putNumber("Lift/Master/Voltage", master.getMotorOutputVoltage());
 		SmartDashboard.putNumber("Lift/Follower/Current", follower.getOutputCurrent());
 		SmartDashboard.putNumber("Lift/Follower/Voltage", follower.getMotorOutputVoltage());
+
+		SmartDashboard.putBoolean("Lift/Position/High Scale?", onTarget(POS_HI_SCALE));
+		SmartDashboard.putBoolean("Lift/Position/Mid Scale?", onTarget(POS_MID_SCALE));
+		SmartDashboard.putBoolean("Lift/Position/Low Scale?", onTarget(POS_LOW_SCALE));
+		SmartDashboard.putBoolean("Lift/Position/Switch?", onTarget(POS_SWITCH));
+		SmartDashboard.putBoolean("Lift/Position/Bottom?", onTarget(POS_BOTTOM));
 	}
-	
+
 	public void initDefaultCommand() {
 		// Set the default command for a subsystem here.
 		setDefaultCommand(new LiftMove());
-	}
-	
-	public boolean onTarget(int target) {
-		return Math.abs(master.getSelectedSensorPosition(SLOTIDX) - target) > DISTANCE_THRESHOLD;
 	}
 }

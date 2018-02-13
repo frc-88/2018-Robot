@@ -7,9 +7,9 @@ import edu.wpi.first.wpilibj.command.InstantCommand;
 /**
  *
  */
-public class intakePneumaticsDown extends InstantCommand {
+public class IntakePneumaticsDown extends InstantCommand {
 
-    public intakePneumaticsDown() {
+    public IntakePneumaticsDown() {
         super();
       
         requires(Robot.intake);
@@ -17,7 +17,7 @@ public class intakePneumaticsDown extends InstantCommand {
 
     // Called once when the command executes
     protected void initialize() {
-    	Robot.intake.intakeCradleDown();
+    	Robot.intake.cradleDown();
     	
     }
 
