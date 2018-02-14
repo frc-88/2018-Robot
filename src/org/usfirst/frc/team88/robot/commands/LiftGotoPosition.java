@@ -22,5 +22,6 @@ public class LiftGotoPosition extends InstantCommand {
 	// Called once when the command executes
 	protected void initialize() {
 		Robot.lift.setPosition(target);
+		Robot.lift.gotoPosition();
 	}
 }
