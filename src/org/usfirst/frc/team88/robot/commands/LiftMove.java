@@ -13,10 +13,9 @@ public class LiftMove extends Command {
 	private static final double POLY_A = 0.35;
 	private static final double POLY_B = 0.5;
 	private static final double POLY_C = 0.15;
+	private static final int MAX_MOVE = 20;
 	
     public LiftMove() {
-        // Use requires() here to declare subsystem dependencies
-        // eg. requires(chassis);
     	requires(Robot.lift);
     }
 
@@ -26,7 +25,13 @@ public class LiftMove extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	Robot.lift.levitate(TJUtility.polynomial(Robot.oi.operator.getLeftStickY(), POLY_A, POLY_B, POLY_C, DEADZONE));
+    	int move = (int) (TJUtility.polynomial(Robot.oi.operator.getLeftStickY(), POLY_A, POLY_B, POLY_C, DEADZONE) * MAX_MOVE);
+    	
+    	if (move != 0) {
+    		Robot.lift.setPosition(Robot.lift.getPosition() + move);
+    	}
+    	
+    	Robot.lift.gotoPosition();
     }
 
     // Make this return true when this Command no longer needs to run execute()
@@ -41,6 +46,5 @@ public class LiftMove extends Command {
     // Called when another command which requires one or more of the same
     // subsystems is scheduled to run
     protected void interrupted() {
-    	Robot.lift.levitate(0.0);
     }
 }
