@@ -31,6 +31,8 @@ public class IntakeControl extends Command {
 		
 		if (Robot.intake.haveCube()) {
 			Robot.oi.operator.rumble(1);
+		} else {
+			Robot.oi.operator.rumble(0);
 		}
 	}
 

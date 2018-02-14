@@ -28,8 +28,8 @@ public class RobotMap {
 	public static final int intakeLeft = 3; 
 	public static final int intakeRight = 2;
 	// Intake - Analog inputs
-	public static final int intakeLeftIR = 3;
-	public static final int intakeRightIR = 0;
+	public static final int intakeLeftIR = 0;
+	public static final int intakeRightIR = 3;
 	// Intake - PCM
 	public static final int intakeSolenoidIn = 0;
 	public static final int intakeSolenoidOut = 1;

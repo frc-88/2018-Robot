@@ -29,13 +29,13 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * </pre>
  */
 public class Intake extends Subsystem {
-	private static final boolean DYNAMIC = false;
+	private static final boolean DYNAMIC = true;
 	private static final double TIMEOUT = 0;
-	private static final double MAX_SPEED = 0.75;
-	private static final double MIN_SPEED = 0.40;
+	private static final double MAX_SPEED = 0.8;
+	private static final double MIN_SPEED = 0.5;
 	private static final double MAX_DISTANCE = 16;
 	private static final double MIN_DISTANCE = 4;
-	private static final double MAX_DIFF = 5.0;
+	private static final double MAX_DIFF = 2.0;
 
 	private TalonSRX leftSide, rightSide;
 	private SharpIR leftDistanceSensor, rightDistanceSensor;

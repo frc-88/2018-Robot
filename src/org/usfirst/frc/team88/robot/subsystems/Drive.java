@@ -29,7 +29,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Drive extends Subsystem implements PIDOutput {
 
 	private final static boolean CAN_CLOSED_LOOP = false;
-	private final static boolean SPLIT_ARCADE = false;
+	private final static boolean SPLIT_ARCADE = true;
 
 	private final static int SLOTIDX = 0;
 	private final static int TIMEOUTMS = 0;
