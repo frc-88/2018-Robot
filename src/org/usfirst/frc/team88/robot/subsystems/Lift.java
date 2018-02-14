@@ -21,27 +21,27 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * </pre>
  */
 public class Lift extends Subsystem {
-	private static final boolean CLOSED_LOOP = false;
+	private static final boolean CLOSED_LOOP = true;
 
 	private static final int SLOTIDX = 0;
 	private static final int TIMEOUTMS = 0;
 	private final static double RAMPRATE = .30;
-	private final static double MAX_SPEED = 13000;
-	private final static int CRUISE_VELOCITY = 13000;
-	private final static int ACCELERATION = 6000;
-	private final static double P = 0.0;
+	private final static double MAX_SPEED = 32;
+	private final static int CRUISE_VELOCITY = 30;
+	private final static int ACCELERATION = 180;
+	private final static double P = 100.0;
 	private final static double I = 0.0;
 	private final static double D = 0.0;
 	private final static double F = 1023 / MAX_SPEED;
 
-	public final static int POS_BOTTOM = 50;
+	private static final int FORWARDLIMIT = 750;
+	private static final int REVERSELIMIT = 80;
+	public final static int POS_BOTTOM = 150;
 	public final static int POS_SWITCH = 200;
 	public final static int POS_LOW_SCALE = 400;
-	public final static int POS_MID_SCALE = 500;
-	public final static int POS_HI_SCALE = 600;
+	public final static int POS_MID_SCALE = 600;
+	public final static int POS_HI_SCALE = 700;
 	public final static int DISTANCE_THRESHOLD = 10;
-	private static final int FORWARDLIMIT = 750;
-	private static final int REVERSELIMIT = 48;
 
 	private TalonSRX master;
 	private TalonSRX follower;
@@ -77,6 +77,8 @@ public class Lift extends Subsystem {
 
 		master.configReverseSoftLimitThreshold(REVERSELIMIT, TIMEOUTMS);
 		master.configReverseSoftLimitEnable(true, TIMEOUTMS);
+		
+		master.overrideLimitSwitchesEnable(true);
 
 		// TODO configure for position based closed loop control using
 		// motion magic capability of TalonSRX
@@ -94,10 +96,13 @@ public class Lift extends Subsystem {
 
 	public void levitate(double velocity) {
 		if (CLOSED_LOOP) {
-			master.set(ControlMode.Velocity, velocity);
+			master.set(ControlMode.Velocity, velocity*MAX_SPEED);
 		} else {
 			master.set(ControlMode.PercentOutput, velocity);
 		}
+		
+		SmartDashboard.putNumber("Lift Master Set Point", velocity*MAX_SPEED);
+
 	}
 
 	public void setPosition(double position) {
@@ -109,19 +114,19 @@ public class Lift extends Subsystem {
 	}
 
 	public void updateDashboard() {
-		SmartDashboard.putNumber("Lift/Master/Position", master.getSelectedSensorPosition(SLOTIDX));
-		SmartDashboard.putNumber("Lift/Master/Velocity", master.getSelectedSensorVelocity(SLOTIDX));
-		SmartDashboard.putNumber("Lift/Master/Error", master.getClosedLoopError(SLOTIDX));
-		SmartDashboard.putNumber("Lift/Master/Current", master.getOutputCurrent());
-		SmartDashboard.putNumber("Lift/Master/Voltage", master.getMotorOutputVoltage());
-		SmartDashboard.putNumber("Lift/Follower/Current", follower.getOutputCurrent());
-		SmartDashboard.putNumber("Lift/Follower/Voltage", follower.getMotorOutputVoltage());
+		SmartDashboard.putNumber("Lift Master Position", master.getSelectedSensorPosition(SLOTIDX));
+		SmartDashboard.putNumber("Lift Master Velocity", master.getSelectedSensorVelocity(SLOTIDX));
+		SmartDashboard.putNumber("Lift Master Error", master.getClosedLoopError(SLOTIDX));
+		SmartDashboard.putNumber("Lift Master Current", master.getOutputCurrent());
+		SmartDashboard.putNumber("Lift Master Voltage", master.getMotorOutputVoltage());
+		SmartDashboard.putNumber("Lift Follower Current", follower.getOutputCurrent());
+		SmartDashboard.putNumber("Lift Follower Voltage", follower.getMotorOutputVoltage());
 
-		SmartDashboard.putBoolean("Lift/Position/High Scale?", onTarget(POS_HI_SCALE));
-		SmartDashboard.putBoolean("Lift/Position/Mid Scale?", onTarget(POS_MID_SCALE));
-		SmartDashboard.putBoolean("Lift/Position/Low Scale?", onTarget(POS_LOW_SCALE));
-		SmartDashboard.putBoolean("Lift/Position/Switch?", onTarget(POS_SWITCH));
-		SmartDashboard.putBoolean("Lift/Position/Bottom?", onTarget(POS_BOTTOM));
+		SmartDashboard.putBoolean("Lift Position High Scale?", onTarget(POS_HI_SCALE));
+		SmartDashboard.putBoolean("Lift Position Mid Scale?", onTarget(POS_MID_SCALE));
+		SmartDashboard.putBoolean("Lift Position Low Scale?", onTarget(POS_LOW_SCALE));
+		SmartDashboard.putBoolean("Lift Position Switch?", onTarget(POS_SWITCH));
+		SmartDashboard.putBoolean("Lift Position Bottom?", onTarget(POS_BOTTOM));
 	}
 
 	public void initDefaultCommand() {
