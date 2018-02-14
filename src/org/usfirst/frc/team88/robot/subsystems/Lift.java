@@ -111,6 +111,10 @@ public class Lift extends Subsystem {
 		return master.getSelectedSensorPosition(SLOTIDX);
 	}
 
+	public boolean onTarget(int target) {
+		return Math.abs(master.getSelectedSensorPosition(SLOTIDX) - target) < DISTANCE_THRESHOLD;
+	}
+
 	public void updateDashboard() {
 		SmartDashboard.putNumber("Lift Target Position", position);
 		SmartDashboard.putNumber("Lift Master Position", master.getSelectedSensorPosition(SLOTIDX));
@@ -120,6 +124,12 @@ public class Lift extends Subsystem {
 		SmartDashboard.putNumber("Lift Master Voltage", master.getMotorOutputVoltage());
 		SmartDashboard.putNumber("Lift Follower Current", follower.getOutputCurrent());
 		SmartDashboard.putNumber("Lift Follower Voltage", follower.getMotorOutputVoltage());
+
+		SmartDashboard.putBoolean("Lift Position High Scale?", onTarget(POS_HI_SCALE));
+		SmartDashboard.putBoolean("Lift Position Mid Scale?", onTarget(POS_MID_SCALE));
+		SmartDashboard.putBoolean("Lift Position Low Scale?", onTarget(POS_LOW_SCALE));
+		SmartDashboard.putBoolean("Lift Position Switch?", onTarget(POS_SWITCH));
+		SmartDashboard.putBoolean("Lift Position Bottom?", onTarget(POS_BOTTOM));
 	}
 
 	public void initDefaultCommand() {
