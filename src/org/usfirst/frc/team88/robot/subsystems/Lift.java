@@ -21,15 +21,13 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * </pre>
  */
 public class Lift extends Subsystem {
-	private static final boolean CLOSED_LOOP = true;
-
 	private static final int SLOTIDX = 0;
 	private static final int TIMEOUTMS = 0;
 	private final static double RAMPRATE = .30;
 	private final static double MAX_SPEED = 32;
 	private final static int CRUISE_VELOCITY = 30;
 	private final static int ACCELERATION = 180;
-	private final static double P = 100.0;
+	private final static double P = 0.0;
 	private final static double I = 0.0;
 	private final static double D = 0.0;
 	private final static double F = 1023 / MAX_SPEED;
@@ -45,6 +43,8 @@ public class Lift extends Subsystem {
 
 	private TalonSRX master;
 	private TalonSRX follower;
+
+	private int position;
 
 	public Lift() {
 		master = new TalonSRX(RobotMap.liftMaster);
@@ -74,10 +74,8 @@ public class Lift extends Subsystem {
 
 		master.configForwardSoftLimitThreshold(FORWARDLIMIT, TIMEOUTMS);
 		master.configForwardSoftLimitEnable(true, TIMEOUTMS);
-
 		master.configReverseSoftLimitThreshold(REVERSELIMIT, TIMEOUTMS);
 		master.configReverseSoftLimitEnable(true, TIMEOUTMS);
-		
 		master.overrideLimitSwitchesEnable(true);
 
 		// TODO configure for position based closed loop control using
@@ -92,21 +90,25 @@ public class Lift extends Subsystem {
 		follower.follow(master);
 		follower.setInverted(true);
 
+		position = POS_BOTTOM;
 	}
 
-	public void levitate(double velocity) {
-		if (CLOSED_LOOP) {
-			master.set(ControlMode.Velocity, velocity*MAX_SPEED);
-		} else {
-			master.set(ControlMode.PercentOutput, velocity);
+	public void gotoPosition() {
+		master.set(ControlMode.MotionMagic, position);
+	}
+
+	public void setPosition(int target) {
+		if (target < REVERSELIMIT) {
+			target = REVERSELIMIT;
+		} else if (target > FORWARDLIMIT) {
+			target = FORWARDLIMIT;
 		}
 		
-		SmartDashboard.putNumber("Lift Master Set Point", velocity*MAX_SPEED);
-
+		position = target;
 	}
 
-	public void setPosition(double position) {
-		master.set(ControlMode.MotionMagic, position);
+	public int getPosition() {
+		return master.getSelectedSensorPosition(SLOTIDX);
 	}
 
 	public boolean onTarget(int target) {
@@ -114,6 +116,7 @@ public class Lift extends Subsystem {
 	}
 
 	public void updateDashboard() {
+		SmartDashboard.putNumber("Lift Target Position", position);
 		SmartDashboard.putNumber("Lift Master Position", master.getSelectedSensorPosition(SLOTIDX));
 		SmartDashboard.putNumber("Lift Master Velocity", master.getSelectedSensorVelocity(SLOTIDX));
 		SmartDashboard.putNumber("Lift Master Error", master.getClosedLoopError(SLOTIDX));

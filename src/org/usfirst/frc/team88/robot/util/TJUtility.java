@@ -19,9 +19,9 @@ public class TJUtility {
 
 	public static double maxValue(double value, double max) {
 		if (value >= max) {
-			return 1.0;
+			return max;
 		} else if (value <= -max) {
-			return -1.0;
+			return -max;
 		} else {
 			return value;
 		}
