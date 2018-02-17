@@ -314,6 +314,8 @@ public class Drive extends Subsystem implements PIDOutput {
 		SmartDashboard.putNumber("Drive/AvgPosition", getAvgPosition());
 		SmartDashboard.putNumber("Drive/AvgVelocity", getAvgVelocity());
 		SmartDashboard.putNumber("Drive/Yaw", navX.getYaw());
+		SmartDashboard.putNumber("Drive/Pitch", navX.getPitch());
+		SmartDashboard.putNumber("Drive/Roll", navX.getRoll());
 
 		SmartDashboard.putNumber("Drive/Left/Master/Position", leftMaster.getSelectedSensorPosition(SLOTIDX));
 		SmartDashboard.putNumber("Drive/Left/Master/Velocity", leftMaster.getSelectedSensorVelocity(SLOTIDX));

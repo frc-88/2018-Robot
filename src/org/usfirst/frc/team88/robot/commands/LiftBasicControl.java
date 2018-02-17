@@ -8,15 +8,15 @@ import edu.wpi.first.wpilibj.command.Command;
 /**
  *
  */
-public class LiftMove extends Command {
+public class LiftBasicControl extends Command {
 	private static final double DEADZONE = 0.1;
 	private static final double POLY_A = 0.35;
 	private static final double POLY_B = 0.5;
 	private static final double POLY_C = 0.15;
-	private static final int MAX_MOVE = 5;
-	
-    public LiftMove() {
-    	requires(Robot.lift);
+
+    public LiftBasicControl() {
+        // Use requires() here to declare subsystem dependencies
+        // eg. requires(chassis);
     }
 
     // Called just before this Command runs the first time
@@ -25,13 +25,7 @@ public class LiftMove extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	int move = (int) (TJUtility.polynomial(Robot.oi.operator.getLeftStickY(), POLY_A, POLY_B, POLY_C, DEADZONE) * MAX_MOVE);
-    	
-    	if (move != 0) {
-    		Robot.lift.setPosition(Robot.lift.getPosition() + move);
-    	}
-    	
-    	Robot.lift.gotoPosition();
+    	Robot.lift.basicMotion(TJUtility.polynomial(Robot.oi.operator.getLeftStickY(), POLY_A, POLY_B, POLY_C, DEADZONE));
     }
 
     // Make this return true when this Command no longer needs to run execute()

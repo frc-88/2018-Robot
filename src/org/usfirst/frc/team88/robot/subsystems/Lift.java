@@ -1,6 +1,7 @@
 package org.usfirst.frc.team88.robot.subsystems;
 
 import org.usfirst.frc.team88.robot.RobotMap;
+import org.usfirst.frc.team88.robot.commands.LiftBasicControl;
 import org.usfirst.frc.team88.robot.commands.LiftMove;
 
 import com.ctre.phoenix.ParamEnum;
@@ -21,6 +22,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * </pre>
  */
 public class Lift extends Subsystem {
+	private static final boolean basicControl = true;
+	
 	private static final int SLOTIDX = 0;
 	private static final int TIMEOUTMS = 0;
 	private final static double RAMPRATE = .30;
@@ -93,6 +96,10 @@ public class Lift extends Subsystem {
 		position = POS_BOTTOM;
 	}
 
+	public void basicMotion(double input) {
+		master.set(ControlMode.PercentOutput, input);
+	}
+
 	public void gotoPosition() {
 		master.set(ControlMode.MotionMagic, position);
 	}
@@ -138,6 +145,10 @@ public class Lift extends Subsystem {
 
 	public void initDefaultCommand() {
 		// Set the default command for a subsystem here.
-		setDefaultCommand(new LiftMove());
+		if (basicControl) {
+			setDefaultCommand(new LiftBasicControl());
+		} else {
+			setDefaultCommand(new LiftMove());
+		}
 	}
 }
