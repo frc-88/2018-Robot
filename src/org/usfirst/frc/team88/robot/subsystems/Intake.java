@@ -29,7 +29,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * </pre>
  */
 public class Intake extends Subsystem {
-	private static final boolean DYNAMIC = true;
+
 	private static final double TIMEOUT = 0;
 	private static final double MAX_INTAKE_SPEED = 0.8;
 	private static final double MAX_EJECT_SPEED = 1.0;
@@ -55,7 +55,6 @@ public class Intake extends Subsystem {
 	}
 
 	// Sets intake wheel speed
-	@SuppressWarnings("unused")
 	public void wheelSpeed(double speed) {
 		double leftSpeed = speed * MAX_INTAKE_SPEED;
 		double rightSpeed = speed * MAX_INTAKE_SPEED;
@@ -64,7 +63,7 @@ public class Intake extends Subsystem {
 
 		
 		if ((leftDistance > MIN_DISTANCE) && (leftDistance < MAX_DISTANCE) && (rightDistance > MIN_DISTANCE)
-				&& (rightDistance < MAX_DISTANCE) && (speed < 0) && DYNAMIC) {
+				&& (rightDistance < MAX_DISTANCE) && (speed < 0)) {
 			double slowSide = (MAX_INTAKE_SPEED
 					- ((MAX_INTAKE_SPEED - MIN_SPEED) * Math.abs(leftDistance - rightDistance) / MAX_DIFF)) * speed;
 

@@ -8,6 +8,7 @@
 package org.usfirst.frc.team88.robot;
 
 import org.usfirst.frc.team88.robot.commands.LiftGotoPosition;
+import org.usfirst.frc.team88.robot.commands.LiftSoftLanding;
 import org.usfirst.frc.team88.robot.subsystems.Lift;
 import org.usfirst.frc.team88.robot.commands.IntakePneumaticsDown;
 import org.usfirst.frc.team88.robot.commands.IntakePneumaticsUp;
@@ -34,16 +35,16 @@ public class OI {
 //		operator.buttonLeftBumper.whenPressed(new IntakePneumaticsDown());
 		
 		operator.buttonB.whenPressed(new LiftGotoPosition(Lift.POS_SWITCH));
-		operator.buttonB.whenReleased(new LiftGotoPosition(Lift.POS_BOTTOM));
+		operator.buttonB.whenReleased(new LiftSoftLanding());
 		
 		operator.buttonA.whenPressed(new LiftGotoPosition(Lift.POS_LOW_SCALE));
-		operator.buttonA.whenReleased(new LiftGotoPosition(Lift.POS_BOTTOM));
+		operator.buttonA.whenReleased(new LiftSoftLanding());
 		
 		operator.buttonX.whenPressed(new LiftGotoPosition(Lift.POS_MID_SCALE));
-		operator.buttonX.whenReleased(new LiftGotoPosition(Lift.POS_BOTTOM));
+		operator.buttonX.whenReleased(new LiftSoftLanding());
 		
 		operator.buttonY.whenPressed(new LiftGotoPosition(Lift.POS_HI_SCALE));
-		operator.buttonY.whenReleased(new LiftGotoPosition(Lift.POS_BOTTOM));
+		operator.buttonY.whenReleased(new LiftSoftLanding());
 	}
 	
 	
