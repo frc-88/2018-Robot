@@ -55,7 +55,6 @@ public class Intake extends Subsystem {
 	}
 
 	// Sets intake wheel speed
-	@SuppressWarnings("unused")
 	public void wheelSpeed(double speed) {
 		double leftSpeed = speed * MAX_INTAKE_SPEED;
 		double rightSpeed = speed * MAX_INTAKE_SPEED;
