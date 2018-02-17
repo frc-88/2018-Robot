@@ -1,5 +1,6 @@
 package org.usfirst.frc.team88.robot.subsystems;
 
+import org.usfirst.frc.team88.robot.Robot;
 import org.usfirst.frc.team88.robot.RobotMap;
 import org.usfirst.frc.team88.robot.commands.DriveSplitArcade;
 import org.usfirst.frc.team88.robot.commands.DriveTank;
@@ -34,8 +35,8 @@ public class Drive extends Subsystem implements PIDOutput {
 	private final static int SLOTIDX = 0;
 	private final static int TIMEOUTMS = 0;
 	private final static double RAMPRATE = .30;
-//	private final static double MAX_RAMPRATE = 1.0;
-//	private final static double MIN_RAMPRATE = .30;
+	private final static double MAX_RAMPRATE = 1.0;
+	private final static double MIN_RAMPRATE = .30;
 	private final static double MAX_SPEED = 13000;
 	private final static double P = 0.03;
 	private final static double I = 0.0;
@@ -61,7 +62,8 @@ public class Drive extends Subsystem implements PIDOutput {
 	private TalonSRX[] leftFollower;
 	private TalonSRX[] rightFollower;
 
-	private int count;
+	private int headingCount;
+	private int ramprateCount;
 
 	public PIDController rotateController;
 	private PIDController headingController;
@@ -146,16 +148,22 @@ public class Drive extends Subsystem implements PIDOutput {
 
 		resetEncoders();
 		navX.zeroYaw();
-		count = 0;
+		headingCount = 0;
+		ramprateCount = 0;
 
 	}
 
 	public void wheelSpeed(double left, double right) {
 
-		// double ramprate = MAX_RAMPRATE * Robot.lift.getPercentHeight() + MIN_RAMPRATE;
+		double ramprate = (MAX_RAMPRATE - MIN_RAMPRATE) * Robot.lift.getPercentHeight() + MIN_RAMPRATE;
 
-		// leftTalons[0].configClosedloopRamp(ramprate,TIMEOUTMS);
-		// rightTalons[0].configClosedloopRamp(ramprate, TIMEOUTMS);
+		if (ramprateCount++ > 10) {
+			ramprateCount = 0;
+			leftMaster.configOpenloopRamp(ramprate,TIMEOUTMS);
+			leftMaster.configClosedloopRamp(ramprate,TIMEOUTMS);
+			rightMaster.configOpenloopRamp(ramprate, TIMEOUTMS);
+			rightMaster.configClosedloopRamp(ramprate, TIMEOUTMS);
+		}
 
 		if (CAN_CLOSED_LOOP) {
 			SmartDashboard.putNumber("Drive/Left/Input", -left * MAX_SPEED);
@@ -210,17 +218,17 @@ public class Drive extends Subsystem implements PIDOutput {
 
 		SmartDashboard.putNumber("Drive/Curve", curve);
 		SmartDashboard.putNumber("Drive/Magnitude", outputMagnitude);
-		SmartDashboard.putNumber("Drive/Count", count);
+		SmartDashboard.putNumber("Drive/Count", headingCount);
 		SmartDashboard.putBoolean("Drive/Stabilize", headingController.isEnabled());
 
 		if (outputMagnitude == 0) {
 			headingController.disable();
-			count = 0;
+			headingCount = 0;
 		} else if (headingController.isEnabled() && curve == 0) {
 			curve = headingCorrection.getHeadingCorrection();
 		} else if (headingController.isEnabled()) {
 			headingController.disable();
-			count = 0;
+			headingCount = 0;
 		}
 
 		if (outputMagnitude != 0) {
@@ -247,7 +255,7 @@ public class Drive extends Subsystem implements PIDOutput {
 			leftOutput = outputMagnitude;
 			rightOutput = outputMagnitude / ratio;
 		} else {
-			if (count++ > 4) {
+			if (headingCount++ > 4) {
 				headingController.reset();
 				headingController.enable();
 				headingController.setSetpoint(getYaw());
