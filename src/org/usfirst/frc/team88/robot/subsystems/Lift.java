@@ -111,6 +111,10 @@ public class Lift extends Subsystem {
 		return master.getSelectedSensorPosition(SLOTIDX);
 	}
 
+	public double getPercentHeight() {
+		return (getPosition() - REVERSELIMIT) / (FORWARDLIMIT - REVERSELIMIT);
+	}
+	
 	public boolean onTarget(int target) {
 		return Math.abs(master.getSelectedSensorPosition(SLOTIDX) - target) < DISTANCE_THRESHOLD;
 	}
