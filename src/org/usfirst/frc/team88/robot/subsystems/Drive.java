@@ -33,7 +33,7 @@ public class Drive extends Subsystem implements PIDOutput {
 
 	private final static int SLOTIDX = 0;
 	private final static int TIMEOUTMS = 0;
-	private final static double RAMPRATE = .30;
+	private final static double RAMPRATE = .50;
 	private final static double MAX_RAMPRATE = 2.0;
 	private final static double MIN_RAMPRATE = .30;
 	private final static double MAX_SPEED = 13000;

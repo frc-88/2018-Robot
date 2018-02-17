@@ -13,7 +13,7 @@ public class LiftMove extends Command {
 	private static final double POLY_A = 0.35;
 	private static final double POLY_B = 0.5;
 	private static final double POLY_C = 0.15;
-	private static final int MAX_MOVE = 20;
+	private static final int MAX_MOVE = 40;
 	
     public LiftMove() {
     	requires(Robot.lift);
