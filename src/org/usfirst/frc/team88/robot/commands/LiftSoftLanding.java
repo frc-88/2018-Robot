@@ -15,8 +15,7 @@ public class LiftSoftLanding extends Command {
 	private int count;
 	
     public LiftSoftLanding() {
-        // Use requires() here to declare subsystem dependencies
-        // eg. requires(chassis);
+    	requires(Robot.lift);
     }
 
     // Called just before this Command runs the first time
