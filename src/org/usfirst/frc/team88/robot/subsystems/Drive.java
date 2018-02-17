@@ -33,9 +33,9 @@ public class Drive extends Subsystem implements PIDOutput {
 
 	private final static int SLOTIDX = 0;
 	private final static int TIMEOUTMS = 0;
-	private final static double RAMPRATE = .50;
-	private final static double MAX_RAMPRATE = 2.0;
-	private final static double MIN_RAMPRATE = .30;
+	private final static double RAMPRATE = .30;
+//	private final static double MAX_RAMPRATE = 1.0;
+//	private final static double MIN_RAMPRATE = .30;
 	private final static double MAX_SPEED = 13000;
 	private final static double P = 0.03;
 	private final static double I = 0.0;
@@ -114,6 +114,7 @@ public class Drive extends Subsystem implements PIDOutput {
 		leftMaster.configPeakOutputForward(+0.83, TIMEOUTMS);
 		leftMaster.configPeakOutputReverse(-0.83, TIMEOUTMS);
 		leftMaster.configNeutralDeadband(0.04, TIMEOUTMS);
+		leftMaster.configOpenloopRamp(RAMPRATE, TIMEOUTMS);
 		leftMaster.configClosedloopRamp(RAMPRATE, TIMEOUTMS);
 		leftMaster.setSensorPhase(false);
 		leftMaster.setNeutralMode(NeutralMode.Brake);
@@ -133,6 +134,7 @@ public class Drive extends Subsystem implements PIDOutput {
 		rightMaster.configPeakOutputForward(+0.83, TIMEOUTMS);
 		rightMaster.configPeakOutputReverse(-0.83, TIMEOUTMS);
 		rightMaster.configNeutralDeadband(0.04, TIMEOUTMS);
+		rightMaster.configOpenloopRamp(RAMPRATE, TIMEOUTMS);
 		rightMaster.configClosedloopRamp(RAMPRATE, TIMEOUTMS);
 		rightMaster.setSensorPhase(false);
 		rightMaster.setNeutralMode(NeutralMode.Brake);
@@ -150,7 +152,7 @@ public class Drive extends Subsystem implements PIDOutput {
 
 	public void wheelSpeed(double left, double right) {
 
-		// double ramprate = MAX_RAMPRATE * Robot.lift.getHeight() + MIN_RAMPRATE;
+		// double ramprate = MAX_RAMPRATE * Robot.lift.getPercentHeight() + MIN_RAMPRATE;
 
 		// leftTalons[0].configClosedloopRamp(ramprate,TIMEOUTMS);
 		// rightTalons[0].configClosedloopRamp(ramprate, TIMEOUTMS);
