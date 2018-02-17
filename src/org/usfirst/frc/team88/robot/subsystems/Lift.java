@@ -34,7 +34,7 @@ public class Lift extends Subsystem {
 
 	private static final int FORWARDLIMIT = 750;
 	private static final int REVERSELIMIT = 80;
-	public final static int POS_BOTTOM = 110;
+	public final static int POS_BOTTOM = 80;
 	public final static int POS_SWITCH = 260;
 	public final static int POS_LOW_SCALE = 520;
 	public final static int POS_MID_SCALE = 600;
