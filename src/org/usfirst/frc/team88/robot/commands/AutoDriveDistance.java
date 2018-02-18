@@ -27,6 +27,8 @@ public class AutoDriveDistance extends Command {
 	private double targetYaw;
 	private double accelerateDistance;
 	private double targetDistanceInches;
+	private double direction;
+	
 	private boolean done;
 
 
@@ -34,7 +36,8 @@ public class AutoDriveDistance extends Command {
 		// Use requires() here to declare subsystem dependencies
 		// eg. requires(chassis);
 		requires(Robot.drive);
-		targetDistanceInches=distance;
+		targetDistanceInches=Math.abs(distance);
+		direction = Math.signum(distance);
 	}
 
 	// Called just before this Command runs the first time
@@ -44,8 +47,7 @@ public class AutoDriveDistance extends Command {
 		state = PREP;
 		done = false;
 		speed = 0.0;
-		//targetDistanceCounts = targetDistanceInches * COUNTS_PER_INCH;
-		targetDistanceCounts = targetDistanceInches;
+		targetDistanceCounts = targetDistanceInches * COUNTS_PER_INCH;
 		targetYaw = Robot.drive.getYaw();
 	}
 
@@ -61,19 +63,19 @@ public class AutoDriveDistance extends Command {
 			break;
 		case ACCELERATE:
 			speed = speed + ACCELERATION;
-			if(Robot.drive.getAvgPosition()> 3*targetDistanceCounts/7){
+			if(Math.abs(Robot.drive.getAvgPosition())> 3*targetDistanceCounts/7){
 				state = DECELERATE;	
-				accelerateDistance = Robot.drive.getAvgPosition(); 
+				accelerateDistance = Math.abs(Robot.drive.getAvgPosition()); 
 				SmartDashboard.putNumber("accelerateDistance", accelerateDistance);
 			}
 			else if (speed > CRUISING_SPEED) {
 				state = CRUISE;
-				accelerateDistance = Robot.drive.getAvgPosition(); 
+				accelerateDistance = Math.abs(Robot.drive.getAvgPosition()); 
 				SmartDashboard.putNumber("accelerateDistance", accelerateDistance);
 			}
 			break;
 		case CRUISE:
-			if (Robot.drive.getAvgPosition() > (targetDistanceCounts - accelerateDistance * 1.5)) {
+			if (Math.abs(Robot.drive.getAvgPosition()) > (targetDistanceCounts - accelerateDistance * 1.5)) {
 				state = DECELERATE;
 			}
 			break;
@@ -84,7 +86,7 @@ public class AutoDriveDistance extends Command {
 				state = STOP;
 			}
 
-			if (Robot.drive.getAvgPosition() > targetDistanceCounts) {
+			if (Math.abs(Robot.drive.getAvgPosition()) > targetDistanceCounts) {
 				speed = 0;
 				state = STOP;
 			}
@@ -101,7 +103,7 @@ public class AutoDriveDistance extends Command {
 		}
 		SmartDashboard.putNumber("State", state);
 
-		Robot.drive.driveCurve(speed, curve);
+		Robot.drive.driveCurve(speed * direction, curve);
 		Robot.drive.updateDashboard();
 	}
 

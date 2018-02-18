@@ -43,13 +43,15 @@ public class Drive extends Subsystem implements PIDOutput {
 	private final static double D = 0.0;
 	private final static double F = 1023 / MAX_SPEED;
 	private final static double DFT_SENSITIVITY = 0.15;
-	private final static double ROTATE_P = 0.0030;
+	
+	private final static double ROTATE_P = 0.0060;
 	private final static double ROTATE_I = 0.0004;
 	private final static double ROTATE_D = 0.0;
 	private final static double ROTATE_F = 0.0;
 	private final static double ROTATE_TOLERANCE = 3.0;
-	private final static double ROTATE_MAX = 0.15;
+	private final static double ROTATE_MAX = 0.30;
 	private final static double ROTATE_MIN = 0.05;
+	
 	private final static double HEADING_P = 0.008;
 	private final static double HEADING_I = 0.0;
 	private final static double HEADING_D = 0.0;
