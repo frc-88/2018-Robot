@@ -49,9 +49,8 @@ public class Intake extends Subsystem {
 		leftDistanceSensor = new SharpIR(RobotMap.intakeLeftIR);
 		rightDistanceSensor = new SharpIR(RobotMap.intakeRightIR);
 
-		// upDown = new DoubleSolenoid(RobotMap.intakeSolenoidIn,
-		// RobotMap.intakeSolenoidOut);
-		// upDown.set(Value.kOff);
+		 upDown = new DoubleSolenoid(RobotMap.intakeSolenoidIn, RobotMap.intakeSolenoidOut);
+		 upDown.set(Value.kForward);
 	}
 
 	// Sets intake wheel speed
@@ -120,8 +119,7 @@ public class Intake extends Subsystem {
 		SmartDashboard.putNumber("Intake/Right/Motor Current", rightSide.getOutputCurrent());
 		SmartDashboard.putNumber("Intake/Right/Motor Voltage", rightSide.getMotorOutputVoltage());
 
-		// SmartDashboard.putBoolean("Intake/Cradle Up?", intakeUpDown.get() ==
-		// Value.kForward);
+		 SmartDashboard.putBoolean("Intake/Cradle Up?", upDown.get() == Value.kForward);
 
 		SmartDashboard.putBoolean("Intake/Have Cube?", haveCube());
 	}

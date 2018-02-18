@@ -30,13 +30,14 @@ public class LiftSoftLanding extends Command {
     protected void execute() {
     	if (Robot.lift.onTarget(Lift.POS_BOTTOM + OFFSET)) {
     		count++;
-    	}
-    	
-    	if (count > 20) {
-    		Robot.lift.setPosition(Lift.POS_BOTTOM + 20);
-    		Robot.lift.gotoPosition();
+    	} else if (count > 10 && Robot.lift.onTarget(Lift.POS_BOTTOM)) {
     		done = true;
     	}
+
+    	if (count > 10) {
+    		Robot.lift.basicMotion(0.0);
+    	}
+    	
     }
 
     // Make this return true when this Command no longer needs to run execute()
