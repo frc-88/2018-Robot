@@ -29,16 +29,16 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class Drive extends Subsystem implements PIDOutput {
 
-	private final static boolean CAN_CLOSED_LOOP = false;
+	private final static boolean CLOSED_LOOP = true;
 	private final static boolean SPLIT_ARCADE = true;
 
 	private final static int SLOTIDX = 0;
 	private final static int TIMEOUTMS = 0;
 	private final static double RAMPRATE = .30;
-	private final static double MAX_RAMPRATE = 1.0;
-	private final static double MIN_RAMPRATE = .30;
-	private final static double MAX_SPEED = 13000;
-	private final static double P = 0.03;
+	private final static double MAX_RAMPRATE = 1.5;
+	private final static double MIN_RAMPRATE = .50;
+	private final static double MAX_SPEED = 12000;
+	private final static double P = 0.0;
 	private final static double I = 0.0;
 	private final static double D = 0.0;
 	private final static double F = 1023 / MAX_SPEED;
@@ -64,7 +64,8 @@ public class Drive extends Subsystem implements PIDOutput {
 
 	private int headingCount;
 	private int ramprateCount;
-
+	private double ramprate;
+	
 	public PIDController rotateController;
 	private PIDController headingController;
 	private PIDHeadingCorrection headingCorrection;
@@ -119,10 +120,10 @@ public class Drive extends Subsystem implements PIDOutput {
 		leftMaster.configOpenloopRamp(RAMPRATE, TIMEOUTMS);
 		leftMaster.configClosedloopRamp(RAMPRATE, TIMEOUTMS);
 		leftMaster.setSensorPhase(false);
-		leftMaster.setNeutralMode(NeutralMode.Brake);
+		leftMaster.setNeutralMode(NeutralMode.Coast);
 
 		for (int i = 0; i < RobotMap.driveLeftFollowers.length; i++) {
-			leftFollower[i].setNeutralMode(NeutralMode.Brake);
+			leftFollower[i].setNeutralMode(NeutralMode.Coast);
 			leftFollower[i].follow(leftMaster);
 		}
 
@@ -139,10 +140,10 @@ public class Drive extends Subsystem implements PIDOutput {
 		rightMaster.configOpenloopRamp(RAMPRATE, TIMEOUTMS);
 		rightMaster.configClosedloopRamp(RAMPRATE, TIMEOUTMS);
 		rightMaster.setSensorPhase(false);
-		rightMaster.setNeutralMode(NeutralMode.Brake);
+		rightMaster.setNeutralMode(NeutralMode.Coast);
 
 		for (int i = 0; i < RobotMap.driveRightFollowers.length; i++) {
-			rightFollower[i].setNeutralMode(NeutralMode.Brake);
+			rightFollower[i].setNeutralMode(NeutralMode.Coast);
 			rightFollower[i].follow(rightMaster);
 		}
 
@@ -154,8 +155,8 @@ public class Drive extends Subsystem implements PIDOutput {
 	}
 
 	public void wheelSpeed(double left, double right) {
-
-		double ramprate = (MAX_RAMPRATE - MIN_RAMPRATE) * Robot.lift.getPercentHeight() + MIN_RAMPRATE;
+		
+		ramprate = (MAX_RAMPRATE - MIN_RAMPRATE) * Robot.lift.getPercentHeight() + MIN_RAMPRATE;
 
 		if (ramprateCount++ > 10) {
 			ramprateCount = 0;
@@ -165,15 +166,15 @@ public class Drive extends Subsystem implements PIDOutput {
 			rightMaster.configClosedloopRamp(ramprate, TIMEOUTMS);
 		}
 
-		if (CAN_CLOSED_LOOP) {
-			SmartDashboard.putNumber("Drive/Left/Input", -left * MAX_SPEED);
-			SmartDashboard.putNumber("Drive/Right/Input", right * MAX_SPEED);
+		if (CLOSED_LOOP) {
+			SmartDashboard.putNumber("Drive Left Input", -left * MAX_SPEED);
+			SmartDashboard.putNumber("Drive Right Input", right * MAX_SPEED);
 
 			leftMaster.set(ControlMode.Velocity, -left * MAX_SPEED);
 			rightMaster.set(ControlMode.Velocity, right * MAX_SPEED);
 		} else {
-			SmartDashboard.putNumber("Drive/Left/Input", left);
-			SmartDashboard.putNumber("Drive/Right/Input", right);
+			SmartDashboard.putNumber("Drive Left Input", left);
+			SmartDashboard.putNumber("Drive Right Input", right);
 
 			leftMaster.set(ControlMode.PercentOutput, -left);
 			rightMaster.set(ControlMode.PercentOutput, right);
@@ -216,10 +217,10 @@ public class Drive extends Subsystem implements PIDOutput {
 		double leftOutput;
 		double rightOutput;
 
-		SmartDashboard.putNumber("Drive/Curve", curve);
-		SmartDashboard.putNumber("Drive/Magnitude", outputMagnitude);
-		SmartDashboard.putNumber("Drive/Count", headingCount);
-		SmartDashboard.putBoolean("Drive/Stabilize", headingController.isEnabled());
+		SmartDashboard.putNumber("Drive Curve", curve);
+		SmartDashboard.putNumber("Drive Magnitude", outputMagnitude);
+		SmartDashboard.putNumber("Drive Count", headingCount);
+		SmartDashboard.putBoolean("Drive Stabilize", headingController.isEnabled());
 
 		if (outputMagnitude == 0) {
 			headingController.disable();
@@ -311,31 +312,32 @@ public class Drive extends Subsystem implements PIDOutput {
 	}
 
 	public void updateDashboard() {
-		SmartDashboard.putNumber("Drive/AvgPosition", getAvgPosition());
-		SmartDashboard.putNumber("Drive/AvgVelocity", getAvgVelocity());
-		SmartDashboard.putNumber("Drive/Yaw", navX.getYaw());
-		SmartDashboard.putNumber("Drive/Pitch", navX.getPitch());
-		SmartDashboard.putNumber("Drive/Roll", navX.getRoll());
+		SmartDashboard.putNumber("Drive AvgPosition", getAvgPosition());
+		SmartDashboard.putNumber("Drive AvgVelocity", getAvgVelocity());
+		SmartDashboard.putNumber("Drive Yaw", navX.getYaw());
+		SmartDashboard.putNumber("Drive Pitch", navX.getPitch());
+		SmartDashboard.putNumber("Drive Roll", navX.getRoll());
+		SmartDashboard.putNumber("Drive Ramprate", ramprate);
 
-		SmartDashboard.putNumber("Drive/Left/Master/Position", leftMaster.getSelectedSensorPosition(SLOTIDX));
-		SmartDashboard.putNumber("Drive/Left/Master/Velocity", leftMaster.getSelectedSensorVelocity(SLOTIDX));
-		SmartDashboard.putNumber("Drive/Left/Master/Error", leftMaster.getClosedLoopError(SLOTIDX));
-		SmartDashboard.putNumber("Drive/Left/Master/Current", leftMaster.getOutputCurrent());
-		SmartDashboard.putNumber("Drive/Left/Master/Voltage", leftMaster.getMotorOutputVoltage());
+		SmartDashboard.putNumber("Drive Left Master Position", leftMaster.getSelectedSensorPosition(SLOTIDX));
+		SmartDashboard.putNumber("Drive Left Master Velocity", leftMaster.getSelectedSensorVelocity(SLOTIDX));
+		SmartDashboard.putNumber("Drive Left Master Error", leftMaster.getClosedLoopError(SLOTIDX));
+		SmartDashboard.putNumber("Drive Left Master Current", leftMaster.getOutputCurrent());
+		SmartDashboard.putNumber("Drive Left Master Voltage", leftMaster.getMotorOutputVoltage());
 
-		SmartDashboard.putNumber("Drive/Right/Master/Position", rightMaster.getSelectedSensorPosition(SLOTIDX));
-		SmartDashboard.putNumber("Drive/Right/Master/Velocity", rightMaster.getSelectedSensorVelocity(SLOTIDX));
-		SmartDashboard.putNumber("Drive/Right/Master/Error", rightMaster.getClosedLoopError(SLOTIDX));
-		SmartDashboard.putNumber("Drive/Right/Master/Current", rightMaster.getOutputCurrent());
-		SmartDashboard.putNumber("Drive/Right/Master/Voltage", rightMaster.getMotorOutputVoltage());
+		SmartDashboard.putNumber("Drive Right Master Position", rightMaster.getSelectedSensorPosition(SLOTIDX));
+		SmartDashboard.putNumber("Drive Right Master Velocity", rightMaster.getSelectedSensorVelocity(SLOTIDX));
+		SmartDashboard.putNumber("Drive Right Master Error", rightMaster.getClosedLoopError(SLOTIDX));
+		SmartDashboard.putNumber("Drive Right Master Current", rightMaster.getOutputCurrent());
+		SmartDashboard.putNumber("Drive Right Master Voltage", rightMaster.getMotorOutputVoltage());
 
 		for (int i = 0; i < RobotMap.driveLeftFollowers.length; i++) {
-			SmartDashboard.putNumber("Drive/Left/Follower"+i+"/Current", leftFollower[i].getOutputCurrent());
-			SmartDashboard.putNumber("Drive/Left/Follower"+i+"/Voltage", leftFollower[i].getMotorOutputVoltage());
+			SmartDashboard.putNumber("Drive Left Follower"+i+" Current", leftFollower[i].getOutputCurrent());
+			SmartDashboard.putNumber("Drive Left Follower"+i+" Voltage", leftFollower[i].getMotorOutputVoltage());
 		}
 		for (int i = 0; i < RobotMap.driveRightFollowers.length; i++) {
-			SmartDashboard.putNumber("Drive/Right/Follower"+i+"/Current", rightFollower[i].getOutputCurrent());
-			SmartDashboard.putNumber("Drive/Right/Follower"+i+"/Voltage", rightFollower[i].getMotorOutputVoltage());
+			SmartDashboard.putNumber("Drive Right Follower"+i+" Current", rightFollower[i].getOutputCurrent());
+			SmartDashboard.putNumber("Drive Right Follower"+i+" Voltage", rightFollower[i].getMotorOutputVoltage());
 		}
 	}
 

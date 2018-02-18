@@ -14,7 +14,7 @@ public class AutoDriveDistanceAngle extends Command {
 	// TODO roll cruising speed and acceleration into constructor
 	private static final double CRUISING_SPEED = 0.5;
 	private static final double ACCELERATION = 0.01;
-	private static final double COUNTS_PER_INCH = 805;
+	private static final double COUNTS_PER_INCH = 1086;
 
 	// states
 	private static final int PREP = 10;

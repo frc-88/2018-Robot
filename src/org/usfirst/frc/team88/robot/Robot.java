@@ -8,6 +8,7 @@
 package org.usfirst.frc.team88.robot;
 
 import org.usfirst.frc.team88.robot.commands.AutoCenterToSwitch;
+import org.usfirst.frc.team88.robot.commands.AutoDriveDistance;
 import org.usfirst.frc.team88.robot.commands.AutoDriveDistanceAngle;
 import org.usfirst.frc.team88.robot.commands.DriveZeroYaw;
 import org.usfirst.frc.team88.robot.subsystems.Drive;
@@ -51,20 +52,17 @@ public class Robot extends TimedRobot {
 		
 		oi = new OI();
 
-		// Show subsystem commands
-		SmartDashboard.putData("Robot/Drive", drive);
-		SmartDashboard.putData("Robot/Intake", intake);
-		SmartDashboard.putData("Robot/Lift", lift);
-
 		// Autonomous mode selector
 		chooser.addDefault("Cross the Line", new AutoDriveDistanceAngle(100, 0));
 		chooser.addObject("Center Switch", new AutoCenterToSwitch());
 		SmartDashboard.putData("Auto mode", chooser);
 		
 		// Buttons to test commands
-		SmartDashboard.putData("Command/Cross the Line", new AutoDriveDistanceAngle(100, 0));
-		SmartDashboard.putData("Command/Center Switch", new AutoCenterToSwitch());
-		SmartDashboard.putData("Command/Zero Yaw", new DriveZeroYaw());
+		SmartDashboard.putData("Command 100000", new AutoDriveDistance(100000));
+		
+		SmartDashboard.putData("Command Cross the Line", new AutoDriveDistanceAngle(100, 0));
+		SmartDashboard.putData("Command Center Switch", new AutoCenterToSwitch());
+		SmartDashboard.putData("Command Zero Yaw", new DriveZeroYaw());
 	}
 
 	/**
@@ -146,6 +144,11 @@ public class Robot extends TimedRobot {
 
 	private void updateDashboard() {
 		SmartDashboard.putString("Robot/Auto Command", chooser.getName());
+
+		// Show subsystem commands
+		SmartDashboard.putData("Robot Drive", drive);
+		SmartDashboard.putData("Robot Intake", intake);
+		SmartDashboard.putData("Robot Lift", lift);
 
 		drive.updateDashboard();
 		intake.updateDashboard();

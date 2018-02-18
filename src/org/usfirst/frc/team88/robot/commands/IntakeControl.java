@@ -26,12 +26,18 @@ public class IntakeControl extends Command {
 
 	// Called repeatedly when this Command is scheduled to run
 	protected void execute() {
+		double input = TJUtility.polynomial(-Robot.oi.operator.getZ(), POLY_A, POLY_B, POLY_C, DEADZONE);
 
-		Robot.intake.wheelSpeed(TJUtility.polynomial(-Robot.oi.operator.getZ(), POLY_A, POLY_B, POLY_C, DEADZONE));
-		
-		if (Robot.intake.haveCube()) {
-			Robot.oi.operator.rumble(1);
-		} else {
+		Robot.intake.wheelSpeed(input);
+
+		if (input != 0) {
+			if (Robot.intake.haveCube()) {
+				Robot.oi.operator.rumble(1);
+			} else {
+				Robot.oi.operator.rumble(0);
+			}
+		}
+		else {
 			Robot.oi.operator.rumble(0);
 		}
 	}

@@ -13,7 +13,7 @@ public class LiftMove extends Command {
 	private static final double POLY_A = 0.35;
 	private static final double POLY_B = 0.5;
 	private static final double POLY_C = 0.15;
-	private static final int MAX_MOVE = 5;
+	private static final int MAX_MOVE = 10;
 	
     public LiftMove() {
     	requires(Robot.lift);
@@ -25,10 +25,12 @@ public class LiftMove extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	int move = (int) (TJUtility.polynomial(Robot.oi.operator.getLeftStickY(), POLY_A, POLY_B, POLY_C, DEADZONE) * MAX_MOVE);
+    	int move = (int) TJUtility.polynomial(Robot.oi.operator.getLeftStickY(), POLY_A, POLY_B, POLY_C, DEADZONE);
     	
-    	if (move != 0) {
-    		Robot.lift.setPosition(Robot.lift.getPosition() + move);
+    	if (move > 0) {
+    		Robot.lift.setPosition(Robot.lift.getPosition() + (move * 3 * MAX_MOVE));
+    	} else if (move < 0) {
+    		Robot.lift.setPosition(Robot.lift.getPosition() + (move * MAX_MOVE));
     	}
     	
     	Robot.lift.gotoPosition();

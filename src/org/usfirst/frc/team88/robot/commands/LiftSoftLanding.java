@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj.command.Command;
  */
 public class LiftSoftLanding extends Command {
 
-	private static final int OFFSET = 100;
+	private static final int OFFSET = 80;
 	private boolean done;
 	private int count;
 	
@@ -32,8 +32,8 @@ public class LiftSoftLanding extends Command {
     		count++;
     	}
     	
-    	if (count > 10) {
-    		Robot.lift.setPosition(Lift.POS_BOTTOM);
+    	if (count > 20) {
+    		Robot.lift.setPosition(Lift.POS_BOTTOM + 20);
     		Robot.lift.gotoPosition();
     		done = true;
     	}

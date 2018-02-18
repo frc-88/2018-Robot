@@ -1,16 +1,14 @@
 package org.usfirst.frc.team88.robot.commands;
 
 import org.usfirst.frc.team88.robot.Robot;
-import org.usfirst.frc.team88.robot.subsystems.Lift;
 
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  *
  */
-public class AutoCenterToSwitch extends Command {
+public class AutoDriveDistance extends Command {
 
 	// states
 	private static final int PREP = 0;
@@ -19,74 +17,45 @@ public class AutoCenterToSwitch extends Command {
 	private static final int DECELERATE = 5;
 	private static final int STOP = 2;
 	private static final int END = 3;
-	private static final double CRUISING_SPEED = 0.5;
+	private static final double CRUISING_SPEED = 0.3;
 	private static final double ACCELERATION = 0.01;
 	private static final double COUNTS_PER_INCH = 1086;
-	private static final double STAGE_ONE = 10;
-	private static final double STAGE_THREE = 35;
 
 	private int state;
 	private double speed;
 	private double targetDistanceCounts;
 	private double targetYaw;
 	private double accelerateDistance;
-	private double stageTwoYaw;
-	private double stageTwoDistanceInches;
+	private double targetDistanceInches;
 	private boolean done;
-	private String gameData;
-	private double count;
 
 
-	public AutoCenterToSwitch() {
+	public AutoDriveDistance(double distance) {
 		// Use requires() here to declare subsystem dependencies
 		// eg. requires(chassis);
 		requires(Robot.drive);
-		requires(Robot.lift);
+		targetDistanceInches=distance;
 	}
 
 	// Called just before this Command runs the first time
 	protected void initialize() {
+		Robot.drive.resetEncoders();
 
 		state = PREP;
 		done = false;
 		speed = 0.0;
-		count = 0.0;
-		
-		Robot.drive.zeroYaw();
-		
-		gameData = DriverStation.getInstance().getGameSpecificMessage();
-		if(gameData.charAt(0) == 'L'){
-			stageTwoYaw = -40;
-			stageTwoDistanceInches = 95;
-		}
-		else if(gameData.charAt(0) == 'R'){
-			stageTwoYaw =38;
-			stageTwoDistanceInches = 80;
-		}
-		targetDistanceCounts = (STAGE_ONE + stageTwoDistanceInches + STAGE_THREE) * COUNTS_PER_INCH;
+		//targetDistanceCounts = targetDistanceInches * COUNTS_PER_INCH;
+		targetDistanceCounts = targetDistanceInches;
+		targetYaw = Robot.drive.getYaw();
 	}
 
 	// Called repeatedly when this Command is scheduled to run
 	protected void execute() {
-		double curve;
-		double avgPosition = Robot.drive.getAvgPosition();
-		
-		if (avgPosition < STAGE_ONE * COUNTS_PER_INCH) {
-			targetYaw = 0.0;
-		} else if (avgPosition < (STAGE_ONE + stageTwoDistanceInches) *COUNTS_PER_INCH) {
-			targetYaw = stageTwoYaw;
-		} else {
-			targetYaw = 0.0;
-		}
-		
-		curve = (targetYaw - (Robot.drive.getYaw())) * 0.02;
+		double curve = (targetYaw - (Robot.drive.getYaw())) * 0.03;
 
 		switch (state){
 		case PREP:
-			Robot.drive.resetEncoders();
 			if(Math.abs(Robot.drive.getAvgPosition())<100){
-				Robot.lift.setPosition(Lift.POS_SWITCH);
-				Robot.lift.gotoPosition();
 				state = ACCELERATE;
 			}
 			break;
@@ -104,7 +73,7 @@ public class AutoCenterToSwitch extends Command {
 			}
 			break;
 		case CRUISE:
-			if (Robot.drive.getAvgPosition() > (targetDistanceCounts - (accelerateDistance * 2.4))) {
+			if (Robot.drive.getAvgPosition() > (targetDistanceCounts - accelerateDistance * 1.5)) {
 				state = DECELERATE;
 			}
 			break;
@@ -124,24 +93,15 @@ public class AutoCenterToSwitch extends Command {
 		case STOP:
 			speed = 0.0;
 
-			Robot.intake.wheelSpeed(1.0);
-			
-			count++;
-			
-			if (count > 20) {
-				state = END;
-			}
+			state = END;
 			break;
 		case END:
-			Robot.intake.wheelSpeed(0.0);
 			done = true;
 			break;
 		}
 		SmartDashboard.putNumber("State", state);
 
-		if(state != PREP){
-			Robot.drive.driveCurve(speed, curve);
-		}
+		Robot.drive.driveCurve(speed, curve);
 		Robot.drive.updateDashboard();
 	}
 
