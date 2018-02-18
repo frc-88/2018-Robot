@@ -8,6 +8,7 @@
 package org.usfirst.frc.team88.robot;
 
 import org.usfirst.frc.team88.robot.commands.AutoCenterToSwitch;
+import org.usfirst.frc.team88.robot.commands.AutoCrossTheLine;
 import org.usfirst.frc.team88.robot.commands.AutoDriveDistance;
 import org.usfirst.frc.team88.robot.commands.AutoDriveDistanceAngle;
 import org.usfirst.frc.team88.robot.commands.DriveZeroYaw;
@@ -53,14 +54,14 @@ public class Robot extends TimedRobot {
 		oi = new OI();
 
 		// Autonomous mode selector
-		chooser.addDefault("Cross the Line", new AutoDriveDistanceAngle(100, 0));
+		chooser.addDefault("Cross the Line", new AutoCrossTheLine());
 		chooser.addObject("Center Switch", new AutoCenterToSwitch());
 		SmartDashboard.putData("Auto mode", chooser);
 		
 		// Buttons to test commands
 		SmartDashboard.putData("Command 100000", new AutoDriveDistance(100000));
 		
-		SmartDashboard.putData("Command Cross the Line", new AutoDriveDistanceAngle(100, 0));
+		SmartDashboard.putData("Command Cross the Line", new AutoCrossTheLine());
 		SmartDashboard.putData("Command Center Switch", new AutoCenterToSwitch());
 		SmartDashboard.putData("Command Zero Yaw", new DriveZeroYaw());
 	}

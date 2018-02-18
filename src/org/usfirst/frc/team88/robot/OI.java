@@ -31,8 +31,8 @@ public class OI {
 		// DriveSplitArcade command to provide field oriented options. Commands
 		// should not be assigned to them.
 		
-//		operator.buttonRightBumper.whenPressed(new IntakePneumaticsUp());
-//		operator.buttonLeftBumper.whenPressed(new IntakePneumaticsDown());
+		operator.buttonRightBumper.whenPressed(new IntakePneumaticsUp());
+		operator.buttonLeftBumper.whenPressed(new IntakePneumaticsDown());
 		
 		operator.buttonB.whenPressed(new LiftGotoPosition(Lift.POS_SWITCH));
 		operator.buttonB.whenReleased(new LiftSoftLanding());

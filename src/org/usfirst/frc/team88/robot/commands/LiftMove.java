@@ -25,14 +25,15 @@ public class LiftMove extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	int move = (int) (TJUtility.polynomial(Robot.oi.operator.getLeftStickY(), POLY_A, POLY_B, POLY_C, DEADZONE) / 2.0);
+    	int move = (int) TJUtility.polynomial(Robot.oi.operator.getLeftStickY(), POLY_A, POLY_B, POLY_C, DEADZONE);
     	
-    	if (move != 0) {
-    		Robot.lift.basicMotion(move);
-    		Robot.lift.setPosition(Robot.lift.getPosition());
-    	} else { 
-        	Robot.lift.gotoPosition();
+    	if (move > 0) {
+    		Robot.lift.setPosition(Robot.lift.getPosition() + (move * 3 * MAX_MOVE));
+    	} else if (move < 0) {
+    		Robot.lift.setPosition(Robot.lift.getPosition() + (move * MAX_MOVE));
     	}
+    	
+    	Robot.lift.gotoPosition();
     }
 
     // Make this return true when this Command no longer needs to run execute()

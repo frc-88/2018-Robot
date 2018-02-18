@@ -36,7 +36,7 @@ public class TJUtility {
 	public static double polynomial(double value, double a, double b, double c, double deadzone) {
 		double output;
 
-		output = POLY_A * Math.pow(value, 5) + POLY_B * Math.pow(value, 3) + POLY_C * value;
+		output = a * Math.pow(value, 5) + b * Math.pow(value, 3) + c * value;
 
 		if (Math.abs(output) < deadzone) {
 			output = 0.0;

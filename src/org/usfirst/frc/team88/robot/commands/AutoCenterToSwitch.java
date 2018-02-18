@@ -23,7 +23,7 @@ public class AutoCenterToSwitch extends Command {
 	private static final double ACCELERATION = 0.01;
 	private static final double COUNTS_PER_INCH = 1086;
 	private static final double STAGE_ONE = 10;
-	private static final double STAGE_THREE = 35;
+	//private static final double STAGE_THREE = 75;
 
 	private int state;
 	private double speed;
@@ -32,6 +32,8 @@ public class AutoCenterToSwitch extends Command {
 	private double accelerateDistance;
 	private double stageTwoYaw;
 	private double stageTwoDistanceInches;
+	private double stageThreeYaw;
+	private double stageThreeDistance;
 	private boolean done;
 	private String gameData;
 	private double count;
@@ -56,14 +58,18 @@ public class AutoCenterToSwitch extends Command {
 		
 		gameData = DriverStation.getInstance().getGameSpecificMessage();
 		if(gameData.charAt(0) == 'L'){
-			stageTwoYaw = -40;
-			stageTwoDistanceInches = 95;
+			stageTwoYaw = -50;
+			stageTwoDistanceInches = 75;
+			stageThreeYaw = 10;
+			stageThreeDistance = 75;
 		}
 		else if(gameData.charAt(0) == 'R'){
 			stageTwoYaw =38;
 			stageTwoDistanceInches = 80;
+			stageThreeYaw = -10;
+			stageThreeDistance = 40;
 		}
-		targetDistanceCounts = (STAGE_ONE + stageTwoDistanceInches + STAGE_THREE) * COUNTS_PER_INCH;
+		targetDistanceCounts = (STAGE_ONE + stageTwoDistanceInches + stageThreeDistance) * COUNTS_PER_INCH;
 	}
 
 	// Called repeatedly when this Command is scheduled to run
@@ -76,7 +82,7 @@ public class AutoCenterToSwitch extends Command {
 		} else if (avgPosition < (STAGE_ONE + stageTwoDistanceInches) *COUNTS_PER_INCH) {
 			targetYaw = stageTwoYaw;
 		} else {
-			targetYaw = 0.0;
+			targetYaw = stageThreeYaw;
 		}
 		
 		curve = (targetYaw - (Robot.drive.getYaw())) * 0.02;
@@ -92,7 +98,7 @@ public class AutoCenterToSwitch extends Command {
 			break;
 		case ACCELERATE:
 			speed = speed + ACCELERATION;
-			if(Robot.drive.getAvgPosition()> 3*targetDistanceCounts/7){
+			if(Robot.drive.getAvgPosition()> targetDistanceCounts){
 				state = DECELERATE;	
 				accelerateDistance = Robot.drive.getAvgPosition(); 
 				SmartDashboard.putNumber("accelerateDistance", accelerateDistance);
@@ -104,7 +110,7 @@ public class AutoCenterToSwitch extends Command {
 			}
 			break;
 		case CRUISE:
-			if (Robot.drive.getAvgPosition() > (targetDistanceCounts - (accelerateDistance * 2.4))) {
+			if (Robot.drive.getAvgPosition() > (targetDistanceCounts - (accelerateDistance * 1.4))) {
 				state = DECELERATE;
 			}
 			break;
@@ -130,6 +136,7 @@ public class AutoCenterToSwitch extends Command {
 			
 			if (count > 20) {
 				state = END;
+				Robot.intake.cradleDown();
 			}
 			break;
 		case END:

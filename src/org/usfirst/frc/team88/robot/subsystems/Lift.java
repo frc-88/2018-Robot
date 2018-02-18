@@ -35,7 +35,7 @@ public class Lift extends Subsystem {
 	private final static double D = 20.0;
 	private final static double F = 1023 / MAX_SPEED;
 
-	private static final int FORWARDLIMIT = 800;
+	private static final int FORWARDLIMIT = 790;
 	private static final int REVERSELIMIT = 75;
 	public final static int POS_BOTTOM = 80;
 	public final static int POS_SWITCH = 260;

@@ -10,9 +10,9 @@ import edu.wpi.first.wpilibj.command.Command;
  */
 public class IntakeControl extends Command {
 	private static final double DEADZONE = 0.1;
-	private static final double POLY_A = 0.35;
-	private static final double POLY_B = 0.5;
-	private static final double POLY_C = 0.15;
+	private static final double POLY_A = 0.6;
+	private static final double POLY_B = 0.1;
+	private static final double POLY_C = 0.3;
 
 	public IntakeControl() {
 		// Use requires() here to declare subsystem dependencies
