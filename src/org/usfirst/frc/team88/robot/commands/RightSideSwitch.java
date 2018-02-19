@@ -34,7 +34,7 @@ public class RightSideSwitch extends CommandGroup {
     	addSequential(new AutoDriveDistanceAngle(156,0));
     	addSequential(new DriveRotateToAngle(-70));
     	addSequential(new AutoDriveDistanceAngle(24,-90));
-    	addSequential(new IntakeEjectCube());
+    	addSequential(new IntakeEjectCube(Lift.POS_SWITCH));
     	addSequential(new AutoDriveDistance(-24));
     	addParallel(new LiftSoftLanding());
     	addSequential(new DriveRotateToAngle(-20));

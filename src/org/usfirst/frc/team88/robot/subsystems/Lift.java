@@ -31,18 +31,20 @@ public class Lift extends Subsystem {
 	private final static int CRUISE_VELOCITY = 30;
 	private final static int ACCELERATION = 180;
 	private final static double P = 13.0;
-	private final static double I = 0.0;
+	private final static double I = 0.0;  // Make sure revers limit is accurate before using i!!!
 	private final static double D = 20.0;
 	private final static double F = 1023 / MAX_SPEED;
 
-	private static final int FORWARDLIMIT = 790;
-	private static final int REVERSELIMIT = 75;
-	public final static int POS_BOTTOM = 80;
-	public final static int POS_SWITCH = 260;
-	public final static int POS_LOW_SCALE = 520;
-	public final static int POS_MID_SCALE = 600;
-	public final static int POS_HI_SCALE = 720;
-	public final static int DISTANCE_THRESHOLD = 10;
+	// When chain is adjusted on the lift, DOUBLE CHECK Limits!!!
+	private static final int FORWARDLIMIT = 920;
+	private static final int REVERSELIMIT = 195;
+	
+	public final static int POS_BOTTOM = REVERSELIMIT +5;
+	public final static int POS_SWITCH = REVERSELIMIT + 200;
+	public final static int POS_LOW_SCALE = REVERSELIMIT + 470;
+	public final static int POS_MID_SCALE = REVERSELIMIT + 550;
+	public final static int POS_HI_SCALE = REVERSELIMIT + 640;
+	public final static int DISTANCE_THRESHOLD = 20;
 
 	private TalonSRX master;
 	private TalonSRX follower;

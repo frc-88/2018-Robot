@@ -7,9 +7,9 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 /**
  *
  */
-public class RightSideScale extends CommandGroup {
+public class RightSideScaleThenSwitch extends CommandGroup {
 
-    public RightSideScale() {
+    public RightSideScaleThenSwitch() {
         // Add Commands here:
         // e.g. addSequential(new Command1());
         //      addSequential(new Command2());
@@ -26,19 +26,32 @@ public class RightSideScale extends CommandGroup {
         // e.g. if Command1 requires chassis, and Command2 requires arm,
         // a CommandGroup containing them would require both the chassis and the
         // arm.
+    	
     	addSequential(new DriveZeroYaw());
+    	addSequential(new DriveEnableBreakMode());
     	addParallel(new IntakePneumaticsDown());
-    	addSequential(new AutoDriveDistanceAngle(21*12,0));
+    	addSequential(new AutoDriveDistanceAngleFast(25.25*12,0));
     	addSequential(new DriveRotateToAngle(-45));
-    	addParallel(new LiftGotoPosition(Lift.POS_MID_SCALE));
+//    	addSequential(new AutoDriveDistanceAngle(2, -45));
+    	addSequential(new LiftGotoPosition(Lift.POS_HI_SCALE));
+    	addSequential(new LiftCheckOnTarget(Lift.POS_HI_SCALE));
+    	addSequential(new IntakeEjectCube(Lift.POS_HI_SCALE));
     	
-    	addSequential(new IntakeEjectCube(Lift.POS_MID_SCALE));
+    	addParallel(new LiftSoftLanding());
     	addSequential(new AutoDriveDistance(-10));
-    	addSequential(new LiftSoftLanding());
-    	addParallel(new DriveRotateToAngle(0));
-    	//addSequential(new DriveRotateToAngle(-45));
-    	//lift command here
-    	//addSequential(new AutoDriveDistanceAngle(12,-45));
     	
+    	
+    	addSequential(new DriveRotateToAngle(-125));
+    	addParallel(new AutoDriveDistanceAngle(64, -147));
+    	addSequential(new IntakeIntakeCube(5));
+    	addParallel(new LiftGotoPosition(Lift.POS_SWITCH));
+    	addSequential(new AutoDriveDistanceAngle(12, -147));
+    	addSequential(new IntakeEjectCube(Lift.POS_SWITCH));
+//    	addSequential(new AutoDriveDistance(-20));
+//    	addParallel(new LiftSoftLanding());
+//    	addSequential(new DriveRotateToAngle(0));
+    	
+    	addSequential(new DriveDisableBreakMode());
     }
+    
 }

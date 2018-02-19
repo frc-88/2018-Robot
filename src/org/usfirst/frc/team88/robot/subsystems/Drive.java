@@ -270,6 +270,19 @@ public class Drive extends Subsystem implements PIDOutput {
 		wheelSpeed(leftOutput, rightOutput);
 	}
 
+	public void setNeutralMode(NeutralMode mode) {
+		leftMaster.setNeutralMode(mode);
+		for (int i = 0; i < RobotMap.driveLeftFollowers.length; i++) {
+			leftFollower[i].setNeutralMode(mode);
+		}
+
+		rightMaster.setNeutralMode(mode);
+		for (int i = 0; i < RobotMap.driveRightFollowers.length; i++) {
+			rightFollower[i].setNeutralMode(mode);
+		}
+
+	}
+	
 	public double getYaw() {
 		return navX.getYaw();
 	}
