@@ -1,6 +1,7 @@
 package org.usfirst.frc.team88.robot.subsystems;
 
 import org.usfirst.frc.team88.robot.RobotMap;
+import org.usfirst.frc.team88.robot.commands.LiftBasicControl;
 import org.usfirst.frc.team88.robot.commands.LiftMove;
 
 import com.ctre.phoenix.ParamEnum;
@@ -21,25 +22,29 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * </pre>
  */
 public class Lift extends Subsystem {
+	private static final boolean BASIC_CONTROL = false;
+	
 	private static final int SLOTIDX = 0;
 	private static final int TIMEOUTMS = 0;
 	private final static double RAMPRATE = .30;
 	private final static double MAX_SPEED = 32;
 	private final static int CRUISE_VELOCITY = 30;
 	private final static int ACCELERATION = 180;
-	private final static double P = 10.0;
-	private final static double I = 0.0;
-	private final static double D = 10.0;
+	private final static double P = 13.0;
+	private final static double I = 0.0;  // Make sure revers limit is accurate before using i!!!
+	private final static double D = 20.0;
 	private final static double F = 1023 / MAX_SPEED;
 
-	private static final int FORWARDLIMIT = 750;
-	private static final int REVERSELIMIT = 80;
-	public final static int POS_BOTTOM = 80;
-	public final static int POS_SWITCH = 260;
-	public final static int POS_LOW_SCALE = 520;
-	public final static int POS_MID_SCALE = 600;
-	public final static int POS_HI_SCALE = 720;
-	public final static int DISTANCE_THRESHOLD = 10;
+	// When chain is adjusted on the lift, DOUBLE CHECK Limits!!!
+	private static final int FORWARDLIMIT = 920;
+	private static final int REVERSELIMIT = 195;
+	
+	public final static int POS_BOTTOM = REVERSELIMIT +5;
+	public final static int POS_SWITCH = REVERSELIMIT + 200;
+	public final static int POS_LOW_SCALE = REVERSELIMIT + 470;
+	public final static int POS_MID_SCALE = REVERSELIMIT + 550;
+	public final static int POS_HI_SCALE = REVERSELIMIT + 640;
+	public final static int DISTANCE_THRESHOLD = 20;
 
 	private TalonSRX master;
 	private TalonSRX follower;
@@ -93,6 +98,10 @@ public class Lift extends Subsystem {
 		position = POS_BOTTOM;
 	}
 
+	public void basicMotion(double input) {
+		master.set(ControlMode.PercentOutput, input);
+	}
+
 	public void gotoPosition() {
 		master.set(ControlMode.MotionMagic, position);
 	}
@@ -112,7 +121,7 @@ public class Lift extends Subsystem {
 	}
 
 	public double getPercentHeight() {
-		return (getPosition() - REVERSELIMIT) / (FORWARDLIMIT - REVERSELIMIT);
+		return (double) (getPosition() - REVERSELIMIT) / (double) (FORWARDLIMIT - REVERSELIMIT);
 	}
 	
 	public boolean onTarget(int target) {
@@ -121,23 +130,29 @@ public class Lift extends Subsystem {
 
 	public void updateDashboard() {
 		SmartDashboard.putNumber("Lift Target Position", position);
-		SmartDashboard.putNumber("Lift Master Position", master.getSelectedSensorPosition(SLOTIDX));
+		SmartDashboard.putNumber("Lift Master Position", getPosition());
 		SmartDashboard.putNumber("Lift Master Velocity", master.getSelectedSensorVelocity(SLOTIDX));
 		SmartDashboard.putNumber("Lift Master Error", master.getClosedLoopError(SLOTIDX));
 		SmartDashboard.putNumber("Lift Master Current", master.getOutputCurrent());
 		SmartDashboard.putNumber("Lift Master Voltage", master.getMotorOutputVoltage());
 		SmartDashboard.putNumber("Lift Follower Current", follower.getOutputCurrent());
 		SmartDashboard.putNumber("Lift Follower Voltage", follower.getMotorOutputVoltage());
-
+		SmartDashboard.putNumber("Percent Height", getPercentHeight());
+		
 		SmartDashboard.putBoolean("Lift Position High Scale?", onTarget(POS_HI_SCALE));
 		SmartDashboard.putBoolean("Lift Position Mid Scale?", onTarget(POS_MID_SCALE));
 		SmartDashboard.putBoolean("Lift Position Low Scale?", onTarget(POS_LOW_SCALE));
 		SmartDashboard.putBoolean("Lift Position Switch?", onTarget(POS_SWITCH));
 		SmartDashboard.putBoolean("Lift Position Bottom?", onTarget(POS_BOTTOM));
+		
 	}
 
 	public void initDefaultCommand() {
 		// Set the default command for a subsystem here.
-		setDefaultCommand(new LiftMove());
+		if (BASIC_CONTROL) {
+			setDefaultCommand(new LiftBasicControl());
+		} else {
+			setDefaultCommand(new LiftMove());
+		}
 	}
 }

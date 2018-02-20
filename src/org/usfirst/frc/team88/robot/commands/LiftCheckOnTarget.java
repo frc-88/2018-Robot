@@ -1,50 +1,32 @@
 package org.usfirst.frc.team88.robot.commands;
 
 import org.usfirst.frc.team88.robot.Robot;
-import org.usfirst.frc.team88.robot.subsystems.Lift;
 
 import edu.wpi.first.wpilibj.command.Command;
 
 /**
  *
  */
-public class LiftSoftLanding extends Command {
-
-	private static final int OFFSET = 80;
-	private boolean done;
-	private int count;
+public class LiftCheckOnTarget extends Command {
 	
-    public LiftSoftLanding() {
-    	requires(Robot.lift);
+	int target;
+    public LiftCheckOnTarget(int t) {
+        // Use requires() here to declare subsystem dependencies
+        // eg. requires(chassis);
+    	target = t;
     }
 
     // Called just before this Command runs the first time
     protected void initialize() {
-    	done = false;
-    	count = 0;
-		Robot.lift.setPosition(Lift.POS_BOTTOM + OFFSET);
-		Robot.lift.gotoPosition();
     }
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	if (Robot.lift.onTarget(Lift.POS_BOTTOM + OFFSET)) {
-    		count++;
-    	} else if ((count > 10 && Robot.lift.onTarget(Lift.POS_BOTTOM)) || count > 100) {
-    		Robot.lift.setPosition(Lift.POS_BOTTOM);
-    		done = true;
-    	}
-
-    	if (count > 10) {
-    		count++;
-    		Robot.lift.basicMotion(-0.2);
-    	}
-    	
     }
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return done;
+        return Robot.lift.onTarget(target);
     }
 
     // Called once after isFinished returns true

@@ -10,9 +10,9 @@ import edu.wpi.first.wpilibj.command.Command;
  */
 public class IntakeControl extends Command {
 	private static final double DEADZONE = 0.1;
-	private static final double POLY_A = 0.35;
-	private static final double POLY_B = 0.5;
-	private static final double POLY_C = 0.15;
+	private static final double POLY_A = 0.6;
+	private static final double POLY_B = 0.1;
+	private static final double POLY_C = 0.3;
 
 	public IntakeControl() {
 		// Use requires() here to declare subsystem dependencies
@@ -26,12 +26,18 @@ public class IntakeControl extends Command {
 
 	// Called repeatedly when this Command is scheduled to run
 	protected void execute() {
+		double input = TJUtility.polynomial(-Robot.oi.operator.getZ(), POLY_A, POLY_B, POLY_C, DEADZONE);
 
-		Robot.intake.wheelSpeed(TJUtility.polynomial(-Robot.oi.operator.getZ(), POLY_A, POLY_B, POLY_C, DEADZONE));
-		
-		if (Robot.intake.haveCube()) {
-			Robot.oi.operator.rumble(1);
-		} else {
+		Robot.intake.wheelSpeed(input);
+
+		if (input != 0) {
+			if (Robot.intake.haveCube()) {
+				Robot.oi.operator.rumble(1);
+			} else {
+				Robot.oi.operator.rumble(0);
+			}
+		}
+		else {
 			Robot.oi.operator.rumble(0);
 		}
 	}

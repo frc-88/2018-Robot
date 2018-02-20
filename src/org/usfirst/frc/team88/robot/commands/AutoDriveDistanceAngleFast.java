@@ -8,12 +8,12 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 /**
  *
  */
-public class AutoDriveDistanceAngle extends Command {
+public class AutoDriveDistanceAngleFast extends Command {
 
 	// performance constants
 	// TODO roll cruising speed and acceleration into constructor
-	private static final double CRUISING_SPEED = 0.5;
-	private static final double ACCELERATION = 0.01;
+	private static final double CRUISING_SPEED = 1;
+	private static final double ACCELERATION = 0.03;
 	private static final double COUNTS_PER_INCH = 1086;
 
 	// states
@@ -31,7 +31,7 @@ public class AutoDriveDistanceAngle extends Command {
 	private double speed;
 	private double accelerateDistance;
 
-	public AutoDriveDistanceAngle(double distance, double angle) {
+	public AutoDriveDistanceAngleFast(double distance, double angle) {
 		requires(Robot.drive);
 
 		targetDistance = distance * COUNTS_PER_INCH;

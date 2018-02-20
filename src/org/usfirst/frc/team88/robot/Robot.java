@@ -7,12 +7,22 @@
 
 package org.usfirst.frc.team88.robot;
 
+import org.usfirst.frc.team88.robot.commands.AutoCenterFull;
 import org.usfirst.frc.team88.robot.commands.AutoCenterToSwitch;
+import org.usfirst.frc.team88.robot.commands.AutoCrossTheLine;
+import org.usfirst.frc.team88.robot.commands.AutoDriveDistance;
 import org.usfirst.frc.team88.robot.commands.AutoDriveDistanceAngle;
+import org.usfirst.frc.team88.robot.commands.DriveResetEncoders;
+import org.usfirst.frc.team88.robot.commands.DriveRotateToAngle;
 import org.usfirst.frc.team88.robot.commands.DriveZeroYaw;
+import org.usfirst.frc.team88.robot.commands.RightSideScale;
+import org.usfirst.frc.team88.robot.commands.RightSideScaleThenSwitch;
+import org.usfirst.frc.team88.robot.commands.RightSideSwitch;
 import org.usfirst.frc.team88.robot.subsystems.Drive;
 import org.usfirst.frc.team88.robot.subsystems.Intake;
 import org.usfirst.frc.team88.robot.subsystems.Lift;
+
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -51,20 +61,30 @@ public class Robot extends TimedRobot {
 		
 		oi = new OI();
 
-		// Show subsystem commands
-		SmartDashboard.putData("Robot/Drive", drive);
-		SmartDashboard.putData("Robot/Intake", intake);
-		SmartDashboard.putData("Robot/Lift", lift);
-
 		// Autonomous mode selector
-		chooser.addDefault("Cross the Line", new AutoDriveDistanceAngle(100, 0));
+		chooser.addDefault("Cross the Line", new AutoCrossTheLine());
 		chooser.addObject("Center Switch", new AutoCenterToSwitch());
 		SmartDashboard.putData("Auto mode", chooser);
 		
 		// Buttons to test commands
-		SmartDashboard.putData("Command/Cross the Line", new AutoDriveDistanceAngle(100, 0));
-		SmartDashboard.putData("Command/Center Switch", new AutoCenterToSwitch());
-		SmartDashboard.putData("Command/Zero Yaw", new DriveZeroYaw());
+		SmartDashboard.putData("Command 100000", new AutoDriveDistance(100000));
+		
+		SmartDashboard.putData("Command Cross the Line", new AutoCrossTheLine());
+		SmartDashboard.putData("Command Center Switch", new AutoCenterToSwitch());
+		SmartDashboard.putData("Command Center Full", new AutoCenterFull());
+		SmartDashboard.putData("Command RightSwitch", new RightSideSwitch());
+		SmartDashboard.putData("Command RightScale", new RightSideScale());
+		
+		SmartDashboard.putData("Command RightScaleThenSwitch", new RightSideScaleThenSwitch());
+		
+		SmartDashboard.putData("Command Zero Yaw", new DriveZeroYaw());
+		SmartDashboard.putData("Command Reset Encoders", new DriveResetEncoders());
+		
+		
+		SmartDashboard.putData("Command Rotate to 0", new DriveRotateToAngle(0));
+		SmartDashboard.putData("Command Rotate to 90", new DriveRotateToAngle(90));
+		SmartDashboard.putData("Command Rotate to 180", new DriveRotateToAngle(180));
+		SmartDashboard.putData("Command Rotate to -90", new DriveRotateToAngle(-90));
 	}
 
 	/**
@@ -125,6 +145,7 @@ public class Robot extends TimedRobot {
 		if (autonomousCommand != null) {
 			autonomousCommand.cancel();
 		}
+		Robot.drive.setNeutralMode(NeutralMode.Coast);
 	}
 
 	/**
@@ -146,6 +167,11 @@ public class Robot extends TimedRobot {
 
 	private void updateDashboard() {
 		SmartDashboard.putString("Robot/Auto Command", chooser.getName());
+
+		// Show subsystem commands
+		SmartDashboard.putData("Robot Drive", drive);
+		SmartDashboard.putData("Robot Intake", intake);
+		SmartDashboard.putData("Robot Lift", lift);
 
 		drive.updateDashboard();
 		intake.updateDashboard();
