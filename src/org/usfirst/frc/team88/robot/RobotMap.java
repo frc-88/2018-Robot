@@ -21,8 +21,8 @@ public class RobotMap {
 	public static final int[] driveRightFollowers = { 8, 9, 11};
 
 	// Lift - CAN
-	public static final int liftMaster = 13; 
-	public static final int liftFollower = 12;
+	public static final int liftMaster = 12; 
+	public static final int liftFollower = 13;
 
 	// Intake - CAN
 	public static final int intakeLeft = 3; 
