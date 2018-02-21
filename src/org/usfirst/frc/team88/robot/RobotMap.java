@@ -15,10 +15,10 @@ package org.usfirst.frc.team88.robot;
  */
 public class RobotMap {
 	// Drive - CAN
-	public static final int driveLeftMaster = 10;
-	public static final int[] driveLeftFollowers = { 8, 9, 11 };
-	public static final int driveRightMaster = 6;
-	public static final int[] driveRightFollowers = { 4, 5, 7};
+	public static final int driveLeftMaster = 6;
+	public static final int[] driveLeftFollowers = { 4, 5, 7 };
+	public static final int driveRightMaster = 10;
+	public static final int[] driveRightFollowers = { 8, 9, 11};
 
 	// Lift - CAN
 	public static final int liftMaster = 13; 
