@@ -7,7 +7,7 @@
 
 package org.usfirst.frc.team88.robot;
 
-import org.usfirst.frc.team88.robot.commands.AutoCenterFull;
+import org.usfirst.frc.team88.robot.commands.AutoCenter;
 import org.usfirst.frc.team88.robot.commands.AutoCenterToSwitch;
 import org.usfirst.frc.team88.robot.commands.AutoCrossTheLine;
 import org.usfirst.frc.team88.robot.commands.AutoDriveDistance;
@@ -71,7 +71,7 @@ public class Robot extends TimedRobot {
 		
 		SmartDashboard.putData("Command Cross the Line", new AutoCrossTheLine());
 		SmartDashboard.putData("Command Center Switch", new AutoCenterToSwitch());
-		SmartDashboard.putData("Command Center Full", new AutoCenterFull());
+		SmartDashboard.putData("Command Center Full", new AutoCenter());
 		SmartDashboard.putData("Command RightSwitch", new AutoRightSideSwitch());
 		SmartDashboard.putData("Command RightScale", new AutoRightSideScale());
 		

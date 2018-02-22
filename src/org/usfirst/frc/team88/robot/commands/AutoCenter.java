@@ -5,9 +5,9 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 /**
  *
  */
-public class AutoCenterFull extends CommandGroup {
+public class AutoCenter extends CommandGroup {
 
-    public AutoCenterFull() {
+    public AutoCenter() {
         // Add Commands here:
         // e.g. addSequential(new Command1());
         //      addSequential(new Command2());
