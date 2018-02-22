@@ -1,9 +1,6 @@
 package org.usfirst.frc.team88.robot.util;
 
 public class TJUtility {
-	private static final double POLY_A = 0.35;
-	private static final double POLY_B = 0.5;
-	private static final double POLY_C = 0.15;
 
 	public static double deadZone(double value, double deadzone) {
 		if (Math.abs(value) < deadzone) {
