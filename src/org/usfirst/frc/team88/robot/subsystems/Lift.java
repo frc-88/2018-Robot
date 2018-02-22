@@ -83,19 +83,10 @@ public class Lift extends Subsystem {
 		master.configReverseSoftLimitEnable(true, TIMEOUTMS);
 		master.overrideLimitSwitchesEnable(true);
 
-		// TODO configure for position based closed loop control using
-		// motion magic capability of TalonSRX
-		//
-		// Interesting links:
-		// https://github.com/CrossTheRoadElec/Phoenix-Documentation/raw/master/Talon%20SRX%20Victor%20SPX%20-%20Software%20Reference%20Manual.pdf
-		// http://www.ctr-electronics.com/downloads/api/java/html/com/ctre/phoenix/motorcontrol/can/BaseMotorController.html#configMotionCruiseVelocity-int-int-
-		// http://www.ctr-electronics.com/downloads/api/java/html/com/ctre/phoenix/motorcontrol/can/BaseMotorController.html#configMotionAcceleration-int-int-
-		// https://github.com/CrossTheRoadElec/Phoenix-Examples-Languages/tree/master/Java/MotionMagic
-
 		follower.follow(master);
 		follower.setInverted(true);
 
-		position = POS_BOTTOM;
+		position = getPosition();
 	}
 
 	public void basicMotion(double input) {
