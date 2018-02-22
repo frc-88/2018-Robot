@@ -15,9 +15,9 @@ import org.usfirst.frc.team88.robot.commands.AutoDriveDistanceAngle;
 import org.usfirst.frc.team88.robot.commands.DriveResetEncoders;
 import org.usfirst.frc.team88.robot.commands.DriveRotateToAngle;
 import org.usfirst.frc.team88.robot.commands.DriveZeroYaw;
-import org.usfirst.frc.team88.robot.commands.RightSideScale;
-import org.usfirst.frc.team88.robot.commands.RightSideScaleThenSwitch;
-import org.usfirst.frc.team88.robot.commands.RightSideSwitch;
+import org.usfirst.frc.team88.robot.commands.AutoRightSideScale;
+import org.usfirst.frc.team88.robot.commands.AutoRightSideScaleThenSwitch;
+import org.usfirst.frc.team88.robot.commands.AutoRightSideSwitch;
 import org.usfirst.frc.team88.robot.subsystems.Drive;
 import org.usfirst.frc.team88.robot.subsystems.Intake;
 import org.usfirst.frc.team88.robot.subsystems.Lift;
@@ -72,10 +72,10 @@ public class Robot extends TimedRobot {
 		SmartDashboard.putData("Command Cross the Line", new AutoCrossTheLine());
 		SmartDashboard.putData("Command Center Switch", new AutoCenterToSwitch());
 		SmartDashboard.putData("Command Center Full", new AutoCenterFull());
-		SmartDashboard.putData("Command RightSwitch", new RightSideSwitch());
-		SmartDashboard.putData("Command RightScale", new RightSideScale());
+		SmartDashboard.putData("Command RightSwitch", new AutoRightSideSwitch());
+		SmartDashboard.putData("Command RightScale", new AutoRightSideScale());
 		
-		SmartDashboard.putData("Command RightScaleThenSwitch", new RightSideScaleThenSwitch());
+		SmartDashboard.putData("Command RightScaleThenSwitch", new AutoRightSideScaleThenSwitch());
 		
 		SmartDashboard.putData("Command Zero Yaw", new DriveZeroYaw());
 		SmartDashboard.putData("Command Reset Encoders", new DriveResetEncoders());
