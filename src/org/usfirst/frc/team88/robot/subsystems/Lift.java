@@ -22,7 +22,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * </pre>
  */
 public class Lift extends Subsystem {
-	private static final boolean BASIC_CONTROL = false;
+	private static final boolean BASIC_CONTROL = true;
 	
 	private static final int SLOTIDX = 0;
 	private static final int TIMEOUTMS = 0;
@@ -36,9 +36,13 @@ public class Lift extends Subsystem {
 	private final static double F = 1023 / MAX_SPEED;
 
 	// When chain is adjusted on the lift, DOUBLE CHECK Limits!!!
-	private static final int FORWARDLIMIT = 920;
-	private static final int REVERSELIMIT = 195;
-	
+// current practice bot values below
+//	private static final int FORWARDLIMIT = 920;
+//	private static final int REVERSELIMIT = 212;
+
+	private static final int FORWARDLIMIT = 1023;
+	private static final int REVERSELIMIT = 0;
+
 	public final static int POS_BOTTOM = REVERSELIMIT +5;
 	public final static int POS_SWITCH = REVERSELIMIT + 200;
 	public final static int POS_LOW_SCALE = REVERSELIMIT + 470;
