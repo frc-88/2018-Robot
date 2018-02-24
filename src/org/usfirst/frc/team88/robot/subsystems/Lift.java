@@ -23,32 +23,41 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class Lift extends Subsystem {
 	private static final boolean BASIC_CONTROL = true;
-	
+
+	public static final int POS_BOTTOM = 2000;
+	public static final int POS_ALMOST_BOTTOM = 2010;
+	public static final int POS_SWITCH = 2020;
+	public static final int POS_LOW_SCALE = 2030;
+	public static final int POS_MID_SCALE = 2040;
+	public static final int POS_HI_SCALE = 2050;
+
 	private static final int SLOTIDX = 0;
 	private static final int TIMEOUTMS = 0;
-	private final static double RAMPRATE = .30;
-	private final static double MAX_SPEED = 32;
-	private final static int CRUISE_VELOCITY = 30;
-	private final static int ACCELERATION = 180;
-	private final static double P = 13.0;
-	private final static double I = 0.0;  // Make sure revers limit is accurate before using i!!!
-	private final static double D = 20.0;
-	private final static double F = 1023 / MAX_SPEED;
+	private static final double RAMPRATE = .30;
+	private static final double MAX_SPEED = 32;
+	private static final int CRUISE_VELOCITY = 30;
+	private static final int ACCELERATION = 180;
+	private static final double P = 13.0;
+	private static final double I = 0.0; // Make sure reverse limit is accurate before using i!!!
+	private static final double D = 20.0;
+	private static final double F = 1023 / MAX_SPEED;
 
-	// When chain is adjusted on the lift, DOUBLE CHECK Limits!!!
-// current practice bot values below
-//	private static final int FORWARDLIMIT = 920;
-//	private static final int REVERSELIMIT = 212;
+	private static final int FORWARD_LIMIT_BASE = 725;
+	private static final int POS_BOTTOM_BASE = 5;
+	private static final int POS_SWITCH_BASE = 200;
+	private static final int POS_LOW_SCALE_BASE = 470;
+	private static final int POS_MID_SCALE_BASE = 550;
+	private static final int POS_HI_SCALE_BASE = 640;
 
-	private static final int FORWARDLIMIT = 1023;
-	private static final int REVERSELIMIT = 0;
+	private static final int DISTANCE_THRESHOLD = 20;
 
-	public final static int POS_BOTTOM = REVERSELIMIT +5;
-	public final static int POS_SWITCH = REVERSELIMIT + 200;
-	public final static int POS_LOW_SCALE = REVERSELIMIT + 470;
-	public final static int POS_MID_SCALE = REVERSELIMIT + 550;
-	public final static int POS_HI_SCALE = REVERSELIMIT + 640;
-	public final static int DISTANCE_THRESHOLD = 20;
+	private int posReverseLimit;
+	private int posForwardLimit;
+	private int posBottom;
+	private int posSwitch;
+	private int posLowScale;
+	private int posMidScale;
+	private int posHighScale;
 
 	private TalonSRX master;
 	private TalonSRX follower;
@@ -81,25 +90,13 @@ public class Lift extends Subsystem {
 		master.configMotionCruiseVelocity(CRUISE_VELOCITY, TIMEOUTMS);
 		master.configMotionAcceleration(ACCELERATION, TIMEOUTMS);
 
-		master.configForwardSoftLimitThreshold(FORWARDLIMIT, TIMEOUTMS);
-		master.configForwardSoftLimitEnable(true, TIMEOUTMS);
-		master.configReverseSoftLimitThreshold(REVERSELIMIT, TIMEOUTMS);
-		master.configReverseSoftLimitEnable(true, TIMEOUTMS);
-		master.overrideLimitSwitchesEnable(true);
-
-		// TODO configure for position based closed loop control using
-		// motion magic capability of TalonSRX
-		//
-		// Interesting links:
-		// https://github.com/CrossTheRoadElec/Phoenix-Documentation/raw/master/Talon%20SRX%20Victor%20SPX%20-%20Software%20Reference%20Manual.pdf
-		// http://www.ctr-electronics.com/downloads/api/java/html/com/ctre/phoenix/motorcontrol/can/BaseMotorController.html#configMotionCruiseVelocity-int-int-
-		// http://www.ctr-electronics.com/downloads/api/java/html/com/ctre/phoenix/motorcontrol/can/BaseMotorController.html#configMotionAcceleration-int-int-
-		// https://github.com/CrossTheRoadElec/Phoenix-Examples-Languages/tree/master/Java/MotionMagic
+		// no clue if this is correct....the zero, in particular, is a mystery
+		setGlobalPositionValues((int) master.configGetParameter(ParamEnum.eReverseSoftLimitThreshold, 0, TIMEOUTMS));
 
 		follower.follow(master);
 		follower.setInverted(true);
 
-		position = POS_BOTTOM;
+		position = getPosition();
 	}
 
 	public void basicMotion(double input) {
@@ -111,12 +108,14 @@ public class Lift extends Subsystem {
 	}
 
 	public void setPosition(int target) {
-		if (target < REVERSELIMIT) {
-			target = REVERSELIMIT;
-		} else if (target > FORWARDLIMIT) {
-			target = FORWARDLIMIT;
-		}
+		target = positionMap(target);
 		
+		if (target < posReverseLimit) {
+			target = posReverseLimit;
+		} else if (target > posForwardLimit) {
+			target = posForwardLimit;
+		}
+
 		position = target;
 	}
 
@@ -125,14 +124,73 @@ public class Lift extends Subsystem {
 	}
 
 	public double getPercentHeight() {
-		return (double) (getPosition() - REVERSELIMIT) / (double) (FORWARDLIMIT - REVERSELIMIT);
+		return (double) (getPosition() - posReverseLimit) / (double) FORWARD_LIMIT_BASE;
 	}
-	
+
 	public boolean onTarget(int target) {
+		target = positionMap(target);
+		
 		return Math.abs(master.getSelectedSensorPosition(SLOTIDX) - target) < DISTANCE_THRESHOLD;
 	}
 
+	public double getMasterCurrent() {
+		return master.getOutputCurrent();
+	}
+
+	// This should only be called when at the reverse limit, used only be calibration routine
+	public void setReverseLimit() {
+		setGlobalPositionValues(getPosition());
+
+		master.configForwardSoftLimitThreshold(posForwardLimit, TIMEOUTMS);
+		master.configForwardSoftLimitEnable(true, TIMEOUTMS);
+		master.configReverseSoftLimitThreshold(posReverseLimit, TIMEOUTMS);
+		master.configReverseSoftLimitEnable(true, TIMEOUTMS);
+		master.overrideLimitSwitchesEnable(true);
+
+		follower.configForwardSoftLimitEnable(false, TIMEOUTMS);
+		follower.configReverseSoftLimitEnable(false, TIMEOUTMS);
+		follower.overrideLimitSwitchesEnable(false);
+	}
+
+	public void disableSoftLimits() {
+		master.configForwardSoftLimitEnable(false, TIMEOUTMS);
+		master.configReverseSoftLimitEnable(false, TIMEOUTMS);
+		master.overrideLimitSwitchesEnable(false);
+	}
+	
+	private void setGlobalPositionValues(int reverseLimit) {
+		posReverseLimit = reverseLimit;
+		posForwardLimit = posReverseLimit + FORWARD_LIMIT_BASE;
+		posBottom = posReverseLimit + POS_BOTTOM_BASE;
+		posSwitch = posReverseLimit + POS_SWITCH_BASE;
+		posLowScale = posReverseLimit + POS_LOW_SCALE_BASE;
+		posMidScale = posReverseLimit + POS_MID_SCALE_BASE;
+		posHighScale = posReverseLimit + POS_HI_SCALE_BASE;
+	}
+
+	private int positionMap(int position) {
+		switch (position) {
+		case POS_BOTTOM:
+			return posBottom;
+		case POS_ALMOST_BOTTOM:
+			return posBottom + 80;
+		case POS_SWITCH:
+			return posSwitch;
+		case POS_LOW_SCALE:
+			return posLowScale;
+		case POS_MID_SCALE:
+			return posMidScale;
+		case POS_HI_SCALE:
+			return posHighScale;
+		default:
+			return position;
+		}
+	}
+
 	public void updateDashboard() {
+		SmartDashboard.putNumber("Lift Reverse Limit", posReverseLimit);
+		SmartDashboard.putNumber("Lift Forward Limit", posForwardLimit);
+		
 		SmartDashboard.putNumber("Lift Target Position", position);
 		SmartDashboard.putNumber("Lift Master Position", getPosition());
 		SmartDashboard.putNumber("Lift Master Velocity", master.getSelectedSensorVelocity(SLOTIDX));
@@ -142,13 +200,12 @@ public class Lift extends Subsystem {
 		SmartDashboard.putNumber("Lift Follower Current", follower.getOutputCurrent());
 		SmartDashboard.putNumber("Lift Follower Voltage", follower.getMotorOutputVoltage());
 		SmartDashboard.putNumber("Percent Height", getPercentHeight());
-		
-		SmartDashboard.putBoolean("Lift Position High Scale?", onTarget(POS_HI_SCALE));
-		SmartDashboard.putBoolean("Lift Position Mid Scale?", onTarget(POS_MID_SCALE));
-		SmartDashboard.putBoolean("Lift Position Low Scale?", onTarget(POS_LOW_SCALE));
-		SmartDashboard.putBoolean("Lift Position Switch?", onTarget(POS_SWITCH));
-		SmartDashboard.putBoolean("Lift Position Bottom?", onTarget(POS_BOTTOM));
-		
+
+		SmartDashboard.putBoolean("Lift Position High Scale?", onTarget(posHighScale));
+		SmartDashboard.putBoolean("Lift Position Mid Scale?", onTarget(posMidScale));
+		SmartDashboard.putBoolean("Lift Position Low Scale?", onTarget(posLowScale));
+		SmartDashboard.putBoolean("Lift Position Switch?", onTarget(posSwitch));
+		SmartDashboard.putBoolean("Lift Position Bottom?", onTarget(posBottom));
 	}
 
 	public void initDefaultCommand() {
