@@ -39,6 +39,7 @@ public class LiftCalibrate extends Command {
     	case PREP: 
     		count = 0;
     		Robot.lift.disableSoftLimits();
+    		state = UP;
     		break;
     	case UP:
     		Robot.lift.basicMotion(SPEED);
