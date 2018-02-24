@@ -14,76 +14,78 @@ public class LiftCalibrate extends Command {
 	private static final int DOWN = 40;
 	private static final int BOTTOM = 50;
 	private static final int END = 60;
-	
+
 	private static final double SPEED = 0.3;
 	private static final double COUNTS = 20;
 	private static final double CURRENT_THRESHOLD = 5;
-	
+
 	private int state;
 	private int count;
-	
-    public LiftCalibrate() {
-        // Use requires() here to declare subsystem dependencies
-        // eg. requires(chassis);
-    	requires(Robot.lift);
-    }
 
-    // Called just before this Command runs the first time
-    protected void initialize() {
-    	state = PREP;
-    }
+	public LiftCalibrate() {
+		// Use requires() here to declare subsystem dependencies
+		// eg. requires(chassis);
+		requires(Robot.lift);
+	}
 
-    // Called repeatedly when this Command is scheduled to run
-    protected void execute() {
-    	switch (state) {
-    	case PREP: 
-    		count = 0;
-    		Robot.lift.disableSoftLimits();
-    		state = UP;
-    		break;
-    	case UP:
-    		Robot.lift.basicMotion(SPEED);
-    		if (count++ > COUNTS) {
-    			count = 0;
-    			state = PAUSE;
-    		}
-    		break;
-    	case PAUSE:
-    		Robot.lift.basicMotion(0.0);
-    		if (count++ > COUNTS) {
-    			count = 0;
-    			state = DOWN;
-    		}
-    	case DOWN:
-    		Robot.lift.basicMotion(-SPEED);
-    		if (count++ > (COUNTS*2)) {
-    			state = END;
-    		}
-    		
-    		if (Robot.lift.getMasterCurrent() > CURRENT_THRESHOLD) {
-    			Robot.lift.basicMotion(0.0);
-    			state = BOTTOM;
-    		}
-    		break;
-    	case BOTTOM:
-    		Robot.lift.setReverseLimit();
-    		state = END;
-    		break;
-    	}
-    }
+	// Called just before this Command runs the first time
+	protected void initialize() {
+		state = PREP;
+	}
 
-    // Make this return true when this Command no longer needs to run execute()
-    protected boolean isFinished() {
-        return state == END;
-    }
+	// Called repeatedly when this Command is scheduled to run
+	protected void execute() {
+		switch (state) {
+		case PREP:
+			count = 0;
+			Robot.lift.disableSoftLimits();
+			state = UP;
+			break;
+		case UP:
+			Robot.lift.basicMotion(SPEED);
+			if (count++ > COUNTS) {
+				count = 0;
+				state = PAUSE;
+			}
+			break;
+		case PAUSE:
+			Robot.lift.basicMotion(0.0);
+			if (count++ > COUNTS) {
+				count = 0;
+				state = DOWN;
+			}
+		case DOWN:
+			Robot.lift.basicMotion(-SPEED);
+			if (count++ > (COUNTS * 2)) {
+				Robot.lift.basicMotion(0.0);
+				state = END;
+			}
 
-    // Called once after isFinished returns true
-    protected void end() {
-    }
+			if (Robot.lift.getMasterCurrent() > CURRENT_THRESHOLD) {
+				Robot.lift.basicMotion(0.0);
+				state = BOTTOM;
+			}
+			break;
+		case BOTTOM:
+			Robot.lift.setReverseLimit();
+			state = END;
+			break;
+		}
+	}
 
-    // Called when another command which requires one or more of the same
-    // subsystems is scheduled to run
-    protected void interrupted() {
-    	Robot.lift.basicMotion(0.0);
-    }
+	// Make this return true when this Command no longer needs to run execute()
+	protected boolean isFinished() {
+		return state == END;
+	}
+
+	// Called once after isFinished returns true
+	protected void end() {
+		Robot.lift.basicMotion(0.0);
+	}
+
+	// Called when another command which requires one or more of the same
+	// subsystems is scheduled to run
+	protected void interrupted() {
+		Robot.lift.basicMotion(0.0);
+	}
 }
