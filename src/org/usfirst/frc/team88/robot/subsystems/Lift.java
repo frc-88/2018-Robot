@@ -185,6 +185,9 @@ public class Lift extends Subsystem {
 	}
 
 	public void updateDashboard() {
+		SmartDashboard.putNumber("Lift Reverse Limit", posReverseLimit);
+		SmartDashboard.putNumber("Lift Forward Limit", posForwardLimit);
+		
 		SmartDashboard.putNumber("Lift Target Position", position);
 		SmartDashboard.putNumber("Lift Master Position", getPosition());
 		SmartDashboard.putNumber("Lift Master Velocity", master.getSelectedSensorVelocity(SLOTIDX));
