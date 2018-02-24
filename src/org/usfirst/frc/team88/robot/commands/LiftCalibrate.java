@@ -15,9 +15,9 @@ public class LiftCalibrate extends Command {
 	private static final int BOTTOM = 50;
 	private static final int END = 60;
 
-	private static final double SPEED = 0.3;
-	private static final double COUNTS = 20;
-	private static final double CURRENT_THRESHOLD = 5;
+	private static final double SPEED = 0.2;
+	private static final double COUNTS = 10;
+	private static final double CURRENT_THRESHOLD = 12;
 
 	private int state;
 	private int count;

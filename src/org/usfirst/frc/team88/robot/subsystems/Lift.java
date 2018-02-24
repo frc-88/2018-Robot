@@ -25,10 +25,11 @@ public class Lift extends Subsystem {
 	private static final boolean BASIC_CONTROL = false;
 
 	public static final int POS_BOTTOM = 2000;
-	public static final int POS_SWITCH = 2001;
-	public static final int POS_LOW_SCALE = 2002;
-	public static final int POS_MID_SCALE = 2003;
-	public static final int POS_HI_SCALE = 2004;
+	public static final int POS_ALMOST_BOTTOM = 2010;
+	public static final int POS_SWITCH = 2020;
+	public static final int POS_LOW_SCALE = 2030;
+	public static final int POS_MID_SCALE = 2040;
+	public static final int POS_HI_SCALE = 2050;
 
 	private static final int SLOTIDX = 0;
 	private static final int TIMEOUTMS = 0;
@@ -171,6 +172,8 @@ public class Lift extends Subsystem {
 		switch (position) {
 		case POS_BOTTOM:
 			return posBottom;
+		case POS_ALMOST_BOTTOM:
+			return posBottom + 80;
 		case POS_SWITCH:
 			return posSwitch;
 		case POS_LOW_SCALE:
