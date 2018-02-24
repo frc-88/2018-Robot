@@ -20,6 +20,7 @@ import org.usfirst.frc.team88.robot.commands.AutoRightSideL;
 import org.usfirst.frc.team88.robot.commands.DriveResetEncoders;
 import org.usfirst.frc.team88.robot.commands.DriveRotateToAngle;
 import org.usfirst.frc.team88.robot.commands.DriveZeroYaw;
+import org.usfirst.frc.team88.robot.commands.LiftCalibrate;
 import org.usfirst.frc.team88.robot.commands.AutoRightSideScale;
 import org.usfirst.frc.team88.robot.commands.AutoRightSideScaleThenSwitch;
 import org.usfirst.frc.team88.robot.commands.AutoRightSideSwitch;
@@ -78,10 +79,13 @@ public class Robot extends TimedRobot {
 		SmartDashboard.putData("Auto Center", new AutoCenter());
 		SmartDashboard.putData("Auto Right", new AutoRight());
 
-		// Buttons to test commands and auto mode components
-		SmartDashboard.putData("Drive 10 feet", new AutoDriveDistance(10 * 12));
+		// buttons for calibration
 		SmartDashboard.putData("Zero Yaw", new DriveZeroYaw());
 		SmartDashboard.putData("Reset Encoders", new DriveResetEncoders());
+		SmartDashboard.putData("Calibrate Lift", new LiftCalibrate());
+		
+		// Buttons to test commands and auto mode components
+		SmartDashboard.putData("Drive 10 feet", new AutoDriveDistance(10 * 12));
 
 		SmartDashboard.putData("Rotate to 0", new DriveRotateToAngle(0));
 		SmartDashboard.putData("Rotate to 90", new DriveRotateToAngle(90));
