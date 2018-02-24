@@ -29,7 +29,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class Drive extends Subsystem implements PIDOutput {
 
-	private final static boolean CLOSED_LOOP = false;
+	private final static boolean CLOSED_LOOP = true;
 	private final static boolean SPLIT_ARCADE = false;
 
 	private final static int SLOTIDX = 0;
@@ -37,11 +37,11 @@ public class Drive extends Subsystem implements PIDOutput {
 	private final static double RAMPRATE = .30;
 	private final static double MAX_RAMPRATE = 1.5;
 	private final static double MIN_RAMPRATE = .50;
-	private final static double MAX_SPEED = 12000;
-	private final static double P = 0.0;
+	private final static double MAX_SPEED = 13000;
+	private final static double P = 0.04;
 	private final static double I = 0.0;
 	private final static double D = 0.0;
-	private final static double F = 1023 / MAX_SPEED;
+	private final static double F = (1023 / MAX_SPEED) * 0.8;
 	private final static double DFT_SENSITIVITY = 0.15;
 	
 	private final static double ROTATE_P = 0.0060;

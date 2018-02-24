@@ -182,7 +182,7 @@ public class Robot extends TimedRobot {
 	}
 
 	private void updateDashboard() {
-		SmartDashboard.putString("Auto Command", chooser.getName());
+		SmartDashboard.putString("Auto Command", chooser.getSelected().getName());
 
 		// Show subsystem commands
 		SmartDashboard.putData("Robot Drive", drive);
