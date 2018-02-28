@@ -43,7 +43,7 @@ public class Drive extends Subsystem implements PIDOutput {
 	private final static double D = 0.0;
 	private final static double F = (1023 / MAX_SPEED) * 0.8;
 	private final static double DFT_SENSITIVITY = 0.15;
-	
+
 	private final static double ROTATE_P = 0.0060;
 	private final static double ROTATE_I = 0.0004;
 	private final static double ROTATE_D = 0.0;
@@ -51,12 +51,14 @@ public class Drive extends Subsystem implements PIDOutput {
 	private final static double ROTATE_TOLERANCE = 3.0;
 	private final static double ROTATE_MAX = 0.30;
 	private final static double ROTATE_MIN = 0.05;
-	
+
 	private final static double HEADING_P = 0.008;
 	private final static double HEADING_I = 0.0;
 	private final static double HEADING_D = 0.0;
 	private final static double HEADING_F = 0.0;
 	private final static double HEADING_TOLERANCE = 0.5;
+	private final static double OFFANGLETHRESHOLDDEGREES = 20;
+	private final static double ONANGLETHRESHOLDDEGREES = 15; 
 	private AHRS navX;
 
 	private TalonSRX leftMaster;
@@ -67,6 +69,7 @@ public class Drive extends Subsystem implements PIDOutput {
 	private int headingCount;
 	private int ramprateCount;
 	private double ramprate;
+	private boolean autoBalanceXMode;
 	
 	public PIDController rotateController;
 	private PIDController headingController;
@@ -85,7 +88,7 @@ public class Drive extends Subsystem implements PIDOutput {
 
 		// init headingController
 		headingCorrection = new PIDHeadingCorrection();
-		
+
 		headingController = new PIDController(HEADING_P, HEADING_I, HEADING_D, HEADING_F, navX, headingCorrection);
 		headingController.setInputRange(-180.0f, 180.0f);
 		headingController.setOutputRange(-1.0, 1.0);
@@ -94,7 +97,7 @@ public class Drive extends Subsystem implements PIDOutput {
 
 		headingController.reset();
 		headingController.disable();
-		
+
 		// init motor controllers
 		leftMaster = new TalonSRX(RobotMap.driveLeftMaster);
 		rightMaster = new TalonSRX(RobotMap.driveRightMaster);
@@ -153,11 +156,12 @@ public class Drive extends Subsystem implements PIDOutput {
 		navX.zeroYaw();
 		headingCount = 0;
 		ramprateCount = 0;
+		autoBalanceXMode = false;
 
 	}
 
 	public void wheelSpeed(double left, double right) {
-		
+
 		ramprate = (MAX_RAMPRATE - MIN_RAMPRATE) * Robot.lift.getPercentHeight() + MIN_RAMPRATE;
 
 		if (ramprateCount++ > 10) {
@@ -167,8 +171,29 @@ public class Drive extends Subsystem implements PIDOutput {
 			rightMaster.configOpenloopRamp(ramprate, TIMEOUTMS);
 			rightMaster.configClosedloopRamp(ramprate, TIMEOUTMS);
 		}
+		double pitchAngleDegrees = navX.getPitch();
+		if ( !autoBalanceXMode && 
+				(Math.abs(pitchAngleDegrees) >= 
+				Math.abs(OFFANGLETHRESHOLDDEGREES))) {
+			autoBalanceXMode = true;
+		}else if ( autoBalanceXMode && 
+				(Math.abs(pitchAngleDegrees) <= 
+				Math.abs(ONANGLETHRESHOLDDEGREES))) {
+			autoBalanceXMode = false;
+		}
 
-		if (CLOSED_LOOP) {
+		if(autoBalanceXMode){
+
+			double pitchAngleRadians = pitchAngleDegrees * (Math.PI / 180.0);
+			right = left = Math.sin(pitchAngleRadians) * -1;
+			
+			SmartDashboard.putNumber("Drive Left Input", left);
+			SmartDashboard.putNumber("Drive Right Input", right);
+			
+			leftMaster.set(ControlMode.PercentOutput, -left);
+			rightMaster.set(ControlMode.PercentOutput, right);
+			
+		}else if (CLOSED_LOOP) {
 			SmartDashboard.putNumber("Drive Left Input", -left * MAX_SPEED);
 			SmartDashboard.putNumber("Drive Right Input", right * MAX_SPEED);
 
@@ -181,6 +206,7 @@ public class Drive extends Subsystem implements PIDOutput {
 			leftMaster.set(ControlMode.PercentOutput, -left);
 			rightMaster.set(ControlMode.PercentOutput, right);
 		}
+
 	}
 
 	/**
@@ -282,7 +308,7 @@ public class Drive extends Subsystem implements PIDOutput {
 		}
 
 	}
-	
+
 	public double getYaw() {
 		return navX.getYaw();
 	}
