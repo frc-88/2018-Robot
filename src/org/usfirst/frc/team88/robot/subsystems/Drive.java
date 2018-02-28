@@ -359,6 +359,9 @@ public class Drive extends Subsystem implements PIDOutput {
 		SmartDashboard.putNumber("Drive Pitch", navX.getPitch());
 		SmartDashboard.putNumber("Drive Roll", navX.getRoll());
 		SmartDashboard.putNumber("Drive Ramprate", ramprate);
+		SmartDashboard.putNumber("Drive Acceleration X", navX.getWorldLinearAccelX());
+		SmartDashboard.putNumber("Drive Acceleration Y", navX.getWorldLinearAccelY());
+		
 
 		SmartDashboard.putNumber("Drive Left Master Position", leftMaster.getSelectedSensorPosition(SLOTIDX));
 		SmartDashboard.putNumber("Drive Left Master Velocity", leftMaster.getSelectedSensorVelocity(SLOTIDX));
