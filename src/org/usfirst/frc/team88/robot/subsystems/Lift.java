@@ -22,7 +22,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * </pre>
  */
 public class Lift extends Subsystem {
-	private static final boolean BASIC_CONTROL = true;
+	private static final boolean BASIC_CONTROL = false;
 
 	public static final int POS_BOTTOM = 2000;
 	public static final int POS_ALMOST_BOTTOM = 2010;
@@ -37,12 +37,12 @@ public class Lift extends Subsystem {
 	private static final double MAX_SPEED = 32;
 	private static final int CRUISE_VELOCITY = 30;
 	private static final int ACCELERATION = 180;
-	private static final double P = 13.0;
+	private static final double P = 20.0;
 	private static final double I = 0.0; // Make sure reverse limit is accurate before using i!!!
-	private static final double D = 20.0;
+	private static final double D = 80.0;
 	private static final double F = 1023 / MAX_SPEED;
 
-	private static final int FORWARD_LIMIT_BASE = 725;
+	private static final int FORWARD_LIMIT_BASE = 700;
 	private static final int POS_BOTTOM_BASE = 5;
 	private static final int POS_SWITCH_BASE = 200;
 	private static final int POS_LOW_SCALE_BASE = 470;
@@ -173,7 +173,7 @@ public class Lift extends Subsystem {
 		case POS_BOTTOM:
 			return posBottom;
 		case POS_ALMOST_BOTTOM:
-			return posBottom + 80;
+			return posBottom + 70;
 		case POS_SWITCH:
 			return posSwitch;
 		case POS_LOW_SCALE:

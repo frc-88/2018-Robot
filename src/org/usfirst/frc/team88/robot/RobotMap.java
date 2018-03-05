@@ -31,8 +31,8 @@ public class RobotMap {
 	public static final int intakeLeftIR = 0;
 	public static final int intakeRightIR = 3;
 	// Intake - PCM
-	public static final int intakeSolenoidIn = 0;
-	public static final int intakeSolenoidOut = 1;
+	public static final int intakeSolenoidIn = 1;
+	public static final int intakeSolenoidOut = 0;
 	
 
 	// Other - unused Talons, CAN
