@@ -116,8 +116,9 @@ public class Robot extends TimedRobot {
 	@Override
 	public void disabledPeriodic() {
 		Scheduler.getInstance().run();
+		SmartDashboard.putString("Auto Command", chooser.getSelected().getName());
 
-		updateDashboard();
+		// updateDashboard();
 	}
 
 	/**
@@ -162,6 +163,7 @@ public class Robot extends TimedRobot {
 			autonomousCommand.cancel();
 		}
 		Robot.drive.setNeutralMode(NeutralMode.Coast);
+		Robot.intake.cradleDown();
 	}
 
 	/**
@@ -182,8 +184,6 @@ public class Robot extends TimedRobot {
 	}
 
 	private void updateDashboard() {
-		SmartDashboard.putString("Auto Command", chooser.getSelected().getName());
-
 		// Show subsystem commands
 		SmartDashboard.putData("Robot Drive", drive);
 		SmartDashboard.putData("Robot Intake", intake);

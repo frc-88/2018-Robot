@@ -264,7 +264,7 @@ public class Drive extends Subsystem implements PIDOutput {
 			curve = curve * Math.signum(outputMagnitude);
 		}
 
-		if ((outputMagnitude == 0) && (Math.abs(getAvgVelocity()) < 0.1 * MAX_SPEED)) {
+		if ((outputMagnitude == 0) && (Math.abs(getAvgVelocity()) < 0.3 * MAX_SPEED)) {
 			leftOutput = curve * 0.5;
 			rightOutput = -curve * 0.5;
 		} else if (curve < 0) {

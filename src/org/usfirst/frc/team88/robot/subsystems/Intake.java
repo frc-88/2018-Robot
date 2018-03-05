@@ -81,7 +81,7 @@ public class Intake extends Subsystem {
 		}
 
 		rightSide.set(ControlMode.PercentOutput, rightSpeed, TIMEOUT);
-		leftSide.set(ControlMode.PercentOutput, -leftSpeed, TIMEOUT);
+		leftSide.set(ControlMode.PercentOutput, leftSpeed, TIMEOUT);
 	}
 
 	public boolean haveCube() {

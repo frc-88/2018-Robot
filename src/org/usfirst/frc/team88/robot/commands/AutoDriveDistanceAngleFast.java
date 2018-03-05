@@ -90,7 +90,7 @@ public class AutoDriveDistanceAngleFast extends Command {
 			break;
 			
 		case CRUISE:
-			if (Robot.drive.getAvgPosition() > (targetDistance - (accelerateDistance * 2))) {
+			if (Robot.drive.getAvgPosition() > (targetDistance - (accelerateDistance * 1.5))) {
 				state = DECELERATE;
 			}
 			break;

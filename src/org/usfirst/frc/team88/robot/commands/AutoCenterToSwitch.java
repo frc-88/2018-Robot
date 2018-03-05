@@ -61,15 +61,15 @@ public class AutoCenterToSwitch extends Command {
 
 		gameData = DriverStation.getInstance().getGameSpecificMessage();
 		if (gameData.charAt(0) == 'L') {
-			stageTwoYaw = -50;
-			stageTwoDistanceInches = 75;
-			stageThreeYaw = 10;
-			stageThreeDistance = 65;
+			stageTwoYaw = -90;
+			stageTwoDistanceInches = 45;
+			stageThreeYaw = 20;
+			stageThreeDistance = 95;
 		} else if (gameData.charAt(0) == 'R') {
-			stageTwoYaw = 38;
-			stageTwoDistanceInches = 80;
-			stageThreeYaw = -10;
-			stageThreeDistance = 40;
+			stageTwoYaw = 75;
+			stageTwoDistanceInches = 50;
+			stageThreeYaw = -20;
+			stageThreeDistance = 60;
 		}
 		targetDistanceCounts = (STAGE_ONE + stageTwoDistanceInches + stageThreeDistance) * COUNTS_PER_INCH;
 	}
@@ -88,7 +88,7 @@ public class AutoCenterToSwitch extends Command {
 				targetYaw = stageThreeYaw;
 			}
 
-			curve = (targetYaw - (Robot.drive.getYaw())) * 0.02;
+			curve = (targetYaw - (Robot.drive.getYaw())) * 0.01;
 
 			if (avgPosition > STAGE_ONE * COUNTS_PER_INCH && !cubeUp) {
 				Robot.lift.setPosition(Lift.POS_SWITCH);
@@ -141,7 +141,7 @@ public class AutoCenterToSwitch extends Command {
 		case STOP:
 			speed = 0.0;
 
-			Robot.intake.wheelSpeed(1.0);
+			Robot.intake.wheelSpeed(0.75);
 
 			count++;
 
