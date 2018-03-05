@@ -2,6 +2,7 @@ package org.usfirst.frc.team88.robot.commands;
 
 import org.usfirst.frc.team88.robot.Robot;
 
+import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -24,13 +25,23 @@ public class AutoDriveDistanceAngleFast extends Command {
 	private static final int STOP = 50;
 	private static final int END = 60;
 	
-	private final double targetDistance;
-	private final double targetHeading;
+	private double targetDistance;
+	private double targetHeading;
+	private String targetDistancePref;
+	private String targetAnglePref;
 	
 	private int state;
 	private double speed;
 	private double accelerateDistance;
+	private Preferences prefs = Preferences.getInstance();
 
+	public AutoDriveDistanceAngleFast(String distancePref, String anglePref) {
+		requires(Robot.drive);
+
+		targetDistancePref = distancePref;
+		targetAnglePref = anglePref;
+	}
+	
 	public AutoDriveDistanceAngleFast(double distance, double angle) {
 		requires(Robot.drive);
 
@@ -40,6 +51,14 @@ public class AutoDriveDistanceAngleFast extends Command {
 
 	// Called just before this Command runs the first time
 	protected void initialize() {
+		if (targetDistancePref != null) {
+			targetDistance = prefs.getDouble(targetDistancePref, 0.0);
+		}
+
+		if (targetAnglePref != null) {
+			targetHeading = prefs.getDouble(targetAnglePref, 0.0);
+		}
+		
 		state = PREP;
 		speed = 0.0;
 	}
