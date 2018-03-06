@@ -28,7 +28,7 @@ public class LiftMove extends Command {
     	int move = (int) TJUtility.polynomial(Robot.oi.operator.getLeftStickY(), POLY_A, POLY_B, POLY_C, DEADZONE);
     	
     	if (move > 0) {
-    		Robot.lift.setPosition(Robot.lift.getPosition() + (move * 3 * MAX_MOVE));
+    		Robot.lift.setPosition(Robot.lift.getPosition() + (move * 5 * MAX_MOVE));
     	} else if (move < 0) {
     		Robot.lift.setPosition(Robot.lift.getPosition() + (move * MAX_MOVE));
     	}
