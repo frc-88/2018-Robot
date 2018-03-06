@@ -10,10 +10,7 @@ import edu.wpi.first.wpilibj.command.Command;
  */
 public class LiftMove extends Command {
 	private static final double DEADZONE = 0.1;
-	private static final double POLY_A = 0.35;
-	private static final double POLY_B = 0.5;
-	private static final double POLY_C = 0.15;
-	private static final int MAX_MOVE = 10;
+	private static final int MAX_MOVE = 20;
 	
     public LiftMove() {
     	requires(Robot.lift);
@@ -25,7 +22,7 @@ public class LiftMove extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	int move = (int) TJUtility.polynomial(Robot.oi.operator.getLeftStickY(), POLY_A, POLY_B, POLY_C, DEADZONE);
+    	int move = (int) TJUtility.deadZone(Robot.oi.operator.getLeftStickY(), DEADZONE);
     	
     	if (move > 0) {
     		Robot.lift.setPosition(Robot.lift.getPosition() + (move * 5 * MAX_MOVE));

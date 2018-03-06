@@ -9,9 +9,9 @@ import edu.wpi.first.wpilibj.command.InstantCommand;
 /**
  *
  */
-public class DriveDisableBreakMode extends InstantCommand {
+public class DriveDisableBrakeMode extends InstantCommand {
 
-    public DriveDisableBreakMode() {
+    public DriveDisableBrakeMode() {
         super();
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
