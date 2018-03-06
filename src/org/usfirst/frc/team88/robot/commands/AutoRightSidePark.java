@@ -1,7 +1,5 @@
 package org.usfirst.frc.team88.robot.commands;
 
-import org.usfirst.frc.team88.robot.subsystems.Lift;
-
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
 /**
