@@ -11,12 +11,12 @@ import org.usfirst.frc.team88.robot.commands.AutoCenter;
 import org.usfirst.frc.team88.robot.commands.AutoCrossTheLine;
 import org.usfirst.frc.team88.robot.commands.AutoDriveDistance;
 import org.usfirst.frc.team88.robot.commands.AutoLeft;
-import org.usfirst.frc.team88.robot.commands.AutoLeftSideL;
+import org.usfirst.frc.team88.robot.commands.AutoLeftSidePark;
 import org.usfirst.frc.team88.robot.commands.AutoLeftSideScale;
 import org.usfirst.frc.team88.robot.commands.AutoLeftSideScaleThenSwitch;
 import org.usfirst.frc.team88.robot.commands.AutoLeftSideSwitch;
 import org.usfirst.frc.team88.robot.commands.AutoRight;
-import org.usfirst.frc.team88.robot.commands.AutoRightSideL;
+import org.usfirst.frc.team88.robot.commands.AutoRightSidePark;
 import org.usfirst.frc.team88.robot.commands.DriveResetEncoders;
 import org.usfirst.frc.team88.robot.commands.DriveRotateToAngle;
 import org.usfirst.frc.team88.robot.commands.DriveZeroYaw;
@@ -95,12 +95,12 @@ public class Robot extends TimedRobot {
 		SmartDashboard.putData("Left Switch", new AutoLeftSideSwitch());
 		SmartDashboard.putData("Left Scale", new AutoLeftSideScale());
 		SmartDashboard.putData("Left ScaleThenSwitch", new AutoLeftSideScaleThenSwitch());
-		SmartDashboard.putData("Left Park", new AutoLeftSideL());
+		SmartDashboard.putData("Left Park", new AutoLeftSidePark());
 
 		SmartDashboard.putData("Right Switch", new AutoRightSideSwitch());
 		SmartDashboard.putData("Right Scale", new AutoRightSideScale());
 		SmartDashboard.putData("Right ScaleThenSwitch", new AutoRightSideScaleThenSwitch());
-		SmartDashboard.putData("Right Park", new AutoRightSideL());
+		SmartDashboard.putData("Right Park", new AutoRightSidePark());
 	}
 
 	/**
