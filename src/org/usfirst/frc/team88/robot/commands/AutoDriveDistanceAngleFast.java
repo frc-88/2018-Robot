@@ -42,6 +42,13 @@ public class AutoDriveDistanceAngleFast extends Command {
 		targetAnglePref = anglePref;
 	}
 	
+	public AutoDriveDistanceAngleFast(String distancePref, double angle) {
+		requires(Robot.drive);
+
+		targetDistancePref = distancePref;
+		targetHeading = angle;
+	}
+	
 	public AutoDriveDistanceAngleFast(double distance, double angle) {
 		requires(Robot.drive);
 
