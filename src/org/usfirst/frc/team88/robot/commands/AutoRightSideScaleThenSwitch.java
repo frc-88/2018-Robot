@@ -11,7 +11,7 @@ public class AutoRightSideScaleThenSwitch extends CommandGroup {
 
 	public AutoRightSideScaleThenSwitch() {
 		addSequential(new DriveZeroYaw());
-		addSequential(new DriveEnableBreakMode());
+		addSequential(new DriveEnableBrakeMode());
 		addParallel(new IntakePneumaticsDown());
 		addSequential(new AutoDriveDistanceAngleFast(25.25 * 12, 0));
 		addSequential(new DriveRotateToAngle(-45));
@@ -33,7 +33,7 @@ public class AutoRightSideScaleThenSwitch extends CommandGroup {
 		// addParallel(new LiftSoftLanding());
 		// addSequential(new DriveRotateToAngle(0));
 
-		addSequential(new DriveDisableBreakMode());
+		addSequential(new DriveDisableBrakeMode());
 	}
 
 }
