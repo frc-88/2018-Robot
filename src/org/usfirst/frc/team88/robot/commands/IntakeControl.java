@@ -32,11 +32,11 @@ public class IntakeControl extends Command {
 		double intake = TJUtility.polynomial(Math.sqrt(Math.pow(Robot.oi.operator.getRightStickX(), 2) + Math.pow(Robot.oi.operator.getRightStickY(), 2)), POLY_A, POLY_B, POLY_C, DEADZONE);
 
 		if (slow != 0) {
-			input = -slow * 0.5;
+			input = slow * 0.5;
 		} else if (fast != 0) {
-			input = -fast;
+			input = fast;
 		} else {
-			input = intake;
+			input = -intake;
 		}
 		
 		Robot.intake.wheelSpeed(input);

@@ -33,7 +33,7 @@ public class AutoDriveDistanceAngleFast extends Command {
 	private int state;
 	private double speed;
 	private double accelerateDistance;
-	private Preferences prefs = Preferences.getInstance();
+	
 
 	public AutoDriveDistanceAngleFast(String distancePref, String anglePref) {
 		requires(Robot.drive);
@@ -58,12 +58,18 @@ public class AutoDriveDistanceAngleFast extends Command {
 
 	// Called just before this Command runs the first time
 	protected void initialize() {
+		Preferences prefs = Preferences.getInstance();
+		
 		if (targetDistancePref != null) {
-			targetDistance = prefs.getDouble(targetDistancePref, 0.0);
+			targetDistance = prefs.getDouble(targetDistancePref, 0.0) * COUNTS_PER_INCH;
+			System.out.println(targetDistancePref);
+			System.out.println(targetDistance);
 		}
 
 		if (targetAnglePref != null) {
 			targetHeading = prefs.getDouble(targetAnglePref, 0.0);
+			System.out.println(targetAnglePref);
+			System.out.println(targetHeading);
 		}
 		
 		state = PREP;

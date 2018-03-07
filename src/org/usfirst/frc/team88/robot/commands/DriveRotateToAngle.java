@@ -2,6 +2,7 @@ package org.usfirst.frc.team88.robot.commands;
 
 import org.usfirst.frc.team88.robot.Robot;
 
+import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -10,18 +11,32 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class DriveRotateToAngle extends Command {
 	double targetAngle;
+	String targetPref;
+	
+	
+	private Preferences prefs = Preferences.getInstance();
 	
     public DriveRotateToAngle(double angle) {
         requires(Robot.drive);
 
         targetAngle = angle;
     }
+    
+    public DriveRotateToAngle(String pref){
+    	requires(Robot.drive);
+    	
+    	targetPref = pref;
+    }
 
     // Called just before this Command runs the first time
     protected void initialize() {
-    	Robot.drive.rotateController.reset();
+		if (targetPref != null) {
+			targetAngle = prefs.getDouble(targetPref, 0.0);
+		}
+		
+		Robot.drive.rotateController.reset();
     	Robot.drive.rotateController.setSetpoint(targetAngle);
-    	Robot.drive.rotateController.enable();    	
+    	Robot.drive.rotateController.enable();
     }
 
     // Called repeatedly when this Command is scheduled to run
