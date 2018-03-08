@@ -11,11 +11,13 @@ import org.usfirst.frc.team88.robot.commands.AutoCenter;
 import org.usfirst.frc.team88.robot.commands.AutoCrossTheLine;
 import org.usfirst.frc.team88.robot.commands.AutoDriveDistance;
 import org.usfirst.frc.team88.robot.commands.AutoLeft;
+import org.usfirst.frc.team88.robot.commands.AutoLeftSideFarScale;
 import org.usfirst.frc.team88.robot.commands.AutoLeftSidePark;
 import org.usfirst.frc.team88.robot.commands.AutoLeftSideScale;
 import org.usfirst.frc.team88.robot.commands.AutoLeftSideScaleThenSwitch;
 import org.usfirst.frc.team88.robot.commands.AutoLeftSideSwitch;
 import org.usfirst.frc.team88.robot.commands.AutoRight;
+import org.usfirst.frc.team88.robot.commands.AutoRightSideFarScale;
 import org.usfirst.frc.team88.robot.commands.AutoRightSidePark;
 import org.usfirst.frc.team88.robot.commands.DriveResetEncoders;
 import org.usfirst.frc.team88.robot.commands.DriveRotateToAngle;
@@ -71,6 +73,12 @@ public class Robot extends TimedRobot {
 		chooser.addObject("Left", new AutoLeft());
 		chooser.addObject("Right", new AutoRight());
 		chooser.addObject("Cross the Line", new AutoCrossTheLine());
+		// testing modes below
+		chooser.addObject("TEST:RNS", new AutoRightSideScale());
+		chooser.addObject("TEST:RFS", new AutoRightSideFarScale());
+		chooser.addObject("TEST:LNS", new AutoLeftSideScale());
+		chooser.addObject("TEST:LFS", new AutoLeftSideFarScale());
+		
 		SmartDashboard.putData("Auto mode", chooser);
 
 		// Autonomous mode buttons for testing
