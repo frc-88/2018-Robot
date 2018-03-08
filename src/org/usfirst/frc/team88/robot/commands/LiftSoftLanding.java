@@ -28,8 +28,7 @@ public class LiftSoftLanding extends Command {
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
     	if (Robot.lift.belowTarget(Lift.POS_ALMOST_BOTTOM)) {
-    		Robot.lift.setPosition(Lift.POS_BOTTOM);
-    		Robot.lift.gotoPosition();
+    		Robot.lift.basicMotion(-0.1);
     		count++;
     	}
     	
@@ -47,6 +46,7 @@ public class LiftSoftLanding extends Command {
 
     // Called once after isFinished returns true
     protected void end() {
+    	Robot.lift.setPosition(Lift.POS_BOTTOM);
     }
 
     // Called when another command which requires one or more of the same

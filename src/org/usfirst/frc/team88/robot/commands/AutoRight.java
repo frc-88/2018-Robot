@@ -3,9 +3,9 @@ package org.usfirst.frc.team88.robot.commands;
 public class AutoRight extends PowerUpConditionalCommand {
 
 	public AutoRight() {
-		super(	new AutoRightSidePark(),   //LL
+		super(	new AutoRightSideFarScale(),   //LL
 				new AutoRightSideScale(),  //LR
-				new AutoRightSideSwitch(), //RL
+				new AutoRightSideFarScale(), //RL
 				new AutoRightSideScale()); //RR
 	}
 
