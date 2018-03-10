@@ -1,5 +1,7 @@
 package org.usfirst.frc.team88.robot.commands;
 
+import org.usfirst.frc.team88.robot.subsystems.Lift;
+
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
 /**
@@ -10,7 +12,9 @@ public class AutoLeftSidePark extends CommandGroup {
 	public AutoLeftSidePark() {
 		addSequential(new DriveZeroYaw());
 		addParallel(new IntakePneumaticsDown());
-		addSequential(new AutoDriveDistanceAngleFast("LeftParkDist_1", 0));
+		addParallel(new LiftGotoPosition(Lift.POS_ALMOST_BOTTOM));
+		addSequential(new AutoDriveDistanceAngleFast("LeftFarScaleDist_1", 0));
 		addSequential(new DriveRotateToAngle(90));
-		addSequential(new AutoDriveDistanceAngleFast("LeftParkDist_2", 90));	}
+		addSequential(new AutoDriveDistanceAngleFast("LeftFarScaleDist_2", 90));
+	}
 }
