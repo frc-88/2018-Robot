@@ -39,8 +39,6 @@ public class IntakeControl extends Command {
 			input = -intake;
 		}
 		
-		Robot.intake.wheelSpeed(input);
-
 		if (input != 0) {
 			if (Robot.intake.haveCube()) {
 				Robot.oi.operator.rumble(1);
@@ -51,6 +49,12 @@ public class IntakeControl extends Command {
 		else {
 			Robot.oi.operator.rumble(0);
 		}
+
+		if (input == 0 && Robot.lift.getPercentHeight() > 0.1){
+			input = 0.1; 
+		}
+		
+		Robot.intake.wheelSpeed(input);
 	}
 
 	// Make this return true when this Command no longer needs to run execute()
