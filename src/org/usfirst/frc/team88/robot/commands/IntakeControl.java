@@ -51,7 +51,7 @@ public class IntakeControl extends Command {
 		}
 
 		if (input == 0 && Robot.lift.getPercentHeight() > 0.1){
-			input = 0.1; 
+			input = -0.15; 
 		}
 		
 		Robot.intake.wheelSpeed(input);
