@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj.command.Command;
  */
 public class LiftMove extends Command {
 	private static final double DEADZONE = 0.1;
-	private static final int MAX_MOVE = 20;
+	private static final int MAX_MOVE = 40;
 	
     public LiftMove() {
     	requires(Robot.lift);
@@ -25,7 +25,7 @@ public class LiftMove extends Command {
     	int move = (int) TJUtility.deadZone(Robot.oi.operator.getLeftStickY(), DEADZONE);
     	
     	if (move > 0) {
-    		Robot.lift.setPosition(Robot.lift.getPosition() + (move * 5 * MAX_MOVE));
+    		Robot.lift.setPosition(Robot.lift.getPosition() + (move * 3 * MAX_MOVE));
     	} else if (move < 0) {
     		Robot.lift.setPosition(Robot.lift.getPosition() + (move * MAX_MOVE));
     	}

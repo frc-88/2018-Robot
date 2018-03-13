@@ -4,9 +4,9 @@ public class AutoLeft extends PowerUpConditionalCommand {
 
 	public AutoLeft() {
 		super(	new AutoLeftSideScale(),     //LL
-				new AutoLeftSideFarScale(),  //LR
+				new AutoLeftSidePark(),  //LR
 				new AutoLeftSideScale(),     //RL
-				new AutoLeftSideFarScale()); //RR
+				new AutoLeftSidePark()); //RR
 	}
 
 }
