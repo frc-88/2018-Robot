@@ -14,7 +14,7 @@ public class DriveSplitArcade extends Command {
 	private static final double POLY_A = 0.35;
 	private static final double POLY_B = 0.5;
 	private static final double POLY_C = 0.15;
-	
+
 	public DriveSplitArcade() {
 		requires(Robot.drive);
 	}
@@ -27,11 +27,25 @@ public class DriveSplitArcade extends Command {
 	protected void execute() {
 		double magnitude, curve, targetHeading, error;
 
-		// below for rocket league style
-		// magnitude = TJUtility.polynomial(Robot.oi.driver.getZ(), POLY_A, POLY_B, POLY_C, DEADZONE);
+		// normal speed controlled by left joystick
 		magnitude = TJUtility.polynomial(Robot.oi.driver.getLeftStickY(), POLY_A, POLY_B, POLY_C, DEADZONE);
+
+		// if left stick at zero, triggers used for slow speed control
+		if (magnitude == 0) {
+			magnitude = -TJUtility.polynomial(Robot.oi.driver.getZ(), POLY_A, POLY_B, POLY_C, DEADZONE) * 0.3;
+		}
+
+		// turning controlled by right stick
 		curve = TJUtility.polynomial(Robot.oi.driver.getRightStickX(), POLY_A, POLY_B, POLY_C, DEADZONE);
 
+		// if right stick at zero, bumpers can be used for slow turning
+		if (curve == 0 && Robot.oi.driver.isButtonLeftBumperPressed()) {
+			curve = -0.3;
+		} else if (curve == 0 && Robot.oi.driver.isButtonRightBumperPressed()) {
+			curve = 0.3;
+		}
+
+		// buttons can be used for ordinal directional control
 		if ((curve == 0) && (magnitude != 0)) {
 			if (Robot.oi.driver.isButtonAPressed()) {
 				targetHeading = 180;

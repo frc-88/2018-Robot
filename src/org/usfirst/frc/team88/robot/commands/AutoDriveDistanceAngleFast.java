@@ -2,6 +2,7 @@ package org.usfirst.frc.team88.robot.commands;
 
 import org.usfirst.frc.team88.robot.Robot;
 
+import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -24,13 +25,30 @@ public class AutoDriveDistanceAngleFast extends Command {
 	private static final int STOP = 50;
 	private static final int END = 60;
 	
-	private final double targetDistance;
-	private final double targetHeading;
+	private double targetDistance;
+	private double targetHeading;
+	private String targetDistancePref;
+	private String targetAnglePref;
 	
 	private int state;
 	private double speed;
 	private double accelerateDistance;
+	
 
+	public AutoDriveDistanceAngleFast(String distancePref, String anglePref) {
+		requires(Robot.drive);
+
+		targetDistancePref = distancePref;
+		targetAnglePref = anglePref;
+	}
+	
+	public AutoDriveDistanceAngleFast(String distancePref, double angle) {
+		requires(Robot.drive);
+
+		targetDistancePref = distancePref;
+		targetHeading = angle;
+	}
+	
 	public AutoDriveDistanceAngleFast(double distance, double angle) {
 		requires(Robot.drive);
 
@@ -40,6 +58,20 @@ public class AutoDriveDistanceAngleFast extends Command {
 
 	// Called just before this Command runs the first time
 	protected void initialize() {
+		Preferences prefs = Preferences.getInstance();
+		
+		if (targetDistancePref != null) {
+			targetDistance = prefs.getDouble(targetDistancePref, 0.0) * COUNTS_PER_INCH;
+			System.out.println(targetDistancePref);
+			System.out.println(targetDistance);
+		}
+
+		if (targetAnglePref != null) {
+			targetHeading = prefs.getDouble(targetAnglePref, 0.0);
+			System.out.println(targetAnglePref);
+			System.out.println(targetHeading);
+		}
+		
 		state = PREP;
 		speed = 0.0;
 	}
@@ -71,7 +103,7 @@ public class AutoDriveDistanceAngleFast extends Command {
 			break;
 			
 		case CRUISE:
-			if (Robot.drive.getAvgPosition() > (targetDistance - (accelerateDistance * 2))) {
+			if (Robot.drive.getAvgPosition() > (targetDistance - (accelerateDistance * 1.5))) {
 				state = DECELERATE;
 			}
 			break;

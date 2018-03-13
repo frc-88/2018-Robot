@@ -37,17 +37,17 @@ public class Lift extends Subsystem {
 	private static final double MAX_SPEED = 32;
 	private static final int CRUISE_VELOCITY = 30;
 	private static final int ACCELERATION = 180;
-	private static final double P = 13.0;
+	private static final double P = 20.0;
 	private static final double I = 0.0; // Make sure reverse limit is accurate before using i!!!
-	private static final double D = 20.0;
+	private static final double D = 80.0;
 	private static final double F = 1023 / MAX_SPEED;
 
-	private static final int FORWARD_LIMIT_BASE = 725;
-	private static final int POS_BOTTOM_BASE = 5;
-	private static final int POS_SWITCH_BASE = 200;
+	private static final int FORWARD_LIMIT_BASE = 700;
+	private static final int POS_BOTTOM_BASE = 2;
+	private static final int POS_SWITCH_BASE = 250;
 	private static final int POS_LOW_SCALE_BASE = 470;
-	private static final int POS_MID_SCALE_BASE = 550;
-	private static final int POS_HI_SCALE_BASE = 640;
+	private static final int POS_MID_SCALE_BASE = 570;
+	private static final int POS_HI_SCALE_BASE = 670;
 
 	private static final int DISTANCE_THRESHOLD = 20;
 
@@ -133,6 +133,12 @@ public class Lift extends Subsystem {
 		return Math.abs(master.getSelectedSensorPosition(SLOTIDX) - target) < DISTANCE_THRESHOLD;
 	}
 
+	public boolean belowTarget(int target) {
+		target = positionMap(target);
+		
+		return master.getSelectedSensorPosition(SLOTIDX) < target;
+	}
+
 	public double getMasterCurrent() {
 		return master.getOutputCurrent();
 	}
@@ -173,7 +179,7 @@ public class Lift extends Subsystem {
 		case POS_BOTTOM:
 			return posBottom;
 		case POS_ALMOST_BOTTOM:
-			return posBottom + 80;
+			return posBottom + 70;
 		case POS_SWITCH:
 			return posSwitch;
 		case POS_LOW_SCALE:
@@ -188,19 +194,25 @@ public class Lift extends Subsystem {
 	}
 
 	public void updateDashboard() {
-		SmartDashboard.putNumber("Lift Reverse Limit", posReverseLimit);
 		SmartDashboard.putNumber("Lift Forward Limit", posForwardLimit);
+		SmartDashboard.putNumber("Lift High Scale", posHighScale);
+		SmartDashboard.putNumber("Lift Mid Scale", posMidScale);
+		SmartDashboard.putNumber("Lift Low Scale", posLowScale);
+		SmartDashboard.putNumber("Lift Switch", posSwitch);
+		SmartDashboard.putNumber("Lift Bottom", posBottom);
+		SmartDashboard.putNumber("Lift Reverse Limit", posReverseLimit);
 		
 		SmartDashboard.putNumber("Lift Target Position", position);
 		SmartDashboard.putNumber("Lift Master Position", getPosition());
+
 		SmartDashboard.putNumber("Lift Master Velocity", master.getSelectedSensorVelocity(SLOTIDX));
 		SmartDashboard.putNumber("Lift Master Error", master.getClosedLoopError(SLOTIDX));
 		SmartDashboard.putNumber("Lift Master Current", master.getOutputCurrent());
 		SmartDashboard.putNumber("Lift Master Voltage", master.getMotorOutputVoltage());
 		SmartDashboard.putNumber("Lift Follower Current", follower.getOutputCurrent());
 		SmartDashboard.putNumber("Lift Follower Voltage", follower.getMotorOutputVoltage());
-		SmartDashboard.putNumber("Percent Height", getPercentHeight());
-
+		
+		SmartDashboard.putNumber("Lift Percent Height", getPercentHeight());
 		SmartDashboard.putBoolean("Lift Position High Scale?", onTarget(posHighScale));
 		SmartDashboard.putBoolean("Lift Position Mid Scale?", onTarget(posMidScale));
 		SmartDashboard.putBoolean("Lift Position Low Scale?", onTarget(posLowScale));

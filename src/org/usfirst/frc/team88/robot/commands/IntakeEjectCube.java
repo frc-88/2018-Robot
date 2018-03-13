@@ -12,11 +12,20 @@ public class IntakeEjectCube extends Command {
 	int count;
 	boolean isDone;
 	int targetPosition;
+	double speed;
     public IntakeEjectCube(int tp) {
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
     	requires(Robot.intake);
     	targetPosition = tp;
+    	speed = 1;
+    }
+    public IntakeEjectCube(int tp, double s) {
+        // Use requires() here to declare subsystem dependencies
+        // eg. requires(chassis);
+    	requires(Robot.intake);
+    	targetPosition = tp;
+    	speed = s;
     }
 
     // Called just before this Command runs the first time
@@ -32,7 +41,7 @@ public class IntakeEjectCube extends Command {
 		
 		
 		if(Robot.lift.onTarget(targetPosition)){
-			Robot.intake.wheelSpeed(1.0);
+			Robot.intake.wheelSpeed(speed);
 			
 			count++;
 			

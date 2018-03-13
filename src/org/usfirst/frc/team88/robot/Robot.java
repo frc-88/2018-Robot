@@ -11,12 +11,14 @@ import org.usfirst.frc.team88.robot.commands.AutoCenter;
 import org.usfirst.frc.team88.robot.commands.AutoCrossTheLine;
 import org.usfirst.frc.team88.robot.commands.AutoDriveDistance;
 import org.usfirst.frc.team88.robot.commands.AutoLeft;
-import org.usfirst.frc.team88.robot.commands.AutoLeftSideL;
+import org.usfirst.frc.team88.robot.commands.AutoLeftSideFarScale;
+import org.usfirst.frc.team88.robot.commands.AutoLeftSidePark;
 import org.usfirst.frc.team88.robot.commands.AutoLeftSideScale;
 import org.usfirst.frc.team88.robot.commands.AutoLeftSideScaleThenSwitch;
 import org.usfirst.frc.team88.robot.commands.AutoLeftSideSwitch;
 import org.usfirst.frc.team88.robot.commands.AutoRight;
-import org.usfirst.frc.team88.robot.commands.AutoRightSideL;
+import org.usfirst.frc.team88.robot.commands.AutoRightSideFarScale;
+import org.usfirst.frc.team88.robot.commands.AutoRightSidePark;
 import org.usfirst.frc.team88.robot.commands.DriveResetEncoders;
 import org.usfirst.frc.team88.robot.commands.DriveRotateToAngle;
 import org.usfirst.frc.team88.robot.commands.DriveZeroYaw;
@@ -71,6 +73,12 @@ public class Robot extends TimedRobot {
 		chooser.addObject("Left", new AutoLeft());
 		chooser.addObject("Right", new AutoRight());
 		chooser.addObject("Cross the Line", new AutoCrossTheLine());
+		// testing modes below
+		chooser.addObject("TEST:RNS", new AutoRightSideScale());
+		chooser.addObject("TEST:RFS", new AutoRightSideFarScale());
+		chooser.addObject("TEST:LNS", new AutoLeftSideScale());
+		chooser.addObject("TEST:LFS", new AutoLeftSideFarScale());
+		
 		SmartDashboard.putData("Auto mode", chooser);
 
 		// Autonomous mode buttons for testing
@@ -95,12 +103,12 @@ public class Robot extends TimedRobot {
 		SmartDashboard.putData("Left Switch", new AutoLeftSideSwitch());
 		SmartDashboard.putData("Left Scale", new AutoLeftSideScale());
 		SmartDashboard.putData("Left ScaleThenSwitch", new AutoLeftSideScaleThenSwitch());
-		SmartDashboard.putData("Left Park", new AutoLeftSideL());
+		SmartDashboard.putData("Left Park", new AutoLeftSidePark());
 
 		SmartDashboard.putData("Right Switch", new AutoRightSideSwitch());
 		SmartDashboard.putData("Right Scale", new AutoRightSideScale());
 		SmartDashboard.putData("Right ScaleThenSwitch", new AutoRightSideScaleThenSwitch());
-		SmartDashboard.putData("Right Park", new AutoRightSideL());
+		SmartDashboard.putData("Right Park", new AutoRightSidePark());
 	}
 
 	/**
@@ -116,8 +124,9 @@ public class Robot extends TimedRobot {
 	@Override
 	public void disabledPeriodic() {
 		Scheduler.getInstance().run();
+		SmartDashboard.putString("Auto Command", chooser.getSelected().getName());
 
-		updateDashboard();
+		// updateDashboard();
 	}
 
 	/**
@@ -162,6 +171,7 @@ public class Robot extends TimedRobot {
 			autonomousCommand.cancel();
 		}
 		Robot.drive.setNeutralMode(NeutralMode.Coast);
+		Robot.intake.cradleDown();
 	}
 
 	/**
@@ -182,8 +192,6 @@ public class Robot extends TimedRobot {
 	}
 
 	private void updateDashboard() {
-		SmartDashboard.putString("Auto Command", chooser.getName());
-
 		// Show subsystem commands
 		SmartDashboard.putData("Robot Drive", drive);
 		SmartDashboard.putData("Robot Intake", intake);
