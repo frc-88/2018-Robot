@@ -3,10 +3,10 @@ package org.usfirst.frc.team88.robot.commands;
 public class AutoLeft extends PowerUpConditionalCommand {
 
 	public AutoLeft() {
-		super(	new AutoLeftSideScaleThenSwitch(),
-				new AutoLeftSideSwitch(),
-				new AutoLeftSideScale(), 
-				new AutoLeftSideL());
+		super(	new AutoLeftSideScale(),     //LL
+				new AutoLeftSidePark(),  //LR
+				new AutoLeftSideScale(),     //RL
+				new AutoLeftSidePark()); //RR
 	}
 
 }

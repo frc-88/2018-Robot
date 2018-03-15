@@ -11,11 +11,10 @@ public class AutoLeftSideScale extends CommandGroup {
 
 	public AutoLeftSideScale() {
 		addSequential(new DriveZeroYaw());
-		addSequential(new DriveEnableBreakMode());
 		addParallel(new IntakePneumaticsDown());
-		addSequential(new AutoDriveDistanceAngleFast(25.25 * 12, 0));
-		addSequential(new DriveRotateToAngle(45));
-		// addSequential(new AutoDriveDistanceAngle(2, 45));
+		addParallel(new LiftGotoPosition(Lift.POS_ALMOST_BOTTOM));
+		addSequential(new AutoDriveDistanceAngleFast("LeftScaleDist", "LeftScaleAngle_1"));
+		addSequential(new DriveRotateToAngle("LeftScaleAngle_2"));
 
 		addSequential(new LiftGotoPosition(Lift.POS_HI_SCALE));
 		addSequential(new LiftCheckOnTarget(Lift.POS_HI_SCALE));
@@ -23,5 +22,7 @@ public class AutoLeftSideScale extends CommandGroup {
 
 		addParallel(new LiftSoftLanding());
 		addSequential(new AutoDriveDistance(-10));
+		addSequential(new DriveRotateToAngle("LeftScaleAngle_3"));
+		addSequential(new DriveRotateToAngle("LeftScaleAngle_3"));
 	}
 }

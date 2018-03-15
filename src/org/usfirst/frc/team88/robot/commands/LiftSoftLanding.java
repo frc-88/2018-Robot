@@ -27,18 +27,16 @@ public class LiftSoftLanding extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	if (Robot.lift.onTarget(Lift.POS_ALMOST_BOTTOM)) {
+    	if (Robot.lift.belowTarget(Lift.POS_ALMOST_BOTTOM)) {
+    		Robot.lift.basicMotion(-0.1);
     		count++;
-    	} else if ((count > 10 && Robot.lift.onTarget(Lift.POS_BOTTOM)) || count > 100) {
-    		Robot.lift.setPosition(Lift.POS_BOTTOM);
-    		done = true;
-    	}
-
-    	if (count > 10) {
-    		count++;
-    		Robot.lift.basicMotion(-0.2);
     	}
     	
+    	if (count > 1 && Robot.lift.onTarget(Lift.POS_BOTTOM)) {
+    		done = true;
+    	} else if (count > 20) {
+    		done = true;
+    	}
     }
 
     // Make this return true when this Command no longer needs to run execute()
@@ -48,6 +46,7 @@ public class LiftSoftLanding extends Command {
 
     // Called once after isFinished returns true
     protected void end() {
+    	Robot.lift.setPosition(Lift.POS_BOTTOM);
     }
 
     // Called when another command which requires one or more of the same
