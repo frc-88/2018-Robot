@@ -354,7 +354,21 @@ public class Drive extends Subsystem implements PIDOutput {
 
 		return speed;
 	}
-
+	
+	public void enableTURBOMODE(){
+		leftMaster.configPeakOutputForward(1, TIMEOUTMS);
+		leftMaster.configPeakOutputReverse(1, TIMEOUTMS);
+		rightMaster.configPeakOutputForward(1, TIMEOUTMS);
+		rightMaster.configPeakOutputReverse(1, TIMEOUTMS);
+	}
+	
+	public void disableTURBOMODE(){
+		leftMaster.configPeakOutputForward(+0.83, TIMEOUTMS);
+		leftMaster.configPeakOutputReverse(-0.83, TIMEOUTMS);
+		rightMaster.configPeakOutputForward(+0.83, TIMEOUTMS);
+		rightMaster.configPeakOutputReverse(-0.83, TIMEOUTMS);
+	}
+	
 	public void updateDashboard() {
 		SmartDashboard.putNumber("Drive AvgPosition", getAvgPosition());
 		SmartDashboard.putNumber("Drive AvgVelocity", getAvgVelocity());
