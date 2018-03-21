@@ -1,4 +1,7 @@
-package org.usfirst.frc.team88.robot.commands;
+package org.usfirst.frc.team88.robot.commands.auto.center;
+
+import org.usfirst.frc.team88.robot.commands.LiftSoftLanding;
+import org.usfirst.frc.team88.robot.commands.auto.AutoDriveDistance;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
 

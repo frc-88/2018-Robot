@@ -1,4 +1,4 @@
-package org.usfirst.frc.team88.robot.commands;
+package org.usfirst.frc.team88.robot.commands.auto.center;
 
 import org.usfirst.frc.team88.robot.Robot;
 import org.usfirst.frc.team88.robot.subsystems.Lift;
