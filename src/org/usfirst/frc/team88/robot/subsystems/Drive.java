@@ -60,7 +60,10 @@ public class Drive extends Subsystem implements PIDOutput {
 	private final static double OFFANGLETHRESHOLDDEGREES = 20;
 	private final static double ONANGLETHRESHOLDDEGREES = 15; 
 	private AHRS navX;
-
+	
+	private double lastAccelX = 0;
+	private double lastAccelY = 0;
+	
 	private TalonSRX leftMaster;
 	private TalonSRX rightMaster;
 	private TalonSRX[] leftFollower;
@@ -362,7 +365,14 @@ public class Drive extends Subsystem implements PIDOutput {
 		SmartDashboard.putNumber("Drive Acceleration X", navX.getWorldLinearAccelX());
 		SmartDashboard.putNumber("Drive Acceleration Y", navX.getWorldLinearAccelY());
 		
-
+		SmartDashboard.putNumber("Drive Jerk X", lastAccelX - navX.getWorldLinearAccelX());
+		SmartDashboard.putNumber("Drive Jerk Y", lastAccelY - navX.getWorldLinearAccelY());
+		lastAccelX = navX.getWorldLinearAccelX();
+		lastAccelY = navX.getWorldLinearAccelY();
+		
+		SmartDashboard.putNumber("Drive Displacement X", navX.getDisplacementX());
+		SmartDashboard.putNumber("Drive Displacement Y", navX.getDisplacementY());
+		
 		SmartDashboard.putNumber("Drive Left Master Position", leftMaster.getSelectedSensorPosition(SLOTIDX));
 		SmartDashboard.putNumber("Drive Left Master Velocity", leftMaster.getSelectedSensorVelocity(SLOTIDX));
 		SmartDashboard.putNumber("Drive Left Master Error", leftMaster.getClosedLoopError(SLOTIDX));
