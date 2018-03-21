@@ -7,25 +7,23 @@
 
 package org.usfirst.frc.team88.robot;
 
-import org.usfirst.frc.team88.robot.commands.AutoCenter;
-import org.usfirst.frc.team88.robot.commands.AutoCrossTheLine;
-import org.usfirst.frc.team88.robot.commands.AutoDriveDistance;
-import org.usfirst.frc.team88.robot.commands.AutoLeft;
-import org.usfirst.frc.team88.robot.commands.AutoLeftSideFarScale;
-import org.usfirst.frc.team88.robot.commands.AutoLeftSidePark;
-import org.usfirst.frc.team88.robot.commands.AutoLeftSideScale;
-import org.usfirst.frc.team88.robot.commands.AutoLeftSideScaleThenSwitch;
-import org.usfirst.frc.team88.robot.commands.AutoLeftSideSwitch;
-import org.usfirst.frc.team88.robot.commands.AutoRight;
-import org.usfirst.frc.team88.robot.commands.AutoRightSideFarScale;
-import org.usfirst.frc.team88.robot.commands.AutoRightSidePark;
 import org.usfirst.frc.team88.robot.commands.DriveResetEncoders;
 import org.usfirst.frc.team88.robot.commands.DriveRotateToAngle;
 import org.usfirst.frc.team88.robot.commands.DriveZeroYaw;
 import org.usfirst.frc.team88.robot.commands.LiftCalibrate;
-import org.usfirst.frc.team88.robot.commands.AutoRightSideScale;
-import org.usfirst.frc.team88.robot.commands.AutoRightSideScaleThenSwitch;
-import org.usfirst.frc.team88.robot.commands.AutoRightSideSwitch;
+import org.usfirst.frc.team88.robot.commands.auto.AutoCrossTheLine;
+import org.usfirst.frc.team88.robot.commands.auto.AutoDriveDistance;
+import org.usfirst.frc.team88.robot.commands.auto.center.AutoCenter;
+import org.usfirst.frc.team88.robot.commands.auto.left.AutoLeft;
+import org.usfirst.frc.team88.robot.commands.auto.left.AutoLeftSideFarScale;
+import org.usfirst.frc.team88.robot.commands.auto.left.AutoLeftSideScale;
+import org.usfirst.frc.team88.robot.commands.auto.left.AutoLeftSideScaleThenSwitch;
+import org.usfirst.frc.team88.robot.commands.auto.left.AutoLeftSideSwitch;
+import org.usfirst.frc.team88.robot.commands.auto.right.AutoRight;
+import org.usfirst.frc.team88.robot.commands.auto.right.AutoRightSideFarScale;
+import org.usfirst.frc.team88.robot.commands.auto.right.AutoRightSideScale;
+import org.usfirst.frc.team88.robot.commands.auto.right.AutoRightSideScaleThenSwitch;
+import org.usfirst.frc.team88.robot.commands.auto.right.AutoRightSideSwitch;
 import org.usfirst.frc.team88.robot.subsystems.Drive;
 import org.usfirst.frc.team88.robot.subsystems.Intake;
 import org.usfirst.frc.team88.robot.subsystems.Lift;
@@ -90,7 +88,6 @@ public class Robot extends TimedRobot {
 		// buttons for calibration
 		SmartDashboard.putData("Zero Yaw", new DriveZeroYaw());
 		SmartDashboard.putData("Reset Encoders", new DriveResetEncoders());
-		SmartDashboard.putData("Calibrate Lift", new LiftCalibrate());
 		
 		// Buttons to test commands and auto mode components
 		SmartDashboard.putData("Drive 10 feet", new AutoDriveDistance(10 * 12));
@@ -99,16 +96,6 @@ public class Robot extends TimedRobot {
 		SmartDashboard.putData("Rotate to 90", new DriveRotateToAngle(90));
 		SmartDashboard.putData("Rotate to 180", new DriveRotateToAngle(180));
 		SmartDashboard.putData("Rotate to -90", new DriveRotateToAngle(-90));
-
-		SmartDashboard.putData("Left Switch", new AutoLeftSideSwitch());
-		SmartDashboard.putData("Left Scale", new AutoLeftSideScale());
-		SmartDashboard.putData("Left ScaleThenSwitch", new AutoLeftSideScaleThenSwitch());
-		SmartDashboard.putData("Left Park", new AutoLeftSidePark());
-
-		SmartDashboard.putData("Right Switch", new AutoRightSideSwitch());
-		SmartDashboard.putData("Right Scale", new AutoRightSideScale());
-		SmartDashboard.putData("Right ScaleThenSwitch", new AutoRightSideScaleThenSwitch());
-		SmartDashboard.putData("Right Park", new AutoRightSidePark());
 	}
 
 	/**
