@@ -19,7 +19,7 @@ public class StepConditionalCommand extends ConditionalCommand {
 		// TODO Auto-generated method stub
 		Preferences prefs = Preferences.getInstance();
 		
-		return prefs.getDouble(name, 0.0) >= step;
+		return prefs.getInt(name, 1) >= step;
 
 	}
 
