@@ -53,7 +53,7 @@ public class AutoDriveDistanceAngleFast extends Command {
 	public AutoDriveDistanceAngleFast(double distance, double angle) {
 		requires(Robot.drive);
 
-		targetDistance = distance * COUNTS_PER_INCH;
+		targetDistance = Math.abs(distance * COUNTS_PER_INCH);
 		direction = Math.signum(distance);
 		targetHeading = angle;
 	}
@@ -63,7 +63,7 @@ public class AutoDriveDistanceAngleFast extends Command {
 		Preferences prefs = Preferences.getInstance();
 		
 		if (targetDistancePref != null) {
-			targetDistance = prefs.getDouble(targetDistancePref, 0.0) * COUNTS_PER_INCH;
+			targetDistance = Math.abs(prefs.getDouble(targetDistancePref, 0.0) * COUNTS_PER_INCH);
 			System.out.println(targetDistancePref);
 			System.out.println(targetDistance);
 			direction = Math.signum(prefs.getDouble(targetDistancePref, 0.0));
