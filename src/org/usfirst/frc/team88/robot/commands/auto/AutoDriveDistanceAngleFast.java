@@ -32,6 +32,7 @@ public class AutoDriveDistanceAngleFast extends Command {
 	
 	private int state;
 	private double speed;
+	private double direction;
 	private double accelerateDistance;
 	
 
@@ -53,6 +54,7 @@ public class AutoDriveDistanceAngleFast extends Command {
 		requires(Robot.drive);
 
 		targetDistance = distance * COUNTS_PER_INCH;
+		direction = Math.signum(distance);
 		targetHeading = angle;
 	}
 
@@ -64,6 +66,7 @@ public class AutoDriveDistanceAngleFast extends Command {
 			targetDistance = prefs.getDouble(targetDistancePref, 0.0) * COUNTS_PER_INCH;
 			System.out.println(targetDistancePref);
 			System.out.println(targetDistance);
+			direction = Math.signum(prefs.getDouble(targetDistancePref, 0.0));
 		}
 
 		if (targetAnglePref != null) {
@@ -90,20 +93,20 @@ public class AutoDriveDistanceAngleFast extends Command {
 			
 		case ACCELERATE:
 			speed = speed + ACCELERATION;
-			if(Robot.drive.getAvgPosition()> 3*targetDistance/7){
+			if(Math.abs(Robot.drive.getAvgPosition())> 3*targetDistance/7){
 				state = DECELERATE;	
-				accelerateDistance = Robot.drive.getAvgPosition(); 
+				accelerateDistance = Math.abs(Robot.drive.getAvgPosition()); 
 				SmartDashboard.putNumber("accelerateDistance", accelerateDistance);
 			}
 			else if (speed > CRUISING_SPEED) {
 				state = CRUISE;
-				accelerateDistance = Robot.drive.getAvgPosition(); 
+				accelerateDistance = Math.abs(Robot.drive.getAvgPosition()); 
 				SmartDashboard.putNumber("accelerateDistance", accelerateDistance);
 			}
 			break;
 			
 		case CRUISE:
-			if (Robot.drive.getAvgPosition() > (targetDistance - (accelerateDistance * 1.5))) {
+			if (Math.abs(Robot.drive.getAvgPosition()) > (targetDistance - (accelerateDistance * 1.5))) {
 				state = DECELERATE;
 			}
 			break;
@@ -115,7 +118,7 @@ public class AutoDriveDistanceAngleFast extends Command {
 				state = STOP;
 			}
 
-			if (Robot.drive.getAvgPosition() > targetDistance) {
+			if (Math.abs(Robot.drive.getAvgPosition()) > targetDistance) {
 				speed = 0;
 				state = STOP;
 			}
@@ -131,7 +134,7 @@ public class AutoDriveDistanceAngleFast extends Command {
 		SmartDashboard.putNumber("State", state);
 
 		if(state != PREP){
-			Robot.drive.driveCurve(speed, curve);
+			Robot.drive.driveCurve(speed * direction, curve);
 		}
 		Robot.drive.updateDashboard();
 	}

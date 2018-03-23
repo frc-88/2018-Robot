@@ -22,7 +22,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * </pre>
  */
 public class Lift extends Subsystem {
-	private static final boolean BASIC_CONTROL = false;
+	private static final boolean BASIC_CONTROL = true;
 
 	public static final int POS_BOTTOM = 2000;
 	public static final int POS_ALMOST_BOTTOM = 2010;
@@ -61,13 +61,15 @@ public class Lift extends Subsystem {
 
 	private TalonSRX master;
 	private TalonSRX follower;
-
+	private TalonSRX follower2;
+	
 	private int position;
 
 	public Lift() {
 		master = new TalonSRX(RobotMap.liftMaster);
 		follower = new TalonSRX(RobotMap.liftFollower);
-
+		follower2 = new TalonSRX(RobotMap.liftFollower2);
+		
 		/* analog signal with no wrap-around (0-3.3V) */
 		master.configSelectedFeedbackSensor(FeedbackDevice.Analog, SLOTIDX, TIMEOUTMS);
 
@@ -95,7 +97,10 @@ public class Lift extends Subsystem {
 
 		follower.follow(master);
 		follower.setInverted(true);
-
+		
+		follower2.follow(master);
+		follower2.setInverted(true);
+		
 		position = getPosition();
 	}
 
@@ -156,6 +161,10 @@ public class Lift extends Subsystem {
 		follower.configForwardSoftLimitEnable(false, TIMEOUTMS);
 		follower.configReverseSoftLimitEnable(false, TIMEOUTMS);
 		follower.overrideLimitSwitchesEnable(false);
+		
+		follower2.configForwardSoftLimitEnable(false, TIMEOUTMS);
+		follower2.configReverseSoftLimitEnable(false, TIMEOUTMS);
+		follower2.overrideLimitSwitchesEnable(false);
 	}
 
 	public void disableSoftLimits() {
