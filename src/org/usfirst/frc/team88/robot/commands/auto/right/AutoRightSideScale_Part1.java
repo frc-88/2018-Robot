@@ -19,7 +19,9 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 public class AutoRightSideScale_Part1 extends CommandGroup {
 
     public AutoRightSideScale_Part1() {
-		addSequential(new DriveZeroYaw());
+    	//Step 1: Score first Cube
+    	
+    	addSequential(new DriveZeroYaw());
 		addParallel(new IntakePneumaticsDown());
 		addParallel(new LiftGotoPosition(Lift.POS_HI_SCALE));
 		addSequential(new DriveEnableTURBOMODE());

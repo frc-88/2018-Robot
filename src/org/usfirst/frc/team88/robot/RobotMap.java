@@ -23,6 +23,7 @@ public class RobotMap {
 	// Lift - CAN
 	public static final int liftMaster = 13; 
 	public static final int liftFollower = 12;
+	public static final int liftFollower2 = 1;
 
 	// Intake - CAN
 	public static final int intakeLeft = 3; 
@@ -37,5 +38,4 @@ public class RobotMap {
 
 	// Other - unused Talons, CAN
 	public static final int unused1 = 0;
-	public static final int unused2 = 1; 
 }
