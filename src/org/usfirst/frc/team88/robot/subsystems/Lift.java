@@ -10,6 +10,7 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
+import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -105,6 +106,10 @@ public class Lift extends Subsystem {
 	}
 
 	public void basicMotion(double input) {
+		Preferences prefs = Preferences.getInstance();
+		
+		input += prefs.getDouble("LiftGravityOffset", 0.0);
+		
 		master.set(ControlMode.PercentOutput, input);
 	}
 

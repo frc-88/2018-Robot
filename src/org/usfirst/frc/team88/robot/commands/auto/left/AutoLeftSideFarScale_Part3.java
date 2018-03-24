@@ -17,6 +17,6 @@ public class AutoLeftSideFarScale_Part3 extends CommandGroup {
     	
     	addSequential(new IntakeEjectCube(Lift.POS_HI_SCALE , .3));
 		addSequential(new AutoDriveDistance(-36));
-		addParallel(new LiftSoftLanding());
+		addSequential(new LiftSoftLanding());
     }
 }
