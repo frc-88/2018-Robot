@@ -19,6 +19,6 @@ public class AutoLeftSideFarScale extends CommandGroup {
 		addSequential(new StepConditionalCommand(new AutoLeftSideFarScale_Part1(), "AutoLeftSideFarScaleStep", 1));
 		addSequential(new StepConditionalCommand(new AutoLeftSideFarScale_Part2(), "AutoLeftSideFarScaleStep", 2));
 		addSequential(new StepConditionalCommand(new AutoLeftSideFarScale_Part3(), "AutoLeftSideFarScaleStep", 3));
-		addSequential(new StepConditionalCommand(new AutoLeftSideFarScale_Part4(), "AutoLefttSideFarScaleStep", 4));
+		addSequential(new StepConditionalCommand(new AutoLeftSideFarScale_Part4(), "AutoLeftSideFarScaleStep", 4));
 	}
 }
