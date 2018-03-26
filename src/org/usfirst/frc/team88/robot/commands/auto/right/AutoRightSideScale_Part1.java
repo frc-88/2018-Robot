@@ -20,13 +20,13 @@ public class AutoRightSideScale_Part1 extends CommandGroup {
 
     public AutoRightSideScale_Part1() {
     	//Step 1: Score first Cube
-    	
     	addSequential(new DriveZeroYaw());
 		addParallel(new IntakePneumaticsDown());
-		addParallel(new LiftGotoPosition(Lift.POS_HI_SCALE));
-		addSequential(new DriveEnableTURBOMODE());
+		addParallel(new LiftGotoPosition(Lift.POS_ALMOST_BOTTOM));
+		//addSequential(new DriveEnableTURBOMODE());
 		addSequential(new AutoDriveDistanceAngleFast("RightScaleDist", "RightScaleAngle_1"));
-		addSequential(new DriveDisableTURBOMODE());
+		//addSequential(new DriveDisableTURBOMODE());
+		addParallel(new LiftGotoPosition(Lift.POS_HI_SCALE));
 		addSequential(new DriveRotateToAngle("RightScaleAngle_2"));
 
 		addSequential(new IntakeEjectCube(Lift.POS_HI_SCALE));
