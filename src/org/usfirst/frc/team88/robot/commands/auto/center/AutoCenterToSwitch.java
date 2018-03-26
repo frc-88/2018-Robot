@@ -23,6 +23,10 @@ public class AutoCenterToSwitch extends Command {
 	private static final double ACCELERATION = 0.01;
 	private static final double COUNTS_PER_INCH = 1086;
 	private static final double STAGE_ONE = 10;
+	
+	private static final double targetDisplacementX = 0; //Make sure these three are correct
+	private static final double toleranceX = 0;
+	private static final double toleranceY = 0;
 	// private static final double STAGE_THREE = 75;
 
 	private int state;
@@ -38,6 +42,11 @@ public class AutoCenterToSwitch extends Command {
 	private boolean done;
 	private String gameData;
 	private double count;
+	
+	private double targetDisplacementY = 0;
+	private boolean shooting = false;
+	private boolean scored = false;
+	
 
 	public AutoCenterToSwitch() {
 		// Use requires() here to declare subsystem dependencies
@@ -65,11 +74,13 @@ public class AutoCenterToSwitch extends Command {
 			stageTwoDistanceInches = 45;
 			stageThreeYaw = 20;
 			stageThreeDistance = 95;
+			targetDisplacementY = 0; //make sure this right
 		} else if (gameData.charAt(0) == 'R') {
 			stageTwoYaw = 75;
 			stageTwoDistanceInches = 50;
 			stageThreeYaw = -20;
 			stageThreeDistance = 60;
+			targetDisplacementY = 0; //make sure this right
 		}
 		targetDistanceCounts = (STAGE_ONE + stageTwoDistanceInches + stageThreeDistance) * COUNTS_PER_INCH;
 	}
@@ -140,21 +151,29 @@ public class AutoCenterToSwitch extends Command {
 			break;
 		case STOP:
 			speed = 0.0;
-
-			Robot.intake.wheelSpeed(0.75);
-
-			count++;
-
-			if (count > 20) {
-				state = END;
-			}
+			
+			state = END;
+			
 			break;
 		case END:
-			Robot.intake.wheelSpeed(0.0);
 			done = true;
 			break;
 		}
-
+		
+		if(!scored && !shooting && Math.abs(Robot.drive.getJerkX()) > 20 && 
+				Math.abs(targetDisplacementX - Robot.drive.getDisplacementX()) > toleranceX && 
+				Math.abs(targetDisplacementY - Robot.drive.getDisplacementY()) > toleranceY){
+			Robot.intake.wheelSpeed(0.75);
+			shooting = true;
+		}
+		if(shooting = true){
+			count++;
+			if(count > 20){
+				scored = true;
+				shooting = false;
+				Robot.intake.wheelSpeed(0.0);
+			}
+		}
 		if (state != PREP) {
 			Robot.drive.driveCurve(speed, curve);
 		}
@@ -175,5 +194,6 @@ public class AutoCenterToSwitch extends Command {
 	// subsystems is scheduled to run
 	protected void interrupted() {
 		Robot.drive.wheelSpeed(0, 0);
+		Robot.intake.wheelSpeed(0.0);
 	}
 }

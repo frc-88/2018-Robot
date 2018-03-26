@@ -19,7 +19,7 @@ public class AutoLeftSideFarScale_Part2 extends CommandGroup {
     	addSequential(new DriveRotateToAngle("LeftFarScaleAngle_1"));
 		addParallel(new DriveRotateToAngle("LeftFarScaleAngle_1"));
 		addSequential(new LiftGotoPosition(Lift.POS_HI_SCALE));
-		addSequential(new LiftCheckOnTarget(Lift.POS_LOW_SCALE));
+		addSequential(new LiftCheckOnTarget(Lift.POS_HI_SCALE));
 		addSequential(new AutoDriveDistanceAngleFast("LeftFarScaleDist_3", 0));
     }
 }

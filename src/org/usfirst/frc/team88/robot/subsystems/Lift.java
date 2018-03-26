@@ -6,6 +6,7 @@ import org.usfirst.frc.team88.robot.commands.LiftMove;
 
 import com.ctre.phoenix.ParamEnum;
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
@@ -23,7 +24,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * </pre>
  */
 public class Lift extends Subsystem {
-	private static final boolean BASIC_CONTROL = true;
+	private static final boolean BASIC_CONTROL = false;
 
 	public static final int POS_BOTTOM = 2000;
 	public static final int POS_ALMOST_BOTTOM = 2010;
@@ -35,13 +36,13 @@ public class Lift extends Subsystem {
 	private static final int SLOTIDX = 0;
 	private static final int TIMEOUTMS = 0;
 	private static final double RAMPRATE = .30;
-	private static final double MAX_SPEED = 32;
-	private static final int CRUISE_VELOCITY = 30;
-	private static final int ACCELERATION = 180;
-	private static final double P = 20.0;
+	private static final double MAX_SPEED = 50;
+	private static final int CRUISE_VELOCITY = 50;
+	private static final int ACCELERATION = 500;
+	private static final double P = 4.0;
 	private static final double I = 0.0; // Make sure reverse limit is accurate before using i!!!
-	private static final double D = 80.0;
-	private static final double F = 1023 / MAX_SPEED;
+	private static final double D = 150.0;
+	private static final double F = (1023 / MAX_SPEED) * 0.9;
 
 	private static final int FORWARD_LIMIT_BASE = 700;
 	private static final int POS_BOTTOM_BASE = 2;
@@ -50,7 +51,7 @@ public class Lift extends Subsystem {
 	private static final int POS_MID_SCALE_BASE = 570;
 	private static final int POS_HI_SCALE_BASE = 670;
 
-	private static final int DISTANCE_THRESHOLD = 20;
+	private static final int DISTANCE_THRESHOLD = 50;
 
 	private int posReverseLimit;
 	private int posForwardLimit;
@@ -87,6 +88,10 @@ public class Lift extends Subsystem {
 		master.configPeakOutputReverse(-1.0, TIMEOUTMS);
 		master.configNeutralDeadband(0.04, TIMEOUTMS);
 		master.configClosedloopRamp(RAMPRATE, TIMEOUTMS);
+		master.configPeakCurrentLimit(35, TIMEOUTMS);
+		master.configPeakCurrentDuration(0, TIMEOUTMS);
+		master.configContinuousCurrentLimit(30, TIMEOUTMS);
+		master.enableCurrentLimit(true);
 		master.setSensorPhase(false);
 		master.setNeutralMode(NeutralMode.Brake);
 
@@ -114,7 +119,7 @@ public class Lift extends Subsystem {
 	}
 
 	public void gotoPosition() {
-		master.set(ControlMode.MotionMagic, position);
+		master.set(ControlMode.MotionMagic, position, DemandType.ArbitraryFeedForward, 0.05);
 	}
 
 	public void setPosition(int target) {

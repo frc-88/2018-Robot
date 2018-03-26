@@ -369,6 +369,22 @@ public class Drive extends Subsystem implements PIDOutput {
 		rightMaster.configPeakOutputReverse(-0.83, TIMEOUTMS);
 	}
 	
+	public double getJerkX(){
+		return lastAccelX-navX.getWorldLinearAccelX();
+	}
+	
+	public double getJerkY(){
+		return lastAccelY-navX.getWorldLinearAccelY();
+	}
+	
+	public double getDisplacementX(){
+		return navX.getDisplacementX();
+	}
+	
+	public double getDisplacementY(){
+		return navX.getDisplacementY();
+	}
+	
 	public void updateDashboard() {
 		SmartDashboard.putNumber("Drive AvgPosition", getAvgPosition());
 		SmartDashboard.putNumber("Drive AvgVelocity", getAvgVelocity());
