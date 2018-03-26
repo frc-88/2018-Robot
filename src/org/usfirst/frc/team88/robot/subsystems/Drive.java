@@ -377,6 +377,10 @@ public class Drive extends Subsystem implements PIDOutput {
 		return lastAccelY-navX.getWorldLinearAccelY();
 	}
 	
+	public void resetDisplacement() {
+		navX.resetDisplacement();
+	}
+	
 	public double getDisplacementX(){
 		return navX.getDisplacementX();
 	}
