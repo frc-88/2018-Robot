@@ -41,11 +41,11 @@ public class AutoCenterToSwitch extends Command {
 	private boolean cubeUp;
 	private boolean done;
 	private String gameData;
-	private double count;
+	private int count;
 	
-	private double targetDisplacementY = 0;
-	private boolean shooting = false;
-	private boolean scored = false;
+	private double targetDisplacementY;
+	private boolean shooting;
+	private boolean scored;
 	
 
 	public AutoCenterToSwitch() {
@@ -61,9 +61,11 @@ public class AutoCenterToSwitch extends Command {
 
 		state = PREP;
 		cubeUp=false;
+		shooting = false;
+		scored = false;
 		done = false;
 		speed = 0.0;
-		count = 0.0;
+		count = 0;
 
 		Robot.drive.zeroYaw();
 		Robot.drive.resetEncoders();
@@ -166,18 +168,20 @@ public class AutoCenterToSwitch extends Command {
 			Robot.intake.wheelSpeed(0.75);
 			shooting = true;
 		}
+		
 		if(shooting = true){
 			count++;
 			if(count > 20){
 				scored = true;
 				shooting = false;
 				Robot.intake.wheelSpeed(0.0);
+				// state = STOP ?
 			}
 		}
+		
 		if (state != PREP) {
 			Robot.drive.driveCurve(speed, curve);
 		}
-		Robot.drive.updateDashboard();
 	}
 
 	// Make this return true when this Command no longer needs to run execute()
