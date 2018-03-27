@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 public class AutoRightSideScale_Part3 extends CommandGroup {
 
     public AutoRightSideScale_Part3() {
+    	//Step 3: Score second cube
     	addSequential(new IntakeEjectCube(Lift.POS_HI_SCALE));
 		
 		addParallel(new LiftSoftLanding());

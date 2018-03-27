@@ -357,9 +357,9 @@ public class Drive extends Subsystem implements PIDOutput {
 	
 	public void enableTURBOMODE(){
 		leftMaster.configPeakOutputForward(1, TIMEOUTMS);
-		leftMaster.configPeakOutputReverse(1, TIMEOUTMS);
+		leftMaster.configPeakOutputReverse(-1, TIMEOUTMS);
 		rightMaster.configPeakOutputForward(1, TIMEOUTMS);
-		rightMaster.configPeakOutputReverse(1, TIMEOUTMS);
+		rightMaster.configPeakOutputReverse(-1, TIMEOUTMS);
 	}
 	
 	public void disableTURBOMODE(){
@@ -375,6 +375,10 @@ public class Drive extends Subsystem implements PIDOutput {
 	
 	public double getJerkY(){
 		return lastAccelY-navX.getWorldLinearAccelY();
+	}
+	
+	public void resetDisplacement() {
+		navX.resetDisplacement();
 	}
 	
 	public double getDisplacementX(){

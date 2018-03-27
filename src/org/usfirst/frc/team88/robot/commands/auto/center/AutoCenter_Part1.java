@@ -3,7 +3,7 @@ package org.usfirst.frc.team88.robot.commands.auto.center;
 import org.usfirst.frc.team88.robot.commands.DriveRotateToAngle;
 import org.usfirst.frc.team88.robot.commands.LiftSoftLanding;
 import org.usfirst.frc.team88.robot.commands.PowerUpConditionalCommand;
-import org.usfirst.frc.team88.robot.commands.auto.AutoDriveDistance;
+import org.usfirst.frc.team88.robot.commands.auto.AutoDriveDistanceAngleFast;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
@@ -17,7 +17,7 @@ public class AutoCenter_Part1 extends CommandGroup {
 		addSequential(new AutoCenterToSwitch());
 
 		// back off and soft land
-		addSequential(new AutoDriveDistance(-60));
+		addSequential(new AutoDriveDistanceAngleFast(-60, 0));
 		addParallel(new LiftSoftLanding());
 
 		// turn towards a second cube

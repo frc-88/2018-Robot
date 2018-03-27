@@ -8,7 +8,7 @@ public class AutoLeft extends PowerUpConditionalCommand {
 		super(new AutoLeftSideScale(), // LL
 				new AutoLeftSideFarScale(), // LR
 				new AutoLeftSideScale(), // RL
-				new AutoLeftSideFarScaleFarSwitch()); // RR
+				new AutoLeftSideFarScale()); // RR
 	}
 
 }

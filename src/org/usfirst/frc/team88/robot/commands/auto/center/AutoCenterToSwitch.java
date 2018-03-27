@@ -24,10 +24,9 @@ public class AutoCenterToSwitch extends Command {
 	private static final double COUNTS_PER_INCH = 1086;
 	private static final double STAGE_ONE = 10;
 	
-	private static final double targetDisplacementX = 0; //Make sure these three are correct
-	private static final double toleranceX = 0;
-	private static final double toleranceY = 0;
-	// private static final double STAGE_THREE = 75;
+	private static final double targetDisplacementX = 2.7; // displacement in meters TODO check this value
+	private static final double toleranceX = 0.25; // TODO check
+	private static final double toleranceY = 0.5; // TODO check
 
 	private int state;
 	private double speed;
@@ -41,11 +40,11 @@ public class AutoCenterToSwitch extends Command {
 	private boolean cubeUp;
 	private boolean done;
 	private String gameData;
-	private double count;
+	private int count;
 	
-	private double targetDisplacementY = 0;
-	private boolean shooting = false;
-	private boolean scored = false;
+	private double targetDisplacementY;
+	private boolean shooting;
+	private boolean scored;
 	
 
 	public AutoCenterToSwitch() {
@@ -61,9 +60,11 @@ public class AutoCenterToSwitch extends Command {
 
 		state = PREP;
 		cubeUp=false;
+		shooting = false;
+		scored = false;
 		done = false;
 		speed = 0.0;
-		count = 0.0;
+		count = 0;
 
 		Robot.drive.zeroYaw();
 		Robot.drive.resetEncoders();
@@ -74,13 +75,13 @@ public class AutoCenterToSwitch extends Command {
 			stageTwoDistanceInches = 45;
 			stageThreeYaw = 20;
 			stageThreeDistance = 95;
-			targetDisplacementY = 0; //make sure this right
+			targetDisplacementY = 1.6; //in meters TODO make sure this right
 		} else if (gameData.charAt(0) == 'R') {
 			stageTwoYaw = 75;
 			stageTwoDistanceInches = 50;
 			stageThreeYaw = -20;
 			stageThreeDistance = 60;
-			targetDisplacementY = 0; //make sure this right
+			targetDisplacementY = 1.3; //in meters TODO make sure this right
 		}
 		targetDistanceCounts = (STAGE_ONE + stageTwoDistanceInches + stageThreeDistance) * COUNTS_PER_INCH;
 	}
@@ -113,6 +114,7 @@ public class AutoCenterToSwitch extends Command {
 		switch (state) {
 		case PREP:
 			Robot.drive.resetEncoders();
+			Robot.drive.resetDisplacement();
 			
 			if (Math.abs(Robot.drive.getAvgPosition()) < 100) {
 				Robot.intake.cradleDown();
@@ -166,18 +168,20 @@ public class AutoCenterToSwitch extends Command {
 			Robot.intake.wheelSpeed(0.75);
 			shooting = true;
 		}
+		
 		if(shooting = true){
 			count++;
 			if(count > 20){
 				scored = true;
 				shooting = false;
 				Robot.intake.wheelSpeed(0.0);
+				// state = STOP ?
 			}
 		}
+		
 		if (state != PREP) {
 			Robot.drive.driveCurve(speed, curve);
 		}
-		Robot.drive.updateDashboard();
 	}
 
 	// Make this return true when this Command no longer needs to run execute()

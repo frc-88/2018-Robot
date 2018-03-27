@@ -3,7 +3,7 @@ package org.usfirst.frc.team88.robot.commands.auto.right;
 import org.usfirst.frc.team88.robot.commands.DriveRotateToAngle;
 import org.usfirst.frc.team88.robot.commands.LiftCheckOnTarget;
 import org.usfirst.frc.team88.robot.commands.LiftGotoPosition;
-import org.usfirst.frc.team88.robot.commands.auto.AutoDriveDistanceAngleFast;
+import org.usfirst.frc.team88.robot.commands.auto.AutoDriveDistanceAngle;
 import org.usfirst.frc.team88.robot.subsystems.Lift;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
@@ -19,7 +19,7 @@ public class AutoRightSideFarScale_Part2 extends CommandGroup {
     	addSequential(new DriveRotateToAngle("RightFarScaleAngle_1"));
 		addParallel(new DriveRotateToAngle("RightFarScaleAngle_1"));
 		addSequential(new LiftGotoPosition(Lift.POS_HI_SCALE));
-		addSequential(new LiftCheckOnTarget(Lift.POS_LOW_SCALE));
-		addSequential(new AutoDriveDistanceAngleFast("RightFarScaleDist_3", 0));
+		addSequential(new LiftCheckOnTarget(Lift.POS_HI_SCALE));
+		addSequential(new AutoDriveDistanceAngle("RightFarScaleDist_3", 0));
     }
 }
