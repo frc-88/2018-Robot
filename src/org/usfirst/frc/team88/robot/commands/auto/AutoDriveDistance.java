@@ -101,7 +101,6 @@ public class AutoDriveDistance extends Command {
 		}
 
 		Robot.drive.driveCurve(speed * direction, curve);
-		Robot.drive.updateDashboard();
 	}
 
 	// Make this return true when this Command no longer needs to run execute()
