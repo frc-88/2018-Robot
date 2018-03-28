@@ -80,7 +80,7 @@ public class AutoCenterToSwitch extends Command {
 			stageTwoYaw = 75;
 			stageTwoDistanceInches = 50;
 			stageThreeYaw = -20;
-			stageThreeDistance = 60;
+			stageThreeDistance = 80;
 			targetDisplacementY = 1.3; //in meters TODO make sure this right
 		}
 		targetDistanceCounts = (STAGE_ONE + stageTwoDistanceInches + stageThreeDistance) * COUNTS_PER_INCH;
@@ -161,15 +161,17 @@ public class AutoCenterToSwitch extends Command {
 			done = true;
 			break;
 		}
-		
-		if(!scored && !shooting && Math.abs(Robot.drive.getJerkX()) > 20 && 
-				Math.abs(targetDisplacementX - Robot.drive.getDisplacementX()) > toleranceX && 
-				Math.abs(targetDisplacementY - Robot.drive.getDisplacementY()) > toleranceY){
+		double jerkX = Math.abs(Robot.drive.getJerkX());
+		double jerkY = Math.abs(Robot.drive.getJerkY());
+		if(!scored && !shooting && (avgPosition > (STAGE_ONE + stageTwoDistanceInches) * COUNTS_PER_INCH) && jerkX > .6){
 			Robot.intake.wheelSpeed(0.75);
 			shooting = true;
 		}
-		
-		if(shooting = true){
+		SmartDashboard.putNumber("JerkX", jerkX);
+		SmartDashboard.putNumber("JerkY", jerkY);
+		SmartDashboard.putBoolean("SHOOTING", shooting);
+		SmartDashboard.putBoolean("SCORED", scored);
+		if(shooting){
 			count++;
 			if(count > 20){
 				scored = true;

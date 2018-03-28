@@ -14,11 +14,14 @@ public class AutoCenter_Part2 extends CommandGroup {
 
 	public AutoCenter_Part2() {
 		// go get the second cube
-		addParallel(new AutoDriveDistance(36));
-		addSequential(new IntakeIntakeCube(3));
+		addParallel(new PowerUpConditionalCommand(new AutoDriveDistance(45),
+				new AutoDriveDistance(45),
+				new AutoDriveDistance(36),
+				new AutoDriveDistance(36)));
+		addSequential(new IntakeIntakeCube(2));
 
 		// back off and turn towards our scale
-		addParallel(new AutoDriveDistance(-12));
+		addSequential(new AutoDriveDistance(-24));
 		addSequential(new PowerUpConditionalCommand(new DriveRotateToAngle(-90), 
 				new DriveRotateToAngle(90),
 				new DriveRotateToAngle(-90), 

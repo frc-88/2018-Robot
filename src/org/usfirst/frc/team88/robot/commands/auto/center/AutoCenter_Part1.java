@@ -17,7 +17,7 @@ public class AutoCenter_Part1 extends CommandGroup {
 		addSequential(new AutoCenterToSwitch());
 
 		// back off and soft land
-		addSequential(new AutoDriveDistanceAngleFast(-60, 0));
+		addSequential(new AutoDriveDistanceAngleFast(-40, 0));
 		addParallel(new LiftSoftLanding());
 
 		// turn towards a second cube
