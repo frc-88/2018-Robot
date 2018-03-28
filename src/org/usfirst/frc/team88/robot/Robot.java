@@ -108,7 +108,7 @@ public class Robot extends TimedRobot {
 		Scheduler.getInstance().run();
 		SmartDashboard.putString("Auto Command", chooser.getSelected().getName());
 
-		// updateDashboard();
+		updateDashboard();
 	}
 
 	/**
