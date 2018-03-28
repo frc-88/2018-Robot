@@ -5,13 +5,11 @@ import org.usfirst.frc.team88.robot.subsystems.Lift;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  *
  */
 public class AutoCenterToSwitch extends Command {
-
 	// states
 	private static final int PREP = 0;
 	private static final int ACCELERATE = 10;
@@ -23,10 +21,6 @@ public class AutoCenterToSwitch extends Command {
 	private static final double ACCELERATION = 0.01;
 	private static final double COUNTS_PER_INCH = 1086;
 	private static final double STAGE_ONE = 10;
-	
-	private static final double targetDisplacementX = 2.7; // displacement in meters TODO check this value
-	private static final double toleranceX = 0.25; // TODO check
-	private static final double toleranceY = 0.5; // TODO check
 
 	private int state;
 	private double speed;
@@ -41,11 +35,9 @@ public class AutoCenterToSwitch extends Command {
 	private boolean done;
 	private String gameData;
 	private int count;
-	
-	private double targetDisplacementY;
+
 	private boolean shooting;
 	private boolean scored;
-	
 
 	public AutoCenterToSwitch() {
 		// Use requires() here to declare subsystem dependencies
@@ -59,7 +51,7 @@ public class AutoCenterToSwitch extends Command {
 	protected void initialize() {
 
 		state = PREP;
-		cubeUp=false;
+		cubeUp = false;
 		shooting = false;
 		scored = false;
 		done = false;
@@ -75,13 +67,11 @@ public class AutoCenterToSwitch extends Command {
 			stageTwoDistanceInches = 45;
 			stageThreeYaw = 20;
 			stageThreeDistance = 95;
-			targetDisplacementY = 1.6; //in meters TODO make sure this right
 		} else if (gameData.charAt(0) == 'R') {
 			stageTwoYaw = 75;
 			stageTwoDistanceInches = 50;
 			stageThreeYaw = -20;
 			stageThreeDistance = 80;
-			targetDisplacementY = 1.3; //in meters TODO make sure this right
 		}
 		targetDistanceCounts = (STAGE_ONE + stageTwoDistanceInches + stageThreeDistance) * COUNTS_PER_INCH;
 	}
@@ -115,29 +105,30 @@ public class AutoCenterToSwitch extends Command {
 		case PREP:
 			Robot.drive.resetEncoders();
 			Robot.drive.resetDisplacement();
-			
+
 			if (Math.abs(Robot.drive.getAvgPosition()) < 100) {
 				Robot.intake.cradleDown();
 				state = ACCELERATE;
 			}
 			break;
+
 		case ACCELERATE:
 			speed = speed + ACCELERATION;
 			if (Robot.drive.getAvgPosition() > targetDistanceCounts) {
 				state = DECELERATE;
 				accelerateDistance = Robot.drive.getAvgPosition();
-				SmartDashboard.putNumber("accelerateDistance", accelerateDistance);
 			} else if (speed > CRUISING_SPEED) {
 				state = CRUISE;
 				accelerateDistance = Robot.drive.getAvgPosition();
-				SmartDashboard.putNumber("accelerateDistance", accelerateDistance);
 			}
 			break;
+
 		case CRUISE:
 			if (Robot.drive.getAvgPosition() > (targetDistanceCounts - (accelerateDistance * 1.4))) {
 				state = DECELERATE;
 			}
 			break;
+
 		case DECELERATE:
 			speed = speed - ACCELERATION;
 			if (speed < 0) {
@@ -149,38 +140,35 @@ public class AutoCenterToSwitch extends Command {
 				speed = 0;
 				state = STOP;
 			}
-
 			break;
+
 		case STOP:
 			speed = 0.0;
-			
 			state = END;
-			
 			break;
+
 		case END:
 			done = true;
 			break;
 		}
+
 		double jerkX = Math.abs(Robot.drive.getJerkX());
-		double jerkY = Math.abs(Robot.drive.getJerkY());
-		if(!scored && !shooting && (avgPosition > (STAGE_ONE + stageTwoDistanceInches) * COUNTS_PER_INCH) && jerkX > .6){
+		if (!scored && !shooting && (avgPosition > (STAGE_ONE + stageTwoDistanceInches) * COUNTS_PER_INCH)
+				&& jerkX > .6) {
 			Robot.intake.wheelSpeed(0.75);
 			shooting = true;
 		}
-		SmartDashboard.putNumber("JerkX", jerkX);
-		SmartDashboard.putNumber("JerkY", jerkY);
-		SmartDashboard.putBoolean("SHOOTING", shooting);
-		SmartDashboard.putBoolean("SCORED", scored);
-		if(shooting){
+
+		if (shooting) {
 			count++;
-			if(count > 20){
+			if (count > 20) {
 				scored = true;
 				shooting = false;
 				Robot.intake.wheelSpeed(0.0);
 				// state = STOP ?
 			}
 		}
-		
+
 		if (state != PREP) {
 			Robot.drive.driveCurve(speed, curve);
 		}
