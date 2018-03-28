@@ -34,16 +34,13 @@ public class AutoCenterToSwitch extends Command {
 	private double stageThreeYaw;
 	private double stageThreeDistance;
 	private boolean cubeUp;
+	private boolean shooting;
+	private boolean scored;
 	private boolean done;
 	private String gameData;
 	private int count;
 
-	private boolean shooting;
-	private boolean scored;
-
 	public AutoCenterToSwitch() {
-		// Use requires() here to declare subsystem dependencies
-		// eg. requires(chassis);
 		requires(Robot.drive);
 		requires(Robot.lift);
 		requires(Robot.intake);
@@ -51,7 +48,6 @@ public class AutoCenterToSwitch extends Command {
 
 	// Called just before this Command runs the first time
 	protected void initialize() {
-
 		state = PREP;
 		cubeUp = false;
 		shooting = false;
@@ -86,26 +82,7 @@ public class AutoCenterToSwitch extends Command {
 		double curve;
 		double avgPosition = Math.abs(Robot.drive.getAvgPosition());
 
-		if (state != PREP) {
-			if (avgPosition < stageOneCounts) {
-				targetYaw = 0.0;
-			} else if (avgPosition < stageTwoCounts) {
-				targetYaw = stageTwoYaw;
-			} else {
-				targetYaw = stageThreeYaw;
-			}
-
-			curve = (targetYaw - (Robot.drive.getYaw())) * 0.01;
-
-			if (avgPosition > stageOneCounts && !cubeUp) {
-				Robot.lift.setPosition(Lift.POS_SWITCH);
-				Robot.lift.gotoPosition();
-				cubeUp = true;
-			}
-		} else {
-			curve = 0.0;
-		}
-
+		// state machine controls our speed in a trapezoidal profile
 		switch (state) {
 		case PREP:
 			if (avgPosition < 100) {
@@ -156,22 +133,50 @@ public class AutoCenterToSwitch extends Command {
 			break;
 		}
 
-		double jerkX = Math.abs(Robot.drive.getJerkX());
-		if (!scored && !shooting && (avgPosition > stageTwoCounts) && jerkX > .6) {
+		// if we are not in PREP state (that is, encoders have been reset)
+		// then adjust our targetHeading based on how far we have driven
+		if (state != PREP) {
+			if (avgPosition < stageOneCounts) {
+				targetYaw = 0.0;
+			} else if (avgPosition < stageTwoCounts) {
+				targetYaw = stageTwoYaw;
+			} else {
+				targetYaw = stageThreeYaw;
+			}
+
+			curve = (targetYaw - (Robot.drive.getYaw())) * 0.01;
+
+			// once we have driven a little bit, raise the lift to get ready to shoot
+			if (avgPosition > stageOneCounts && !cubeUp) {
+				Robot.lift.setPosition(Lift.POS_SWITCH);
+				Robot.lift.gotoPosition();
+				cubeUp = true;
+			}
+		} else {
+			curve = 0.0;
+		}
+
+		// if the lift is up, we haven't shot, and we have driven far enough
+		// shoot when we collide with the fence
+		if (cubeUp && !scored && !shooting && (avgPosition > stageTwoCounts)
+				&& (Math.abs(Robot.drive.getJerkX()) > .6)) {
 			Robot.intake.wheelSpeed(0.75);
 			shooting = true;
 		}
 
+		// run the intake for 20*20 = 400ms, then we're done!
 		if (shooting) {
 			count++;
 			if (count > 20) {
 				scored = true;
 				shooting = false;
 				Robot.intake.wheelSpeed(0.0);
-				// state = STOP ?
+				state = STOP;
 			}
 		}
 
+		// don't move until we've completed PREP state
+		// that is, don't move until the encoders are reset
 		if (state != PREP) {
 			Robot.drive.driveCurve(speed, curve);
 		}
