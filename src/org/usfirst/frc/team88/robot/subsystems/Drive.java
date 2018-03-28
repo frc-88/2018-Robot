@@ -38,10 +38,13 @@ public class Drive extends Subsystem implements PIDOutput {
 	private final static double MAX_RAMPRATE = 1.5;
 	private final static double MIN_RAMPRATE = .50;
 	private final static double MAX_SPEED = 13000;
+	private final static double MAX_SPEED_TURBO = 15500;  // TODO this is estimated...verify this value
+	
 	private final static double P = 0.04;
 	private final static double I = 0.0;
 	private final static double D = 0.0;
 	private final static double F = (1023 / MAX_SPEED) * 0.8;
+	private final static double F_TURBO = (1023 / MAX_SPEED_TURBO) * 0.8;
 	private final static double DFT_SENSITIVITY = 0.15;
 
 	private final static double ROTATE_P = 0.0060;
@@ -73,6 +76,7 @@ public class Drive extends Subsystem implements PIDOutput {
 	private int ramprateCount;
 	private double ramprate;
 	private boolean autoBalanceXMode;
+	private boolean turbo;
 	
 	public PIDController rotateController;
 	private PIDController headingController;
@@ -160,7 +164,7 @@ public class Drive extends Subsystem implements PIDOutput {
 		headingCount = 0;
 		ramprateCount = 0;
 		autoBalanceXMode = false;
-
+		turbo = false;
 	}
 
 	public void wheelSpeed(double left, double right) {
@@ -197,11 +201,11 @@ public class Drive extends Subsystem implements PIDOutput {
 			rightMaster.set(ControlMode.PercentOutput, right);
 			
 		}else if (CLOSED_LOOP) {
-			SmartDashboard.putNumber("Drive Left Input", -left * MAX_SPEED);
-			SmartDashboard.putNumber("Drive Right Input", right * MAX_SPEED);
+			SmartDashboard.putNumber("Drive Left Input", -left * (turbo ? MAX_SPEED_TURBO : MAX_SPEED));
+			SmartDashboard.putNumber("Drive Right Input", right * (turbo ? MAX_SPEED_TURBO : MAX_SPEED));
 
-			leftMaster.set(ControlMode.Velocity, -left * MAX_SPEED);
-			rightMaster.set(ControlMode.Velocity, right * MAX_SPEED);
+			leftMaster.set(ControlMode.Velocity, -left * (turbo ? MAX_SPEED_TURBO : MAX_SPEED));
+			rightMaster.set(ControlMode.Velocity, right * (turbo ? MAX_SPEED_TURBO : MAX_SPEED));
 		} else {
 			SmartDashboard.putNumber("Drive Left Input", left);
 			SmartDashboard.putNumber("Drive Right Input", right);
@@ -267,7 +271,7 @@ public class Drive extends Subsystem implements PIDOutput {
 			curve = curve * Math.signum(outputMagnitude);
 		}
 
-		if ((outputMagnitude == 0) && (Math.abs(getAvgVelocity()) < 0.3 * MAX_SPEED)) {
+		if ((outputMagnitude == 0) && (Math.abs(getAvgVelocity()) < 0.3 * (turbo ? MAX_SPEED_TURBO : MAX_SPEED))) {
 			leftOutput = curve * 0.5;
 			rightOutput = -curve * 0.5;
 		} else if (curve < 0) {
@@ -356,15 +360,25 @@ public class Drive extends Subsystem implements PIDOutput {
 	}
 	
 	public void enableTURBOMODE(){
+		turbo = true;
+		
+		leftMaster.config_kF(SLOTIDX, F_TURBO, TIMEOUTMS);
 		leftMaster.configPeakOutputForward(1, TIMEOUTMS);
 		leftMaster.configPeakOutputReverse(-1, TIMEOUTMS);
+		
+		rightMaster.config_kF(SLOTIDX, F_TURBO, TIMEOUTMS);
 		rightMaster.configPeakOutputForward(1, TIMEOUTMS);
 		rightMaster.configPeakOutputReverse(-1, TIMEOUTMS);
 	}
 	
 	public void disableTURBOMODE(){
+		turbo = false;
+		
+		leftMaster.config_kF(SLOTIDX, F, TIMEOUTMS);
 		leftMaster.configPeakOutputForward(+0.83, TIMEOUTMS);
 		leftMaster.configPeakOutputReverse(-0.83, TIMEOUTMS);
+
+		rightMaster.config_kF(SLOTIDX, F, TIMEOUTMS);
 		rightMaster.configPeakOutputForward(+0.83, TIMEOUTMS);
 		rightMaster.configPeakOutputReverse(-0.83, TIMEOUTMS);
 	}
