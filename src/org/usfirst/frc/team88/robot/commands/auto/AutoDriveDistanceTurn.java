@@ -80,7 +80,7 @@ public class AutoDriveDistanceTurn extends Command {
 			if (avgPosition < targetDistanceLeg1) {
 				targetHeading = 0.0;
 			} else {
-				targetHeading = (isRightTurn ? 90 : -90);
+				targetHeading = (isRightTurn ? 95 : -95);
 			}
 
 			curve = (targetHeading - (Robot.drive.getYaw())) * 0.01;
