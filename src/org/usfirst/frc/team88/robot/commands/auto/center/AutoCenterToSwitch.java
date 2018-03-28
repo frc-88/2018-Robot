@@ -108,11 +108,11 @@ public class AutoCenterToSwitch extends Command {
 
 		switch (state) {
 		case PREP:
-			Robot.drive.resetEncoders();
-
 			if (avgPosition < 100) {
 				Robot.intake.cradleDown();
 				state = ACCELERATE;
+			} else {
+				Robot.drive.resetEncoders();
 			}
 			break;
 
