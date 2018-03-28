@@ -14,6 +14,8 @@ package org.usfirst.frc.team88.robot;
  * floating around.
  */
 public class RobotMap {
+	public static final boolean debugMode = false;
+	
 	// Drive - CAN
 	public static final int driveLeftMaster = 10;
 	public static final int[] driveLeftFollowers = { 8, 9, 11 };
