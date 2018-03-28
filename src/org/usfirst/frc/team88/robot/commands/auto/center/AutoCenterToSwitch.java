@@ -24,6 +24,8 @@ public class AutoCenterToSwitch extends Command {
 
 	private int state;
 	private double speed;
+	private double stageOneCounts;
+	private double stageTwoCounts;
 	private double targetDistanceCounts;
 	private double targetYaw;
 	private double accelerateDistance;
@@ -73,6 +75,9 @@ public class AutoCenterToSwitch extends Command {
 			stageThreeYaw = -20;
 			stageThreeDistance = 80;
 		}
+
+		stageOneCounts = STAGE_ONE * COUNTS_PER_INCH;
+		stageTwoCounts = (STAGE_ONE + stageTwoDistanceInches) * COUNTS_PER_INCH;
 		targetDistanceCounts = (STAGE_ONE + stageTwoDistanceInches + stageThreeDistance) * COUNTS_PER_INCH;
 	}
 
@@ -82,9 +87,9 @@ public class AutoCenterToSwitch extends Command {
 		double avgPosition = Math.abs(Robot.drive.getAvgPosition());
 
 		if (state != PREP) {
-			if (avgPosition < STAGE_ONE * COUNTS_PER_INCH) {
+			if (avgPosition < stageOneCounts) {
 				targetYaw = 0.0;
-			} else if (avgPosition < (STAGE_ONE + stageTwoDistanceInches) * COUNTS_PER_INCH) {
+			} else if (avgPosition < stageTwoCounts) {
 				targetYaw = stageTwoYaw;
 			} else {
 				targetYaw = stageThreeYaw;
@@ -92,7 +97,7 @@ public class AutoCenterToSwitch extends Command {
 
 			curve = (targetYaw - (Robot.drive.getYaw())) * 0.01;
 
-			if (avgPosition > STAGE_ONE * COUNTS_PER_INCH && !cubeUp) {
+			if (avgPosition > stageOneCounts && !cubeUp) {
 				Robot.lift.setPosition(Lift.POS_SWITCH);
 				Robot.lift.gotoPosition();
 				cubeUp = true;
@@ -152,8 +157,7 @@ public class AutoCenterToSwitch extends Command {
 		}
 
 		double jerkX = Math.abs(Robot.drive.getJerkX());
-		if (!scored && !shooting && (avgPosition > (STAGE_ONE + stageTwoDistanceInches) * COUNTS_PER_INCH)
-				&& jerkX > .6) {
+		if (!scored && !shooting && (avgPosition > stageTwoCounts) && jerkX > .6) {
 			Robot.intake.wheelSpeed(0.75);
 			shooting = true;
 		}
