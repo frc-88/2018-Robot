@@ -79,7 +79,7 @@ public class AutoCenterToSwitch extends Command {
 	// Called repeatedly when this Command is scheduled to run
 	protected void execute() {
 		double curve;
-		double avgPosition = Robot.drive.getAvgPosition();
+		double avgPosition = Math.abs(Robot.drive.getAvgPosition());
 
 		if (state != PREP) {
 			if (avgPosition < STAGE_ONE * COUNTS_PER_INCH) {
@@ -104,9 +104,8 @@ public class AutoCenterToSwitch extends Command {
 		switch (state) {
 		case PREP:
 			Robot.drive.resetEncoders();
-			Robot.drive.resetDisplacement();
 
-			if (Math.abs(Robot.drive.getAvgPosition()) < 100) {
+			if (avgPosition < 100) {
 				Robot.intake.cradleDown();
 				state = ACCELERATE;
 			}
@@ -114,17 +113,17 @@ public class AutoCenterToSwitch extends Command {
 
 		case ACCELERATE:
 			speed = speed + ACCELERATION;
-			if (Robot.drive.getAvgPosition() > targetDistanceCounts) {
+			if (avgPosition > targetDistanceCounts) {
 				state = DECELERATE;
-				accelerateDistance = Robot.drive.getAvgPosition();
+				accelerateDistance = avgPosition;
 			} else if (speed > CRUISING_SPEED) {
 				state = CRUISE;
-				accelerateDistance = Robot.drive.getAvgPosition();
+				accelerateDistance = avgPosition;
 			}
 			break;
 
 		case CRUISE:
-			if (Robot.drive.getAvgPosition() > (targetDistanceCounts - (accelerateDistance * 1.4))) {
+			if (avgPosition > (targetDistanceCounts - (accelerateDistance * 1.4))) {
 				state = DECELERATE;
 			}
 			break;
@@ -136,7 +135,7 @@ public class AutoCenterToSwitch extends Command {
 				state = STOP;
 			}
 
-			if (Robot.drive.getAvgPosition() > targetDistanceCounts) {
+			if (avgPosition > targetDistanceCounts) {
 				speed = 0;
 				state = STOP;
 			}
