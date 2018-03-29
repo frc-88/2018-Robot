@@ -1,6 +1,7 @@
 package org.usfirst.frc.team88.robot.commands;
 
 import org.usfirst.frc.team88.robot.Robot;
+import org.usfirst.frc.team88.robot.RobotMap;
 
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.command.Command;
@@ -41,8 +42,10 @@ public class DriveRotateToAngle extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-		SmartDashboard.putNumber("Rot Error", Robot.drive.rotateController.getError());
-		SmartDashboard.putNumber("Rot On Target", Robot.drive.rotateController.onTarget()?1:0);
+    	if (RobotMap.debugMode) {
+			SmartDashboard.putNumber("Rot Error", Robot.drive.rotateController.getError());
+			SmartDashboard.putNumber("Rot On Target", Robot.drive.rotateController.onTarget()?1:0);
+    	}
     }
 
     // Make this return true when this Command no longer needs to run execute()

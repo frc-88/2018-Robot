@@ -23,9 +23,9 @@ public class AutoRightSideScale_Part1 extends CommandGroup {
     	addSequential(new DriveZeroYaw());
 		addParallel(new IntakePneumaticsDown());
 		addParallel(new LiftGotoPosition(Lift.POS_ALMOST_BOTTOM));
-		//addSequential(new DriveEnableTURBOMODE());
+		addSequential(new DriveEnableTURBOMODE());
 		addSequential(new AutoDriveDistanceAngleFast("RightScaleDist", "RightScaleAngle_1"));
-		//addSequential(new DriveDisableTURBOMODE());
+		addSequential(new DriveDisableTURBOMODE());
 		addParallel(new LiftGotoPosition(Lift.POS_HI_SCALE));
 		addSequential(new DriveRotateToAngle("RightScaleAngle_2"));
 

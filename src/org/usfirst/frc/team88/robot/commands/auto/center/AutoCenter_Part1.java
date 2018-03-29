@@ -25,9 +25,5 @@ public class AutoCenter_Part1 extends CommandGroup {
 				new DriveRotateToAngle("CenterLeftAngle"), 
 				new DriveRotateToAngle("CenterRightAngle"),
 				new DriveRotateToAngle("CenterRightAngle")));
-		addSequential(new PowerUpConditionalCommand(new DriveRotateToAngle("CenterLeftAngle"),
-				new DriveRotateToAngle("CenterLeftAngle"), 
-				new DriveRotateToAngle("CenterRightAngle"),
-				new DriveRotateToAngle("CenterRightAngle")));
 	}
 }

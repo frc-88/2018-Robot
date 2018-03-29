@@ -110,18 +110,19 @@ public class Intake extends Subsystem {
 
 	public void updateDashboard() {
 		SmartDashboard.putNumber("Intake Left Sensor Distance", leftDistanceSensor.getDistance());
-		SmartDashboard.putNumber("Intake Left Sensor Voltage", leftDistanceSensor.getAverageVoltage());
 		SmartDashboard.putNumber("Intake Right Sensor Distance", rightDistanceSensor.getDistance());
-		SmartDashboard.putNumber("Intake Right Sensor Voltage", rightDistanceSensor.getAverageVoltage());
 
-		SmartDashboard.putNumber("Intake Left Motor Current", leftSide.getOutputCurrent());
-		SmartDashboard.putNumber("Intake Left Motor Voltage", leftSide.getMotorOutputVoltage());
-		SmartDashboard.putNumber("Intake Right Motor Current", rightSide.getOutputCurrent());
-		SmartDashboard.putNumber("Intake Right Motor Voltage", rightSide.getMotorOutputVoltage());
-
-		 SmartDashboard.putBoolean("Intake Cradle Up?", upDown.get() == Value.kForward);
-
+		SmartDashboard.putBoolean("Intake Cradle Up?", upDown.get() == Value.kForward);
 		SmartDashboard.putBoolean("Intake Have Cube?", haveCube());
+
+		if (RobotMap.debugMode) {
+			SmartDashboard.putNumber("Intake Left Sensor Voltage", leftDistanceSensor.getAverageVoltage());
+			SmartDashboard.putNumber("Intake Left Motor Current", leftSide.getOutputCurrent());
+			SmartDashboard.putNumber("Intake Left Motor Voltage", leftSide.getMotorOutputVoltage());
+			SmartDashboard.putNumber("Intake Right Sensor Voltage", rightDistanceSensor.getAverageVoltage());
+			SmartDashboard.putNumber("Intake Right Motor Current", rightSide.getOutputCurrent());
+			SmartDashboard.putNumber("Intake Right Motor Voltage", rightSide.getMotorOutputVoltage());
+		}
 	}
 
 	public void initDefaultCommand() {
