@@ -1,4 +1,4 @@
-package org.usfirst.frc.team88.robot.commands;
+package org.usfirst.frc.team88.robot.commands.auto;
 
 import org.usfirst.frc.team88.robot.Robot;
 
@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 /**
  *
  */
-public class AutoDriveDistanceAngleFast extends Command {
+public class AutoDriveDistanceTurn extends Command {
 
 	// performance constants
 	// TODO roll cruising speed and acceleration into constructor
@@ -24,90 +24,97 @@ public class AutoDriveDistanceAngleFast extends Command {
 	private static final int DECELERATE = 40;
 	private static final int STOP = 50;
 	private static final int END = 60;
-	
-	private double targetDistance;
+
+	private double targetDistanceLeg1;
+	private String targetDistanceLeg1Pref;
+	private double targetDistanceLeg2;
+	private String targetDistanceLeg2Pref;
 	private double targetHeading;
-	private String targetDistancePref;
-	private String targetAnglePref;
-	
+	private boolean isRightTurn;
+
 	private int state;
 	private double speed;
+	private double direction;
 	private double accelerateDistance;
-	
 
-	public AutoDriveDistanceAngleFast(String distancePref, String anglePref) {
+	public AutoDriveDistanceTurn(String distanceLeg1Pref, String distanceLeg2Pref, boolean rightTurn) {
 		requires(Robot.drive);
 
-		targetDistancePref = distancePref;
-		targetAnglePref = anglePref;
+		targetDistanceLeg1Pref = distanceLeg1Pref;
+		targetDistanceLeg2Pref = distanceLeg2Pref;
+		isRightTurn = rightTurn;
 	}
-	
-	public AutoDriveDistanceAngleFast(String distancePref, double angle) {
+
+	public AutoDriveDistanceTurn(double distanceLeg1, double distanceLeg2, boolean rightTurn) {
 		requires(Robot.drive);
 
-		targetDistancePref = distancePref;
-		targetHeading = angle;
-	}
-	
-	public AutoDriveDistanceAngleFast(double distance, double angle) {
-		requires(Robot.drive);
-
-		targetDistance = distance * COUNTS_PER_INCH;
-		targetHeading = angle;
+		targetDistanceLeg1 = Math.abs(distanceLeg1 * COUNTS_PER_INCH);
+		targetDistanceLeg2 = Math.abs(distanceLeg2 * COUNTS_PER_INCH);
+		direction = Math.signum(distanceLeg1);
+		isRightTurn = rightTurn;
 	}
 
 	// Called just before this Command runs the first time
 	protected void initialize() {
 		Preferences prefs = Preferences.getInstance();
-		
-		if (targetDistancePref != null) {
-			targetDistance = prefs.getDouble(targetDistancePref, 0.0) * COUNTS_PER_INCH;
-			System.out.println(targetDistancePref);
-			System.out.println(targetDistance);
+
+		if (targetDistanceLeg1Pref != null) {
+			targetDistanceLeg1 = Math.abs(prefs.getDouble(targetDistanceLeg1Pref, 0.0) * COUNTS_PER_INCH);
+			direction = Math.signum(prefs.getDouble(targetDistanceLeg1Pref, 0.0));
 		}
 
-		if (targetAnglePref != null) {
-			targetHeading = prefs.getDouble(targetAnglePref, 0.0);
-			System.out.println(targetAnglePref);
-			System.out.println(targetHeading);
+		if (targetDistanceLeg2Pref != null) {
+			targetDistanceLeg2 = Math.abs(prefs.getDouble(targetDistanceLeg2Pref, 0.0) * COUNTS_PER_INCH);
 		}
-		
+
 		state = PREP;
 		speed = 0.0;
 	}
 
 	// Called repeatedly when this Command is scheduled to run
 	protected void execute() {
-		double curve = (targetHeading - (Robot.drive.getYaw())) * 0.02;
+		double curve;
+		double avgPosition = Math.abs(Robot.drive.getAvgPosition());
 
-		switch (state){
+		if (state != PREP) {
+			if (avgPosition < targetDistanceLeg1) {
+				targetHeading = 0.0;
+			} else {
+				targetHeading = (isRightTurn ? 95 : -95);
+			}
+
+			curve = (targetHeading - (Robot.drive.getYaw())) * 0.01;
+		} else {
+			curve = 0.0;
+		}
+
+		switch (state) {
 		case PREP:
 			Robot.drive.resetEncoders();
-			if(Math.abs(Robot.drive.getAvgPosition())<100){
+			if (Math.abs(Robot.drive.getAvgPosition()) < 100) {
 				state = ACCELERATE;
 			}
 			break;
-			
+
 		case ACCELERATE:
 			speed = speed + ACCELERATION;
-			if(Robot.drive.getAvgPosition()> 3*targetDistance/7){
-				state = DECELERATE;	
-				accelerateDistance = Robot.drive.getAvgPosition(); 
+			if (Math.abs(Robot.drive.getAvgPosition()) > 3 * targetDistanceLeg2 / 7) {
+				state = DECELERATE;
+				accelerateDistance = Math.abs(Robot.drive.getAvgPosition());
 				SmartDashboard.putNumber("accelerateDistance", accelerateDistance);
-			}
-			else if (speed > CRUISING_SPEED) {
+			} else if (speed > CRUISING_SPEED) {
 				state = CRUISE;
-				accelerateDistance = Robot.drive.getAvgPosition(); 
+				accelerateDistance = Math.abs(Robot.drive.getAvgPosition());
 				SmartDashboard.putNumber("accelerateDistance", accelerateDistance);
 			}
 			break;
-			
+
 		case CRUISE:
-			if (Robot.drive.getAvgPosition() > (targetDistance - (accelerateDistance * 1.5))) {
+			if (Math.abs(Robot.drive.getAvgPosition()) > (targetDistanceLeg2 - (accelerateDistance * 1.5))) {
 				state = DECELERATE;
 			}
 			break;
-			
+
 		case DECELERATE:
 			speed = speed - ACCELERATION;
 			if (speed < 0) {
@@ -115,25 +122,23 @@ public class AutoDriveDistanceAngleFast extends Command {
 				state = STOP;
 			}
 
-			if (Robot.drive.getAvgPosition() > targetDistance) {
+			if (Math.abs(Robot.drive.getAvgPosition()) > targetDistanceLeg2) {
 				speed = 0;
 				state = STOP;
 			}
 
 			break;
-			
+
 		case STOP:
 			speed = 0.0;
 			state = END;
 
 			break;
 		}
-		SmartDashboard.putNumber("State", state);
 
-		if(state != PREP){
-			Robot.drive.driveCurve(speed, curve);
+		if (state != PREP) {
+			Robot.drive.driveCurve(speed * direction, curve);
 		}
-		Robot.drive.updateDashboard();
 	}
 
 	// Make this return true when this Command no longer needs to run execute()
