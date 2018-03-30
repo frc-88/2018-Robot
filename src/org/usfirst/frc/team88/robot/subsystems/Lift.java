@@ -223,6 +223,13 @@ public class Lift extends Subsystem {
 		
 		SmartDashboard.putNumber("Lift Target Position", position);
 		SmartDashboard.putNumber("Lift Master Position", getPosition());
+
+		SmartDashboard.putNumber("Lift Master Velocity", master.getSelectedSensorVelocity(SLOTIDX));
+		SmartDashboard.putNumber("Lift Master Error", master.getClosedLoopError(SLOTIDX));
+		SmartDashboard.putNumber("Lift Master Current", master.getOutputCurrent());
+		SmartDashboard.putNumber("Lift Master Voltage", master.getMotorOutputVoltage());
+		SmartDashboard.putNumber("Lift Follower Current", follower.getOutputCurrent());
+		SmartDashboard.putNumber("Lift Follower Voltage", follower.getMotorOutputVoltage());
 		
 		SmartDashboard.putNumber("Lift Percent Height", getPercentHeight());
 		SmartDashboard.putBoolean("Lift Position High Scale?", onTarget(posHighScale));
@@ -230,15 +237,6 @@ public class Lift extends Subsystem {
 		SmartDashboard.putBoolean("Lift Position Low Scale?", onTarget(posLowScale));
 		SmartDashboard.putBoolean("Lift Position Switch?", onTarget(posSwitch));
 		SmartDashboard.putBoolean("Lift Position Bottom?", onTarget(posBottom));
-
-		if (RobotMap.debugMode) {
-			SmartDashboard.putNumber("Lift Master Velocity", master.getSelectedSensorVelocity(SLOTIDX));
-			SmartDashboard.putNumber("Lift Master Error", master.getClosedLoopError(SLOTIDX));
-			SmartDashboard.putNumber("Lift Master Current", master.getOutputCurrent());
-			SmartDashboard.putNumber("Lift Master Voltage", master.getMotorOutputVoltage());
-			SmartDashboard.putNumber("Lift Follower Current", follower.getOutputCurrent());
-			SmartDashboard.putNumber("Lift Follower Voltage", follower.getMotorOutputVoltage());
-		}
 	}
 
 	public void initDefaultCommand() {

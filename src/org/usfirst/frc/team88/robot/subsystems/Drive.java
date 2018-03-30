@@ -38,13 +38,10 @@ public class Drive extends Subsystem implements PIDOutput {
 	private final static double MAX_RAMPRATE = 1.5;
 	private final static double MIN_RAMPRATE = .50;
 	private final static double MAX_SPEED = 13000;
-	private final static double MAX_SPEED_TURBO = 15500;  // TODO this is estimated...verify this value
-	
 	private final static double P = 0.04;
 	private final static double I = 0.0;
 	private final static double D = 0.0;
 	private final static double F = (1023 / MAX_SPEED) * 0.8;
-	private final static double F_TURBO = (1023 / MAX_SPEED_TURBO) * 0.8;
 	private final static double DFT_SENSITIVITY = 0.15;
 
 	private final static double ROTATE_P = 0.0060;
@@ -76,7 +73,6 @@ public class Drive extends Subsystem implements PIDOutput {
 	private int ramprateCount;
 	private double ramprate;
 	private boolean autoBalanceXMode;
-	private boolean turbo;
 	
 	public PIDController rotateController;
 	private PIDController headingController;
@@ -164,7 +160,7 @@ public class Drive extends Subsystem implements PIDOutput {
 		headingCount = 0;
 		ramprateCount = 0;
 		autoBalanceXMode = false;
-		turbo = false;
+
 	}
 
 	public void wheelSpeed(double left, double right) {
@@ -189,21 +185,31 @@ public class Drive extends Subsystem implements PIDOutput {
 			autoBalanceXMode = false;
 		}
 
-		if (autoBalanceXMode){
+		if(autoBalanceXMode){
+
 			double pitchAngleRadians = pitchAngleDegrees * (Math.PI / 180.0);
 			right = left = Math.sin(pitchAngleRadians) * -1;
-		} else if (CLOSED_LOOP) {
-			left = left * (turbo ? MAX_SPEED_TURBO : MAX_SPEED);
-			right = right * (turbo ? MAX_SPEED_TURBO : MAX_SPEED);
-		} 
-		
-		if (RobotMap.debugMode) {
+			
 			SmartDashboard.putNumber("Drive Left Input", left);
 			SmartDashboard.putNumber("Drive Right Input", right);
+			
+			leftMaster.set(ControlMode.PercentOutput, -left);
+			rightMaster.set(ControlMode.PercentOutput, right);
+			
+		}else if (CLOSED_LOOP) {
+			SmartDashboard.putNumber("Drive Left Input", -left * MAX_SPEED);
+			SmartDashboard.putNumber("Drive Right Input", right * MAX_SPEED);
+
+			leftMaster.set(ControlMode.Velocity, -left * MAX_SPEED);
+			rightMaster.set(ControlMode.Velocity, right * MAX_SPEED);
+		} else {
+			SmartDashboard.putNumber("Drive Left Input", left);
+			SmartDashboard.putNumber("Drive Right Input", right);
+
+			leftMaster.set(ControlMode.PercentOutput, -left);
+			rightMaster.set(ControlMode.PercentOutput, right);
 		}
-		
-		leftMaster.set(ControlMode.PercentOutput, -left);
-		rightMaster.set(ControlMode.PercentOutput, right);
+
 	}
 
 	/**
@@ -242,12 +248,10 @@ public class Drive extends Subsystem implements PIDOutput {
 		double leftOutput;
 		double rightOutput;
 
-		if (RobotMap.debugMode) {
-			SmartDashboard.putNumber("Drive Curve", curve);
-			SmartDashboard.putNumber("Drive Magnitude", outputMagnitude);
-			SmartDashboard.putNumber("Drive Count", headingCount);
-			SmartDashboard.putBoolean("Drive Stabilize", headingController.isEnabled());
-		}
+		SmartDashboard.putNumber("Drive Curve", curve);
+		SmartDashboard.putNumber("Drive Magnitude", outputMagnitude);
+		SmartDashboard.putNumber("Drive Count", headingCount);
+		SmartDashboard.putBoolean("Drive Stabilize", headingController.isEnabled());
 
 		if (outputMagnitude == 0) {
 			headingController.disable();
@@ -263,7 +267,7 @@ public class Drive extends Subsystem implements PIDOutput {
 			curve = curve * Math.signum(outputMagnitude);
 		}
 
-		if ((outputMagnitude == 0) && (Math.abs(getAvgVelocity()) < 0.3 * (turbo ? MAX_SPEED_TURBO : MAX_SPEED))) {
+		if ((outputMagnitude == 0) && (Math.abs(getAvgVelocity()) < 0.3 * MAX_SPEED)) {
 			leftOutput = curve * 0.5;
 			rightOutput = -curve * 0.5;
 		} else if (curve < 0) {
@@ -352,25 +356,15 @@ public class Drive extends Subsystem implements PIDOutput {
 	}
 	
 	public void enableTURBOMODE(){
-		turbo = true;
-		
-		leftMaster.config_kF(SLOTIDX, F_TURBO, TIMEOUTMS);
 		leftMaster.configPeakOutputForward(1, TIMEOUTMS);
 		leftMaster.configPeakOutputReverse(-1, TIMEOUTMS);
-		
-		rightMaster.config_kF(SLOTIDX, F_TURBO, TIMEOUTMS);
 		rightMaster.configPeakOutputForward(1, TIMEOUTMS);
 		rightMaster.configPeakOutputReverse(-1, TIMEOUTMS);
 	}
 	
 	public void disableTURBOMODE(){
-		turbo = false;
-		
-		leftMaster.config_kF(SLOTIDX, F, TIMEOUTMS);
 		leftMaster.configPeakOutputForward(+0.83, TIMEOUTMS);
 		leftMaster.configPeakOutputReverse(-0.83, TIMEOUTMS);
-
-		rightMaster.config_kF(SLOTIDX, F, TIMEOUTMS);
 		rightMaster.configPeakOutputForward(+0.83, TIMEOUTMS);
 		rightMaster.configPeakOutputReverse(-0.83, TIMEOUTMS);
 	}
@@ -398,40 +392,40 @@ public class Drive extends Subsystem implements PIDOutput {
 	public void updateDashboard() {
 		SmartDashboard.putNumber("Drive AvgPosition", getAvgPosition());
 		SmartDashboard.putNumber("Drive AvgVelocity", getAvgVelocity());
-		SmartDashboard.putNumber("Drive Ramprate", ramprate);
-
 		SmartDashboard.putNumber("Drive Yaw", navX.getYaw());
 		SmartDashboard.putNumber("Drive Pitch", navX.getPitch());
 		SmartDashboard.putNumber("Drive Roll", navX.getRoll());
+		SmartDashboard.putNumber("Drive Ramprate", ramprate);
 		SmartDashboard.putNumber("Drive Acceleration X", navX.getWorldLinearAccelX());
 		SmartDashboard.putNumber("Drive Acceleration Y", navX.getWorldLinearAccelY());
+		
 		SmartDashboard.putNumber("Drive Jerk X", lastAccelX - navX.getWorldLinearAccelX());
 		SmartDashboard.putNumber("Drive Jerk Y", lastAccelY - navX.getWorldLinearAccelY());
 		lastAccelX = navX.getWorldLinearAccelX();
 		lastAccelY = navX.getWorldLinearAccelY();
 		
+		SmartDashboard.putNumber("Drive Displacement X", navX.getDisplacementX());
+		SmartDashboard.putNumber("Drive Displacement Y", navX.getDisplacementY());
+		
 		SmartDashboard.putNumber("Drive Left Master Position", leftMaster.getSelectedSensorPosition(SLOTIDX));
 		SmartDashboard.putNumber("Drive Left Master Velocity", leftMaster.getSelectedSensorVelocity(SLOTIDX));
 		SmartDashboard.putNumber("Drive Left Master Error", leftMaster.getClosedLoopError(SLOTIDX));
+		SmartDashboard.putNumber("Drive Left Master Current", leftMaster.getOutputCurrent());
+		SmartDashboard.putNumber("Drive Left Master Voltage", leftMaster.getMotorOutputVoltage());
 
 		SmartDashboard.putNumber("Drive Right Master Position", rightMaster.getSelectedSensorPosition(SLOTIDX));
 		SmartDashboard.putNumber("Drive Right Master Velocity", rightMaster.getSelectedSensorVelocity(SLOTIDX));
 		SmartDashboard.putNumber("Drive Right Master Error", rightMaster.getClosedLoopError(SLOTIDX));
+		SmartDashboard.putNumber("Drive Right Master Current", rightMaster.getOutputCurrent());
+		SmartDashboard.putNumber("Drive Right Master Voltage", rightMaster.getMotorOutputVoltage());
 
-		if (RobotMap.debugMode) {
-			SmartDashboard.putNumber("Drive Left Master Current", leftMaster.getOutputCurrent());
-			SmartDashboard.putNumber("Drive Left Master Voltage", leftMaster.getMotorOutputVoltage());
-			for (int i = 0; i < RobotMap.driveLeftFollowers.length; i++) {
-				SmartDashboard.putNumber("Drive Left Follower"+i+" Current", leftFollower[i].getOutputCurrent());
-				SmartDashboard.putNumber("Drive Left Follower"+i+" Voltage", leftFollower[i].getMotorOutputVoltage());
-			}
-	
-			SmartDashboard.putNumber("Drive Right Master Current", rightMaster.getOutputCurrent());
-			SmartDashboard.putNumber("Drive Right Master Voltage", rightMaster.getMotorOutputVoltage());
-			for (int i = 0; i < RobotMap.driveRightFollowers.length; i++) {
-				SmartDashboard.putNumber("Drive Right Follower"+i+" Current", rightFollower[i].getOutputCurrent());
-				SmartDashboard.putNumber("Drive Right Follower"+i+" Voltage", rightFollower[i].getMotorOutputVoltage());
-			}
+		for (int i = 0; i < RobotMap.driveLeftFollowers.length; i++) {
+			SmartDashboard.putNumber("Drive Left Follower"+i+" Current", leftFollower[i].getOutputCurrent());
+			SmartDashboard.putNumber("Drive Left Follower"+i+" Voltage", leftFollower[i].getMotorOutputVoltage());
+		}
+		for (int i = 0; i < RobotMap.driveRightFollowers.length; i++) {
+			SmartDashboard.putNumber("Drive Right Follower"+i+" Current", rightFollower[i].getOutputCurrent());
+			SmartDashboard.putNumber("Drive Right Follower"+i+" Voltage", rightFollower[i].getMotorOutputVoltage());
 		}
 	}
 

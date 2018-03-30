@@ -5,11 +5,13 @@ import org.usfirst.frc.team88.robot.subsystems.Lift;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  *
  */
 public class AutoCenterToSwitch extends Command {
+
 	// states
 	private static final int PREP = 0;
 	private static final int ACCELERATE = 10;
@@ -21,11 +23,13 @@ public class AutoCenterToSwitch extends Command {
 	private static final double ACCELERATION = 0.01;
 	private static final double COUNTS_PER_INCH = 1086;
 	private static final double STAGE_ONE = 10;
+	
+	private static final double targetDisplacementX = 2.7; // displacement in meters TODO check this value
+	private static final double toleranceX = 0.25; // TODO check
+	private static final double toleranceY = 0.5; // TODO check
 
 	private int state;
 	private double speed;
-	private double stageOneCounts;
-	private double stageTwoCounts;
 	private double targetDistanceCounts;
 	private double targetYaw;
 	private double accelerateDistance;
@@ -34,13 +38,18 @@ public class AutoCenterToSwitch extends Command {
 	private double stageThreeYaw;
 	private double stageThreeDistance;
 	private boolean cubeUp;
-	private boolean shooting;
-	private boolean scored;
 	private boolean done;
 	private String gameData;
 	private int count;
+	
+	private double targetDisplacementY;
+	private boolean shooting;
+	private boolean scored;
+	
 
 	public AutoCenterToSwitch() {
+		// Use requires() here to declare subsystem dependencies
+		// eg. requires(chassis);
 		requires(Robot.drive);
 		requires(Robot.lift);
 		requires(Robot.intake);
@@ -48,8 +57,9 @@ public class AutoCenterToSwitch extends Command {
 
 	// Called just before this Command runs the first time
 	protected void initialize() {
+
 		state = PREP;
-		cubeUp = false;
+		cubeUp=false;
 		shooting = false;
 		scored = false;
 		done = false;
@@ -65,80 +75,26 @@ public class AutoCenterToSwitch extends Command {
 			stageTwoDistanceInches = 45;
 			stageThreeYaw = 20;
 			stageThreeDistance = 95;
+			targetDisplacementY = 1.6; //in meters TODO make sure this right
 		} else if (gameData.charAt(0) == 'R') {
 			stageTwoYaw = 75;
 			stageTwoDistanceInches = 50;
 			stageThreeYaw = -20;
 			stageThreeDistance = 80;
+			targetDisplacementY = 1.3; //in meters TODO make sure this right
 		}
-
-		stageOneCounts = STAGE_ONE * COUNTS_PER_INCH;
-		stageTwoCounts = (STAGE_ONE + stageTwoDistanceInches) * COUNTS_PER_INCH;
 		targetDistanceCounts = (STAGE_ONE + stageTwoDistanceInches + stageThreeDistance) * COUNTS_PER_INCH;
 	}
 
 	// Called repeatedly when this Command is scheduled to run
 	protected void execute() {
 		double curve;
-		double avgPosition = Math.abs(Robot.drive.getAvgPosition());
+		double avgPosition = Robot.drive.getAvgPosition();
 
-		// state machine controls our speed in a trapezoidal profile
-		switch (state) {
-		case PREP:
-			if (avgPosition < 100) {
-				Robot.intake.cradleDown();
-				state = ACCELERATE;
-			} else {
-				Robot.drive.resetEncoders();
-			}
-			break;
-
-		case ACCELERATE:
-			speed = speed + ACCELERATION;
-			if (avgPosition > targetDistanceCounts) {
-				state = DECELERATE;
-				accelerateDistance = avgPosition;
-			} else if (speed > CRUISING_SPEED) {
-				state = CRUISE;
-				accelerateDistance = avgPosition;
-			}
-			break;
-
-		case CRUISE:
-			if (avgPosition > (targetDistanceCounts - (accelerateDistance * 1.4))) {
-				state = DECELERATE;
-			}
-			break;
-
-		case DECELERATE:
-			speed = speed - ACCELERATION;
-			if (speed < 0) {
-				speed = 0.0;
-				state = STOP;
-			}
-
-			if (avgPosition > targetDistanceCounts) {
-				speed = 0;
-				state = STOP;
-			}
-			break;
-
-		case STOP:
-			speed = 0.0;
-			state = END;
-			break;
-
-		case END:
-			done = true;
-			break;
-		}
-
-		// if we are not in PREP state (that is, encoders have been reset)
-		// then adjust our targetHeading based on how far we have driven
 		if (state != PREP) {
-			if (avgPosition < stageOneCounts) {
+			if (avgPosition < STAGE_ONE * COUNTS_PER_INCH) {
 				targetYaw = 0.0;
-			} else if (avgPosition < stageTwoCounts) {
+			} else if (avgPosition < (STAGE_ONE + stageTwoDistanceInches) * COUNTS_PER_INCH) {
 				targetYaw = stageTwoYaw;
 			} else {
 				targetYaw = stageThreeYaw;
@@ -146,8 +102,7 @@ public class AutoCenterToSwitch extends Command {
 
 			curve = (targetYaw - (Robot.drive.getYaw())) * 0.01;
 
-			// once we have driven a little bit, raise the lift to get ready to shoot
-			if (avgPosition > stageOneCounts && !cubeUp) {
+			if (avgPosition > STAGE_ONE * COUNTS_PER_INCH && !cubeUp) {
 				Robot.lift.setPosition(Lift.POS_SWITCH);
 				Robot.lift.gotoPosition();
 				cubeUp = true;
@@ -156,27 +111,76 @@ public class AutoCenterToSwitch extends Command {
 			curve = 0.0;
 		}
 
-		// if the lift is up, we haven't shot, and we have driven far enough
-		// shoot when we collide with the fence
-		if (cubeUp && !scored && !shooting && (avgPosition > stageTwoCounts)
-				&& (Math.abs(Robot.drive.getJerkX()) > .6)) {
+		switch (state) {
+		case PREP:
+			Robot.drive.resetEncoders();
+			Robot.drive.resetDisplacement();
+			
+			if (Math.abs(Robot.drive.getAvgPosition()) < 100) {
+				Robot.intake.cradleDown();
+				state = ACCELERATE;
+			}
+			break;
+		case ACCELERATE:
+			speed = speed + ACCELERATION;
+			if (Robot.drive.getAvgPosition() > targetDistanceCounts) {
+				state = DECELERATE;
+				accelerateDistance = Robot.drive.getAvgPosition();
+				SmartDashboard.putNumber("accelerateDistance", accelerateDistance);
+			} else if (speed > CRUISING_SPEED) {
+				state = CRUISE;
+				accelerateDistance = Robot.drive.getAvgPosition();
+				SmartDashboard.putNumber("accelerateDistance", accelerateDistance);
+			}
+			break;
+		case CRUISE:
+			if (Robot.drive.getAvgPosition() > (targetDistanceCounts - (accelerateDistance * 1.4))) {
+				state = DECELERATE;
+			}
+			break;
+		case DECELERATE:
+			speed = speed - ACCELERATION;
+			if (speed < 0) {
+				speed = 0.0;
+				state = STOP;
+			}
+
+			if (Robot.drive.getAvgPosition() > targetDistanceCounts) {
+				speed = 0;
+				state = STOP;
+			}
+
+			break;
+		case STOP:
+			speed = 0.0;
+			
+			state = END;
+			
+			break;
+		case END:
+			done = true;
+			break;
+		}
+		double jerkX = Math.abs(Robot.drive.getJerkX());
+		double jerkY = Math.abs(Robot.drive.getJerkY());
+		if(!scored && !shooting && (avgPosition > (STAGE_ONE + stageTwoDistanceInches) * COUNTS_PER_INCH) && jerkX > .6){
 			Robot.intake.wheelSpeed(0.75);
 			shooting = true;
 		}
-
-		// run the intake for 20*20 = 400ms, then we're done!
-		if (shooting) {
+		SmartDashboard.putNumber("JerkX", jerkX);
+		SmartDashboard.putNumber("JerkY", jerkY);
+		SmartDashboard.putBoolean("SHOOTING", shooting);
+		SmartDashboard.putBoolean("SCORED", scored);
+		if(shooting){
 			count++;
-			if (count > 20) {
+			if(count > 20){
 				scored = true;
 				shooting = false;
 				Robot.intake.wheelSpeed(0.0);
-				state = STOP;
+				// state = STOP ?
 			}
 		}
-
-		// don't move until we've completed PREP state
-		// that is, don't move until the encoders are reset
+		
 		if (state != PREP) {
 			Robot.drive.driveCurve(speed, curve);
 		}
