@@ -6,10 +6,12 @@ import org.usfirst.frc.team88.robot.commands.LiftMove;
 
 import com.ctre.phoenix.ParamEnum;
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
+import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -34,13 +36,13 @@ public class Lift extends Subsystem {
 	private static final int SLOTIDX = 0;
 	private static final int TIMEOUTMS = 0;
 	private static final double RAMPRATE = .30;
-	private static final double MAX_SPEED = 32;
-	private static final int CRUISE_VELOCITY = 30;
-	private static final int ACCELERATION = 180;
-	private static final double P = 20.0;
+	private static final double MAX_SPEED = 50;
+	private static final int CRUISE_VELOCITY = 50;
+	private static final int ACCELERATION = 500;
+	private static final double P = 4.0;
 	private static final double I = 0.0; // Make sure reverse limit is accurate before using i!!!
-	private static final double D = 80.0;
-	private static final double F = 1023 / MAX_SPEED;
+	private static final double D = 150.0;
+	private static final double F = (1023 / MAX_SPEED) * 0.9;
 
 	private static final int FORWARD_LIMIT_BASE = 700;
 	private static final int POS_BOTTOM_BASE = 2;
@@ -49,7 +51,7 @@ public class Lift extends Subsystem {
 	private static final int POS_MID_SCALE_BASE = 570;
 	private static final int POS_HI_SCALE_BASE = 670;
 
-	private static final int DISTANCE_THRESHOLD = 20;
+	private static final int DISTANCE_THRESHOLD = 50;
 
 	private int posReverseLimit;
 	private int posForwardLimit;
@@ -61,13 +63,15 @@ public class Lift extends Subsystem {
 
 	private TalonSRX master;
 	private TalonSRX follower;
-
+	private TalonSRX follower2;
+	
 	private int position;
 
 	public Lift() {
 		master = new TalonSRX(RobotMap.liftMaster);
 		follower = new TalonSRX(RobotMap.liftFollower);
-
+		follower2 = new TalonSRX(RobotMap.liftFollower2);
+		
 		/* analog signal with no wrap-around (0-3.3V) */
 		master.configSelectedFeedbackSensor(FeedbackDevice.Analog, SLOTIDX, TIMEOUTMS);
 
@@ -84,6 +88,10 @@ public class Lift extends Subsystem {
 		master.configPeakOutputReverse(-1.0, TIMEOUTMS);
 		master.configNeutralDeadband(0.04, TIMEOUTMS);
 		master.configClosedloopRamp(RAMPRATE, TIMEOUTMS);
+		master.configPeakCurrentLimit(35, TIMEOUTMS);
+		master.configPeakCurrentDuration(0, TIMEOUTMS);
+		master.configContinuousCurrentLimit(30, TIMEOUTMS);
+		master.enableCurrentLimit(true);
 		master.setSensorPhase(false);
 		master.setNeutralMode(NeutralMode.Brake);
 
@@ -95,16 +103,23 @@ public class Lift extends Subsystem {
 
 		follower.follow(master);
 		follower.setInverted(true);
-
+		
+		follower2.follow(master);
+		follower2.setInverted(true);
+		
 		position = getPosition();
 	}
 
 	public void basicMotion(double input) {
+		Preferences prefs = Preferences.getInstance();
+		
+		input += prefs.getDouble("LiftGravityOffset", 0.0);
+		
 		master.set(ControlMode.PercentOutput, input);
 	}
 
 	public void gotoPosition() {
-		master.set(ControlMode.MotionMagic, position);
+		master.set(ControlMode.MotionMagic, position, DemandType.ArbitraryFeedForward, 0.05);
 	}
 
 	public void setPosition(int target) {
@@ -156,6 +171,10 @@ public class Lift extends Subsystem {
 		follower.configForwardSoftLimitEnable(false, TIMEOUTMS);
 		follower.configReverseSoftLimitEnable(false, TIMEOUTMS);
 		follower.overrideLimitSwitchesEnable(false);
+		
+		follower2.configForwardSoftLimitEnable(false, TIMEOUTMS);
+		follower2.configReverseSoftLimitEnable(false, TIMEOUTMS);
+		follower2.overrideLimitSwitchesEnable(false);
 	}
 
 	public void disableSoftLimits() {

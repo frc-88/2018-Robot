@@ -13,6 +13,8 @@ public class PowerUpConditionalCommand extends ConditionalCommand {
 	protected boolean condition() {
 		String gameData = DriverStation.getInstance().getGameSpecificMessage();
 
+		System.out.println("Switch Condition: GameData = "+ gameData);
+
 		return gameData.charAt(0) == 'L';
 	}
 
@@ -25,6 +27,8 @@ public class PowerUpConditionalCommand extends ConditionalCommand {
 		protected boolean condition() {
 			String gameData = DriverStation.getInstance().getGameSpecificMessage();
 
+			System.out.println("Scale Condition: GameData = "+ gameData);
+			
 			return gameData.charAt(1) == 'L';
 		}
 

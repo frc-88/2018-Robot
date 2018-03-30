@@ -23,6 +23,7 @@ public class RobotMap {
 	// Lift - CAN
 	public static final int liftMaster = 12; 
 	public static final int liftFollower = 13;
+	public static final int liftFollower2 = 1;  // TODO get correct value
 
 	// Intake - CAN
 	public static final int intakeLeft = 3; 
