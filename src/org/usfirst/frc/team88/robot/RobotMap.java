@@ -14,27 +14,28 @@ package org.usfirst.frc.team88.robot;
  * floating around.
  */
 public class RobotMap {
+	public static final boolean isTripleStack = false;
+
 	// Drive - CAN
-	public static final int driveLeftMaster = 10;
-	public static final int[] driveLeftFollowers = { 8, 9, 11 };
-	public static final int driveRightMaster = 6;
-	public static final int[] driveRightFollowers = { 4, 5, 7};
+	public static final int driveLeftMaster = isTripleStack ? 6 : 10;
+	public static final int[] driveLeftFollowers = isTripleStack ? new int[] { 4, 5, 7 } : new int[] { 8, 9, 11 };
+	public static final int driveRightMaster = isTripleStack ? 10 : 6;
+	public static final int[] driveRightFollowers = isTripleStack ? new int[] { 8, 9, 11 } : new int[] { 4, 5, 7 };
 
 	// Lift - CAN
-	public static final int liftMaster = 13; 
-	public static final int liftFollower = 12;
+	public static final int liftMaster = isTripleStack ? 12 : 13;
+	public static final int liftFollower = isTripleStack ? 13 : 12;
 	public static final int liftFollower2 = 1;
 
 	// Intake - CAN
-	public static final int intakeLeft = 3; 
+	public static final int intakeLeft = 3;
 	public static final int intakeRight = 2;
 	// Intake - Analog inputs
 	public static final int intakeLeftIR = 0;
 	public static final int intakeRightIR = 3;
 	// Intake - PCM
-	public static final int intakeSolenoidIn = 0;
-	public static final int intakeSolenoidOut = 1;
-	
+	public static final int intakeSolenoidIn = isTripleStack ? 1 : 0;
+	public static final int intakeSolenoidOut = isTripleStack ? 0 : 1;
 
 	// Other - unused Talons, CAN
 	public static final int unused1 = 0;
