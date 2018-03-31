@@ -44,27 +44,7 @@ public class DriveSplitArcade extends Command {
 		} else if (curve == 0 && Robot.oi.driver.isButtonRightBumperPressed()) {
 			curve = 0.3;
 		}
-
-		// buttons can be used for ordinal directional control
-		if ((curve == 0) && (magnitude != 0)) {
-			if (Robot.oi.driver.isButtonAPressed()) {
-				targetHeading = 180;
-			} else if (Robot.oi.driver.isButtonBPressed()) {
-				targetHeading = 90;
-			} else if (Robot.oi.driver.isButtonXPressed()) {
-				targetHeading = -90;
-			} else if (Robot.oi.driver.isButtonYPressed()) {
-				targetHeading = 0;
-			} else {
-				targetHeading = 999;
-			}
-
-			if (targetHeading != 999) {
-				error = TJUtility.normalizeAngle(targetHeading - Robot.drive.getYaw());
-				curve = TJUtility.maxValue(error * 0.013, 1.0);
-			}
-		}
-
+		
 		Robot.drive.driveCurve(magnitude, curve, SENSITIVITY);
 	}
 

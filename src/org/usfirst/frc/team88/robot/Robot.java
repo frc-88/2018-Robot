@@ -7,6 +7,7 @@
 
 package org.usfirst.frc.team88.robot;
 
+import org.usfirst.frc.team88.robot.commands.DingleballTest;
 import org.usfirst.frc.team88.robot.commands.DriveResetEncoders;
 import org.usfirst.frc.team88.robot.commands.DriveRotateToAngle;
 import org.usfirst.frc.team88.robot.commands.DriveZeroYaw;
@@ -19,6 +20,8 @@ import org.usfirst.frc.team88.robot.commands.auto.left.AutoLeftSideScale;
 import org.usfirst.frc.team88.robot.commands.auto.right.AutoRight;
 import org.usfirst.frc.team88.robot.commands.auto.right.AutoRightSideFarScale;
 import org.usfirst.frc.team88.robot.commands.auto.right.AutoRightSideScale;
+import org.usfirst.frc.team88.robot.subsystems.Arm;
+import org.usfirst.frc.team88.robot.subsystems.Dingleball;
 import org.usfirst.frc.team88.robot.subsystems.Drive;
 import org.usfirst.frc.team88.robot.subsystems.Intake;
 import org.usfirst.frc.team88.robot.subsystems.Lift;
@@ -43,6 +46,8 @@ public class Robot extends TimedRobot {
 	public static Drive drive;
 	public static Intake intake;
 	public static Lift lift;
+	public static Arm arm;
+	public static Dingleball dingleball;
 	public static OI oi;
 
 	private Command autonomousCommand;
@@ -55,10 +60,12 @@ public class Robot extends TimedRobot {
 	@Override
 	public void robotInit() {
 		CameraServer.getInstance().startAutomaticCapture();
+		drive = new Drive();
 		intake = new Intake();
 		lift = new Lift();
-		drive = new Drive();
-
+		arm = new Arm();
+		dingleball = new Dingleball();
+		
 		oi = new OI();
 
 		// Autonomous mode selector
@@ -91,6 +98,8 @@ public class Robot extends TimedRobot {
 		SmartDashboard.putData("Rotate to 90", new DriveRotateToAngle(90));
 		SmartDashboard.putData("Rotate to 180", new DriveRotateToAngle(180));
 		SmartDashboard.putData("Rotate to -90", new DriveRotateToAngle(-90));
+		
+		SmartDashboard.putData("DingleballOut", new DingleballTest());
 	}
 
 	/**
@@ -175,12 +184,16 @@ public class Robot extends TimedRobot {
 
 	private void updateDashboard() {
 		// Show subsystem commands
-		SmartDashboard.putData("Robot Drive", drive);
-		SmartDashboard.putData("Robot Intake", intake);
-		SmartDashboard.putData("Robot Lift", lift);
+		SmartDashboard.putData("Drive", drive);
+		SmartDashboard.putData("Intake", intake);
+		SmartDashboard.putData("Lift", lift);
+		SmartDashboard.putData("Arm", arm);
+		SmartDashboard.putData("Dingle", dingleball);
 
 		drive.updateDashboard();
 		intake.updateDashboard();
 		lift.updateDashboard();
+		arm.updateDashboard();
+		dingleball.updateDashboard();
 	}
 }
