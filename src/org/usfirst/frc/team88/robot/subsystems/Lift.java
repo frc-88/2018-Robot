@@ -1,5 +1,6 @@
 package org.usfirst.frc.team88.robot.subsystems;
 
+import org.usfirst.frc.team88.robot.Robot;
 import org.usfirst.frc.team88.robot.RobotMap;
 import org.usfirst.frc.team88.robot.commands.LiftBasicControl;
 import org.usfirst.frc.team88.robot.commands.LiftMove;
@@ -32,6 +33,8 @@ public class Lift extends Subsystem {
 	public static final int POS_LOW_SCALE = 2030;
 	public static final int POS_MID_SCALE = 2040;
 	public static final int POS_HI_SCALE = 2050;
+	public static final int POS_SAFE = 2060;
+	public static final int POS_SAFE_BOTTOM = 2070;
 
 	private static final int SLOTIDX = 0;
 	private static final int TIMEOUTMS = 0;
@@ -40,7 +43,8 @@ public class Lift extends Subsystem {
 	private static final int CRUISE_VELOCITY = 50;
 	private static final int ACCELERATION = 500;
 	private static final double P = 4.0;
-	private static final double I = 0.0; // Make sure reverse limit is accurate before using i!!!
+	private static final double I = 0.0; // Make sure reverse limit is accurate
+											// before using i!!!
 	private static final double D = 150.0;
 	private static final double F = (1023 / MAX_SPEED) * 0.9;
 
@@ -50,6 +54,8 @@ public class Lift extends Subsystem {
 	private static final int POS_LOW_SCALE_BASE = 470;
 	private static final int POS_MID_SCALE_BASE = 570;
 	private static final int POS_HI_SCALE_BASE = 670;
+	private static final int POS_SAFE_BASE = 100; // TODO
+	private static final int UP_OFFSET = 30; //TODO
 
 	private static final int DISTANCE_THRESHOLD = 50;
 
@@ -60,18 +66,20 @@ public class Lift extends Subsystem {
 	private int posLowScale;
 	private int posMidScale;
 	private int posHighScale;
+	private int posSafe;
+	private int posSafeBottom;
 
 	private TalonSRX master;
 	private TalonSRX follower;
 	private TalonSRX follower2;
-	
+
 	private int position;
 
 	public Lift() {
 		master = new TalonSRX(RobotMap.liftMaster);
 		follower = new TalonSRX(RobotMap.liftFollower);
 		follower2 = new TalonSRX(RobotMap.liftFollower2);
-		
+
 		/* analog signal with no wrap-around (0-3.3V) */
 		master.configSelectedFeedbackSensor(FeedbackDevice.Analog, SLOTIDX, TIMEOUTMS);
 
@@ -103,18 +111,18 @@ public class Lift extends Subsystem {
 
 		follower.follow(master);
 		follower.setInverted(true);
-		
+
 		follower2.follow(master);
 		follower2.setInverted(true);
-		
+
 		position = getPosition();
 	}
 
 	public void basicMotion(double input) {
 		Preferences prefs = Preferences.getInstance();
-		
+
 		input += prefs.getDouble("LiftGravityOffset", 0.0);
-		
+
 		master.set(ControlMode.PercentOutput, input);
 	}
 
@@ -124,11 +132,14 @@ public class Lift extends Subsystem {
 
 	public void setPosition(int target) {
 		target = positionMap(target);
-		
+
 		if (target < posReverseLimit) {
 			target = posReverseLimit;
 		} else if (target > posForwardLimit) {
 			target = posForwardLimit;
+		}
+		if (target < posSafe && Robot.arm.isUp()) {
+			target = posSafe;
 		}
 
 		position = target;
@@ -144,13 +155,13 @@ public class Lift extends Subsystem {
 
 	public boolean onTarget(int target) {
 		target = positionMap(target);
-		
+
 		return Math.abs(master.getSelectedSensorPosition(SLOTIDX) - target) < DISTANCE_THRESHOLD;
 	}
 
 	public boolean belowTarget(int target) {
 		target = positionMap(target);
-		
+
 		return master.getSelectedSensorPosition(SLOTIDX) < target;
 	}
 
@@ -158,7 +169,8 @@ public class Lift extends Subsystem {
 		return master.getOutputCurrent();
 	}
 
-	// This should only be called when at the reverse limit, used only be calibration routine
+	// This should only be called when at the reverse limit, used only be
+	// calibration routine
 	public void setReverseLimit() {
 		setGlobalPositionValues(getPosition());
 
@@ -171,7 +183,7 @@ public class Lift extends Subsystem {
 		follower.configForwardSoftLimitEnable(false, TIMEOUTMS);
 		follower.configReverseSoftLimitEnable(false, TIMEOUTMS);
 		follower.overrideLimitSwitchesEnable(false);
-		
+
 		follower2.configForwardSoftLimitEnable(false, TIMEOUTMS);
 		follower2.configReverseSoftLimitEnable(false, TIMEOUTMS);
 		follower2.overrideLimitSwitchesEnable(false);
@@ -182,7 +194,7 @@ public class Lift extends Subsystem {
 		master.configReverseSoftLimitEnable(false, TIMEOUTMS);
 		master.overrideLimitSwitchesEnable(false);
 	}
-	
+
 	private void setGlobalPositionValues(int reverseLimit) {
 		posReverseLimit = reverseLimit;
 		posForwardLimit = posReverseLimit + FORWARD_LIMIT_BASE;
@@ -194,21 +206,48 @@ public class Lift extends Subsystem {
 	}
 
 	private int positionMap(int position) {
-		switch (position) {
-		case POS_BOTTOM:
-			return posBottom;
-		case POS_ALMOST_BOTTOM:
-			return posBottom + 70;
-		case POS_SWITCH:
-			return posSwitch;
-		case POS_LOW_SCALE:
-			return posLowScale;
-		case POS_MID_SCALE:
-			return posMidScale;
-		case POS_HI_SCALE:
-			return posHighScale;
-		default:
-			return position;
+		if (!Robot.arm.isUp()) {
+			switch (position) {
+			case POS_BOTTOM:
+				return posBottom;
+			case POS_ALMOST_BOTTOM:
+				return posBottom + 70;
+			case POS_SWITCH:
+				return posSwitch;
+			case POS_LOW_SCALE:
+				return posLowScale;
+			case POS_MID_SCALE:
+				return posMidScale;
+			case POS_HI_SCALE:
+				return posHighScale;
+			case POS_SAFE:
+				return posSafe;
+			case POS_SAFE_BOTTOM:
+				return posSafeBottom;
+			default:
+				return position;
+			}
+		} else {
+			switch (position) {
+			case POS_BOTTOM:
+				return posSafe;
+			case POS_ALMOST_BOTTOM:
+				return posSafe + 40;
+			case POS_SWITCH:
+				return posSafe;
+			case POS_LOW_SCALE:
+				return posLowScale - UP_OFFSET;
+			case POS_MID_SCALE:
+				return posMidScale - UP_OFFSET;
+			case POS_HI_SCALE:
+				return posHighScale - UP_OFFSET;
+			case POS_SAFE:
+				return posSafe;
+			case POS_SAFE_BOTTOM:
+				return posSafeBottom;
+			default:
+				return position;
+			}
 		}
 	}
 
@@ -220,7 +259,7 @@ public class Lift extends Subsystem {
 		SmartDashboard.putNumber("Lift Switch", posSwitch);
 		SmartDashboard.putNumber("Lift Bottom", posBottom);
 		SmartDashboard.putNumber("Lift Reverse Limit", posReverseLimit);
-		
+
 		SmartDashboard.putNumber("Lift Target Position", position);
 		SmartDashboard.putNumber("Lift Master Position", getPosition());
 
@@ -230,7 +269,7 @@ public class Lift extends Subsystem {
 		SmartDashboard.putNumber("Lift Master Voltage", master.getMotorOutputVoltage());
 		SmartDashboard.putNumber("Lift Follower Current", follower.getOutputCurrent());
 		SmartDashboard.putNumber("Lift Follower Voltage", follower.getMotorOutputVoltage());
-		
+
 		SmartDashboard.putNumber("Lift Percent Height", getPercentHeight());
 		SmartDashboard.putBoolean("Lift Position High Scale?", onTarget(posHighScale));
 		SmartDashboard.putBoolean("Lift Position Mid Scale?", onTarget(posMidScale));

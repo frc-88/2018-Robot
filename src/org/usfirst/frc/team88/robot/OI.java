@@ -10,6 +10,11 @@ package org.usfirst.frc.team88.robot;
 import org.usfirst.frc.team88.robot.commands.LiftGotoPosition;
 import org.usfirst.frc.team88.robot.commands.LiftSoftLanding;
 import org.usfirst.frc.team88.robot.subsystems.Lift;
+import org.usfirst.frc.team88.robot.commands.ArmDown;
+import org.usfirst.frc.team88.robot.commands.ArmStart;
+import org.usfirst.frc.team88.robot.commands.ArmUp;
+import org.usfirst.frc.team88.robot.commands.DingleballIn;
+import org.usfirst.frc.team88.robot.commands.DingleballOut;
 import org.usfirst.frc.team88.robot.commands.IntakePneumaticsDown;
 import org.usfirst.frc.team88.robot.commands.IntakePneumaticsUp;
 import org.usfirst.frc.team88.robot.util.TJController;
@@ -26,13 +31,12 @@ public class OI {
 		driver = new TJController(0);
 		operator = new TJController(1);
 
-		// !!! DO NOT ADD COMMANDS TO DRIVER BUTTONS !!!
-		// The A, B, X, and Y buttons on the driver controlled are used in the
-		// DriveSplitArcade command to provide field oriented options. Commands
-		// should not be assigned to them.
+		driver.buttonA.whenPressed(new DingleballOut());
+		driver.buttonA.whenReleased(new DingleballIn());
 		
-		operator.buttonRightBumper.whenPressed(new IntakePneumaticsUp());
-		operator.buttonLeftBumper.whenPressed(new IntakePneumaticsDown());
+		operator.buttonRightBumper.whenPressed(new ArmUp());
+		operator.buttonLeftBumper.whenPressed(new ArmDown());
+		operator.buttonStart.whenPressed(new ArmStart());
 		
 		operator.buttonB.whenPressed(new LiftGotoPosition(Lift.POS_SWITCH));
 		operator.buttonB.whenReleased(new LiftSoftLanding());
