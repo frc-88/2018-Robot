@@ -1,5 +1,6 @@
 package org.usfirst.frc.team88.robot.commands.auto.center;
 
+import org.usfirst.frc.team88.robot.commands.DingleballIn;
 import org.usfirst.frc.team88.robot.commands.DriveRotateToAngle;
 import org.usfirst.frc.team88.robot.commands.LiftSoftLanding;
 import org.usfirst.frc.team88.robot.commands.PowerUpConditionalCommand;
@@ -19,6 +20,7 @@ public class AutoCenter_Part1 extends CommandGroup {
 		// back off and soft land
 		addSequential(new AutoDriveDistanceAngleFast(-40, 0));
 		addParallel(new LiftSoftLanding());
+		addParallel(new DingleballIn());
 
 		// turn towards a second cube
 		addSequential(new PowerUpConditionalCommand(new DriveRotateToAngle("CenterLeftAngle"),

@@ -53,6 +53,8 @@ public class AutoCenterToSwitch extends Command {
 		requires(Robot.drive);
 		requires(Robot.lift);
 		requires(Robot.intake);
+		requires(Robot.arm);
+		requires(Robot.dingleball);
 	}
 
 	// Called just before this Command runs the first time
@@ -105,6 +107,8 @@ public class AutoCenterToSwitch extends Command {
 			if (avgPosition > STAGE_ONE * COUNTS_PER_INCH && !cubeUp) {
 				Robot.lift.setPosition(Lift.POS_SWITCH);
 				Robot.lift.gotoPosition();
+				Robot.arm.goToDown();
+				Robot.dingleball.ballsFoward();
 				cubeUp = true;
 			}
 		} else {
@@ -117,7 +121,6 @@ public class AutoCenterToSwitch extends Command {
 			Robot.drive.resetDisplacement();
 			
 			if (Math.abs(Robot.drive.getAvgPosition()) < 100) {
-				Robot.intake.cradleDown();
 				state = ACCELERATE;
 			}
 			break;
@@ -154,30 +157,36 @@ public class AutoCenterToSwitch extends Command {
 		case STOP:
 			speed = 0.0;
 			
-			state = END;
+			// if we get here and we haven't started shooting yet, start shooting
+			if (!scored && !shooting) {
+				Robot.intake.wheelSpeed(0.75);
+				shooting = true;
+			}
+			
+			else if (scored) {
+				state = END;
+			}
 			
 			break;
 		case END:
 			done = true;
 			break;
 		}
+		
 		double jerkX = Math.abs(Robot.drive.getJerkX());
 		double jerkY = Math.abs(Robot.drive.getJerkY());
 		if(!scored && !shooting && (avgPosition > (STAGE_ONE + stageTwoDistanceInches) * COUNTS_PER_INCH) && jerkX > .6){
 			Robot.intake.wheelSpeed(0.75);
 			shooting = true;
 		}
-		SmartDashboard.putNumber("JerkX", jerkX);
-		SmartDashboard.putNumber("JerkY", jerkY);
-		SmartDashboard.putBoolean("SHOOTING", shooting);
-		SmartDashboard.putBoolean("SCORED", scored);
+
 		if(shooting){
 			count++;
 			if(count > 20){
 				scored = true;
 				shooting = false;
 				Robot.intake.wheelSpeed(0.0);
-				// state = STOP ?
+				state = STOP;
 			}
 		}
 		
