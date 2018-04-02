@@ -9,7 +9,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * Sam R.
- * 
+ * watch them soar outward
+ * swinging to and fro, aiding
+ * us to score freely
  */
 public class Dingleball extends Subsystem {
 
