@@ -26,28 +26,29 @@ public class Dingleball extends Subsystem {
 	
 	public void set(double value){
 		leftDingle.set(value);
+		rightDingle.set(1 - value);
 	}
+	
 	public void ballsFoward(){
-		leftDingle.set(1);
-		rightDingle.set(0);
+		set(1);
 	}
 	
 	public void ballsBackward(){
-		leftDingle.set(0);
-		rightDingle.set(1);
+		set(0);
 	}
 	
 	public void ballsDown(){
-		leftDingle.set(0.5);
-		rightDingle.set(0.5);
+		set(0.5);
 	}
 	
 	public void updateDashboard() {
-		SmartDashboard.putNumber("Dingle Position", leftDingle.get());
+		SmartDashboard.putNumber("Dingle Left Position", leftDingle.get());
+		SmartDashboard.putNumber("Dingle Left Position", rightDingle.get());
 	}
-    public void initDefaultCommand() {
+
+	public void initDefaultCommand() {
         // Set the default command for a subsystem here.
-        setDefaultCommand(new DingleballIn());
+        setDefaultCommand(null);
     }
 }
 
