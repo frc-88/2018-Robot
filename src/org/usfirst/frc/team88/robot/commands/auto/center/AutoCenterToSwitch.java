@@ -24,10 +24,6 @@ public class AutoCenterToSwitch extends Command {
 	private static final double COUNTS_PER_INCH = 1086;
 	private static final double STAGE_ONE = 10;
 	
-	private static final double targetDisplacementX = 2.7; // displacement in meters TODO check this value
-	private static final double toleranceX = 0.25; // TODO check
-	private static final double toleranceY = 0.5; // TODO check
-
 	private int state;
 	private double speed;
 	private double targetDistanceCounts;
@@ -42,7 +38,6 @@ public class AutoCenterToSwitch extends Command {
 	private String gameData;
 	private int count;
 	
-	private double targetDisplacementY;
 	private boolean shooting;
 	private boolean scored;
 	
@@ -77,13 +72,11 @@ public class AutoCenterToSwitch extends Command {
 			stageTwoDistanceInches = 45;
 			stageThreeYaw = 20;
 			stageThreeDistance = 95;
-			targetDisplacementY = 1.6; //in meters TODO make sure this right
 		} else if (gameData.charAt(0) == 'R') {
 			stageTwoYaw = 75;
 			stageTwoDistanceInches = 50;
 			stageThreeYaw = -20;
 			stageThreeDistance = 80;
-			targetDisplacementY = 1.3; //in meters TODO make sure this right
 		}
 		targetDistanceCounts = (STAGE_ONE + stageTwoDistanceInches + stageThreeDistance) * COUNTS_PER_INCH;
 	}
@@ -174,7 +167,6 @@ public class AutoCenterToSwitch extends Command {
 		}
 		
 		double jerkX = Math.abs(Robot.drive.getJerkX());
-		double jerkY = Math.abs(Robot.drive.getJerkY());
 		if(!scored && !shooting && (avgPosition > (STAGE_ONE + stageTwoDistanceInches) * COUNTS_PER_INCH) && jerkX > .6){
 			Robot.intake.wheelSpeed(0.75);
 			shooting = true;
