@@ -55,7 +55,8 @@ public class Lift extends Subsystem {
 	private static final int POS_MID_SCALE_BASE = 570;
 	private static final int POS_HI_SCALE_BASE = 670;
 	private static final int POS_SAFE_BASE = 100; // TODO
-	private static final int UP_OFFSET = 30; //TODO
+	private static final int POS_SAFE_BOTTOM_BASE = 80; // TODO
+	private static final int UP_OFFSET = 30; // TODO
 
 	private static final int DISTANCE_THRESHOLD = 50;
 
@@ -138,7 +139,8 @@ public class Lift extends Subsystem {
 		} else if (target > posForwardLimit) {
 			target = posForwardLimit;
 		}
-		if (target < posSafe && Robot.arm.isUp()) {
+
+		if (target < posSafe && !Robot.arm.isDown()) {
 			target = posSafe;
 		}
 
@@ -198,6 +200,8 @@ public class Lift extends Subsystem {
 	private void setGlobalPositionValues(int reverseLimit) {
 		posReverseLimit = reverseLimit;
 		posForwardLimit = posReverseLimit + FORWARD_LIMIT_BASE;
+		posSafeBottom = posReverseLimit + POS_SAFE_BOTTOM_BASE;
+		posSafe = posReverseLimit + POS_SAFE_BASE;
 		posBottom = posReverseLimit + POS_BOTTOM_BASE;
 		posSwitch = posReverseLimit + POS_SWITCH_BASE;
 		posLowScale = posReverseLimit + POS_LOW_SCALE_BASE;
@@ -206,7 +210,7 @@ public class Lift extends Subsystem {
 	}
 
 	private int positionMap(int position) {
-		if (!Robot.arm.isUp()) {
+		if (Robot.arm.isDown()) {
 			switch (position) {
 			case POS_BOTTOM:
 				return posBottom;
@@ -253,11 +257,14 @@ public class Lift extends Subsystem {
 
 	public void updateDashboard() {
 		SmartDashboard.putNumber("Lift Forward Limit", posForwardLimit);
-		SmartDashboard.putNumber("Lift High Scale", posHighScale);
-		SmartDashboard.putNumber("Lift Mid Scale", posMidScale);
-		SmartDashboard.putNumber("Lift Low Scale", posLowScale);
-		SmartDashboard.putNumber("Lift Switch", posSwitch);
-		SmartDashboard.putNumber("Lift Bottom", posBottom);
+		SmartDashboard.putNumber("Lift High Scale", positionMap(POS_HI_SCALE));
+		SmartDashboard.putNumber("Lift Mid Scale", positionMap(POS_MID_SCALE));
+		SmartDashboard.putNumber("Lift Low Scale", positionMap(POS_LOW_SCALE));
+		SmartDashboard.putNumber("Lift Switch", positionMap(POS_SWITCH));
+		SmartDashboard.putNumber("Lift Bottom", positionMap(POS_SAFE));
+		SmartDashboard.putNumber("Lift Bottom", positionMap(POS_SAFE_BOTTOM));
+		SmartDashboard.putNumber("Lift Bottom", positionMap(POS_ALMOST_BOTTOM));
+		SmartDashboard.putNumber("Lift Bottom", positionMap(POS_BOTTOM));
 		SmartDashboard.putNumber("Lift Reverse Limit", posReverseLimit);
 
 		SmartDashboard.putNumber("Lift Target Position", position);
@@ -271,11 +278,11 @@ public class Lift extends Subsystem {
 		SmartDashboard.putNumber("Lift Follower Voltage", follower.getMotorOutputVoltage());
 
 		SmartDashboard.putNumber("Lift Percent Height", getPercentHeight());
-		SmartDashboard.putBoolean("Lift Position High Scale?", onTarget(posHighScale));
-		SmartDashboard.putBoolean("Lift Position Mid Scale?", onTarget(posMidScale));
-		SmartDashboard.putBoolean("Lift Position Low Scale?", onTarget(posLowScale));
-		SmartDashboard.putBoolean("Lift Position Switch?", onTarget(posSwitch));
-		SmartDashboard.putBoolean("Lift Position Bottom?", onTarget(posBottom));
+		SmartDashboard.putBoolean("Lift Position High Scale?", onTarget(positionMap(POS_HI_SCALE)));
+		SmartDashboard.putBoolean("Lift Position Mid Scale?", onTarget(positionMap(POS_MID_SCALE)));
+		SmartDashboard.putBoolean("Lift Position Low Scale?", onTarget(positionMap(POS_LOW_SCALE)));
+		SmartDashboard.putBoolean("Lift Position Switch?", onTarget(positionMap(POS_SWITCH)));
+		SmartDashboard.putBoolean("Lift Position Bottom?", onTarget(positionMap(POS_BOTTOM)));
 	}
 
 	public void initDefaultCommand() {
