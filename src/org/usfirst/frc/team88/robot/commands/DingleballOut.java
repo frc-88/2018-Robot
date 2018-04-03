@@ -23,9 +23,6 @@ public class DingleballOut extends Command {
     protected void execute() {
     	if(Robot.arm.isUp()){
     		Robot.dingleball.ballsBackward();
-    	}
-    	else if(Robot.arm.isDown()){
-    		Robot.dingleball.ballsFoward();
     	} else {
     		Robot.dingleball.ballsFoward();
     	}
@@ -33,7 +30,7 @@ public class DingleballOut extends Command {
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return false;
+        return true;
     }
 
     // Called once after isFinished returns true

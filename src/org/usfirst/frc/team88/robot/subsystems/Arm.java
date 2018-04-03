@@ -1,18 +1,13 @@
 package org.usfirst.frc.team88.robot.subsystems;
 
-import org.usfirst.frc.team88.robot.Robot;
 import org.usfirst.frc.team88.robot.RobotMap;
 import org.usfirst.frc.team88.robot.commands.ArmBasicControl;
-import org.usfirst.frc.team88.robot.commands.LiftBasicControl;
-import org.usfirst.frc.team88.robot.commands.LiftMove;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
-import edu.wpi.first.wpilibj.AnalogPotentiometer;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -45,13 +40,10 @@ public class Arm extends Subsystem {
 	private int posStart;
 	private int posDown;
 	
-	private double position;
-
 	public Arm() {
 		master = new TalonSRX(RobotMap.armMotor);
 
-		initQuadrature();
-		master.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, SLOTIDX, TIMEOUTMS);
+		master.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute, SLOTIDX, TIMEOUTMS);
 
 		master.config_kP(SLOTIDX, P, TIMEOUTMS);
 		master.config_kI(SLOTIDX, I, TIMEOUTMS);
@@ -78,10 +70,6 @@ public class Arm extends Subsystem {
 		setPositionValues();
 	}
 
-	public void basicMotion(double input) {
-		master.set(ControlMode.PercentOutput, input);
-	}
-
 	private void setPositionValues() {
 		Preferences prefs = Preferences.getInstance();
 		int armBottom = prefs.getInt("ArmBottom", POS_DOWN_DFT); 
@@ -93,27 +81,10 @@ public class Arm extends Subsystem {
 		}
 	}
 	
-	public void setPosition(double target){
-		position = target;
+	public void basicMotion(double input) {
+		master.set(ControlMode.PercentOutput, input);
 	}
-	
-	public int getPosition(){
-		return master.getSelectedSensorPosition(SLOTIDX);
-	}
-	public boolean isUp(){
-		return master.getSelectedSensorPosition(SLOTIDX) > posStart;
-	}
-	
-	public boolean isDown(){
-		return master.getSelectedSensorPosition(SLOTIDX) < posDown - 10 
-				|| master.getSelectedSensorPosition(SLOTIDX) > posDown + 10;
-	}
-	
-	public boolean isStart(){
-		return master.getSelectedSensorPosition(SLOTIDX) < posStart - 10 
-				|| master.getSelectedSensorPosition(SLOTIDX) > posStart + 10;
-	}
-	
+
 	public void goToUp() {
 		master.set(ControlMode.MotionMagic, posUp);
 	}
@@ -126,58 +97,34 @@ public class Arm extends Subsystem {
 		master.set(ControlMode.MotionMagic, posStart);
 	}
 	
-	
-	
-	/**
-	 * Below is from CTRE example found here:
-	 * https://github.com/CrossTheRoadElec/Phoenix-Examples-Languages/blob/master/Java/MagEncoder%20(Absolute)/src/org/usfirst/frc/team217/robot/Robot.java
-	 * 
-	 * Seed the quadrature position to become absolute. This routine also
-	 * ensures the travel is continuous.
-	 */
-	public void initQuadrature() {
-		/* get the absolute pulse width position */
-		int pulseWidth = master.getSensorCollection().getPulseWidthPosition();
-
-//		/*
-//		 * if there is a discontinuity in our measured range, subtract one half
-//		 * rotation to remove it
-//		 */
-//		if (kDiscontinuityPresent) {
-//
-//			/* calculate the center */
-//			int newCenter;
-//			newCenter = (kBookEnd_0 + kBookEnd_1) / 2;
-//			newCenter &= 0xFFF;
-//
-//			/*
-//			 * apply the offset so the discontinuity is in the unused portion of
-//			 * the sensor
-//			 */
-//			pulseWidth -= newCenter;
-//		}
-
-		/* mask out the bottom 12 bits to normalize to [0,4095],
-		 * or in other words, to stay within [0,360) degrees */
-		pulseWidth = pulseWidth & 0xFFF;
-
-		/* save it to quadrature */
-		master.getSensorCollection().setQuadraturePosition(pulseWidth, TIMEOUTMS);
-
+	public int getPosition(){
+		return master.getSelectedSensorPosition(SLOTIDX);
 	}
 
+	public boolean isUp(){
+		return master.getSelectedSensorPosition(SLOTIDX) > posStart;
+	}
+	
+	public boolean isDown(){
+		return master.getSelectedSensorPosition(SLOTIDX) > posDown - 10 
+				|| master.getSelectedSensorPosition(SLOTIDX) < posDown + 10;
+	}
+	
+	public boolean isStart(){
+		return master.getSelectedSensorPosition(SLOTIDX) > posStart - 10 
+				|| master.getSelectedSensorPosition(SLOTIDX) < posStart + 10;
+	}
 	
 	public void updateDashboard() {
-		SmartDashboard.putNumber("Arm Position(Absolute)", master.getSensorCollection().getPulseWidthPosition());
-		SmartDashboard.putNumber("Arm Position(QuadRel)", master.getSensorCollection().getQuadraturePosition());
-		SmartDashboard.putNumber("Arm Velocity(QuadRel)", master.getSensorCollection().getQuadratureVelocity());
-
-		
-		SmartDashboard.putNumber("Arm Position(Relative)", master.getSelectedSensorPosition(SLOTIDX));
+		SmartDashboard.putNumber("Arm Position", master.getSelectedSensorPosition(SLOTIDX));
 		SmartDashboard.putNumber("Arm Velocity", master.getSelectedSensorVelocity(SLOTIDX));
 		SmartDashboard.putNumber("Arm Error", master.getClosedLoopError(SLOTIDX));
 		SmartDashboard.putNumber("Arm Current", master.getOutputCurrent());
 		SmartDashboard.putNumber("Arm Voltage", master.getMotorOutputVoltage());
+		
+		SmartDashboard.putBoolean("Arm Up?", isUp());
+		SmartDashboard.putBoolean("Arm Start?", isStart());
+		SmartDashboard.putBoolean("Arm Down?", isDown());
 	}
 
 	public void initDefaultCommand() {

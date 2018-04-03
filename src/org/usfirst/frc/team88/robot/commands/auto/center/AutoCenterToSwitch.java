@@ -24,10 +24,6 @@ public class AutoCenterToSwitch extends Command {
 	private static final double COUNTS_PER_INCH = 1086;
 	private static final double STAGE_ONE = 10;
 	
-	private static final double targetDisplacementX = 2.7; // displacement in meters TODO check this value
-	private static final double toleranceX = 0.25; // TODO check
-	private static final double toleranceY = 0.5; // TODO check
-
 	private int state;
 	private double speed;
 	private double targetDistanceCounts;
@@ -42,7 +38,6 @@ public class AutoCenterToSwitch extends Command {
 	private String gameData;
 	private int count;
 	
-	private double targetDisplacementY;
 	private boolean shooting;
 	private boolean scored;
 	
@@ -53,6 +48,8 @@ public class AutoCenterToSwitch extends Command {
 		requires(Robot.drive);
 		requires(Robot.lift);
 		requires(Robot.intake);
+		requires(Robot.arm);
+		requires(Robot.dingleball);
 	}
 
 	// Called just before this Command runs the first time
@@ -75,13 +72,11 @@ public class AutoCenterToSwitch extends Command {
 			stageTwoDistanceInches = 45;
 			stageThreeYaw = 20;
 			stageThreeDistance = 95;
-			targetDisplacementY = 1.6; //in meters TODO make sure this right
 		} else if (gameData.charAt(0) == 'R') {
 			stageTwoYaw = 75;
 			stageTwoDistanceInches = 50;
 			stageThreeYaw = -20;
 			stageThreeDistance = 80;
-			targetDisplacementY = 1.3; //in meters TODO make sure this right
 		}
 		targetDistanceCounts = (STAGE_ONE + stageTwoDistanceInches + stageThreeDistance) * COUNTS_PER_INCH;
 	}
@@ -105,6 +100,8 @@ public class AutoCenterToSwitch extends Command {
 			if (avgPosition > STAGE_ONE * COUNTS_PER_INCH && !cubeUp) {
 				Robot.lift.setPosition(Lift.POS_SWITCH);
 				Robot.lift.gotoPosition();
+				Robot.arm.goToDown();
+				Robot.dingleball.ballsFoward();
 				cubeUp = true;
 			}
 		} else {
@@ -117,7 +114,6 @@ public class AutoCenterToSwitch extends Command {
 			Robot.drive.resetDisplacement();
 			
 			if (Math.abs(Robot.drive.getAvgPosition()) < 100) {
-				Robot.intake.cradleDown();
 				state = ACCELERATE;
 			}
 			break;
@@ -154,30 +150,35 @@ public class AutoCenterToSwitch extends Command {
 		case STOP:
 			speed = 0.0;
 			
-			state = END;
+			// if we get here and we haven't started shooting yet, start shooting
+			if (!scored && !shooting) {
+				Robot.intake.wheelSpeed(0.75);
+				shooting = true;
+			}
+			
+			else if (scored) {
+				state = END;
+			}
 			
 			break;
 		case END:
 			done = true;
 			break;
 		}
+		
 		double jerkX = Math.abs(Robot.drive.getJerkX());
-		double jerkY = Math.abs(Robot.drive.getJerkY());
 		if(!scored && !shooting && (avgPosition > (STAGE_ONE + stageTwoDistanceInches) * COUNTS_PER_INCH) && jerkX > .6){
 			Robot.intake.wheelSpeed(0.75);
 			shooting = true;
 		}
-		SmartDashboard.putNumber("JerkX", jerkX);
-		SmartDashboard.putNumber("JerkY", jerkY);
-		SmartDashboard.putBoolean("SHOOTING", shooting);
-		SmartDashboard.putBoolean("SCORED", scored);
+
 		if(shooting){
 			count++;
 			if(count > 20){
 				scored = true;
 				shooting = false;
 				Robot.intake.wheelSpeed(0.0);
-				// state = STOP ?
+				state = STOP;
 			}
 		}
 		
