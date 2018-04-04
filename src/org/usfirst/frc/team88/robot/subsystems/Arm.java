@@ -15,7 +15,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * Sam R., Brodie B.
- * 
+ * new technology
+ * behold our new found power
+ * as we score backwards
  */
 public class Arm extends Subsystem {
 	private static final boolean BASIC_CONTROL = true;
