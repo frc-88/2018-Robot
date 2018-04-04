@@ -3,6 +3,7 @@ package org.usfirst.frc.team88.robot.subsystems;
 import org.usfirst.frc.team88.robot.RobotMap;
 import org.usfirst.frc.team88.robot.commands.ArmBasicControl;
 
+import com.ctre.phoenix.ParamEnum;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
@@ -19,7 +20,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Arm extends Subsystem {
 	private static final boolean BASIC_CONTROL = true;
 
-	private static final int POS_DOWN_DFT = 0;
 	private static final int POS_START_OFFSET = 1700;
 	private static final int POS_UP_OFFSET = 2000;
 	
@@ -71,14 +71,11 @@ public class Arm extends Subsystem {
 	}
 
 	private void setPositionValues() {
-		Preferences prefs = Preferences.getInstance();
-		int armBottom = prefs.getInt("ArmBottom", POS_DOWN_DFT); 
+		int armBottom = (int) master.configGetParameter(ParamEnum.eReverseSoftLimitThreshold, 0, TIMEOUTMS); 
 		
-		if (posDown != armBottom) {
-			posDown = armBottom;
-			posStart = posDown + POS_START_OFFSET;
-			posUp = posDown + POS_UP_OFFSET;
-		}
+		posDown = armBottom;
+		posStart = armBottom + POS_START_OFFSET;
+		posUp = armBottom + POS_UP_OFFSET;
 	}
 	
 	public void basicMotion(double input) {
