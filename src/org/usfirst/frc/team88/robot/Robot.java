@@ -11,6 +11,7 @@ import org.usfirst.frc.team88.robot.commands.DingleballTest;
 import org.usfirst.frc.team88.robot.commands.DriveResetEncoders;
 import org.usfirst.frc.team88.robot.commands.DriveRotateToAngle;
 import org.usfirst.frc.team88.robot.commands.DriveZeroYaw;
+import org.usfirst.frc.team88.robot.commands.LiftGotoPosition;
 import org.usfirst.frc.team88.robot.commands.auto.AutoCrossTheLine;
 import org.usfirst.frc.team88.robot.commands.auto.AutoDriveDistance;
 import org.usfirst.frc.team88.robot.commands.auto.center.AutoCenter;
@@ -100,6 +101,7 @@ public class Robot extends TimedRobot {
 		SmartDashboard.putData("Rotate to -90", new DriveRotateToAngle(-90));
 		
 		SmartDashboard.putData("DingleballOut", new DingleballTest());
+		SmartDashboard.putData("GOTO LIFT SWITCH", new LiftGotoPosition(Lift.POS_SWITCH));
 	}
 
 	/**
