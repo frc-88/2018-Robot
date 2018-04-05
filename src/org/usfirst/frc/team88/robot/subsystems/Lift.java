@@ -103,9 +103,11 @@ public class Lift extends Subsystem {
 
 		follower.follow(master);
 		follower.setInverted(true);
+		follower.setNeutralMode(NeutralMode.Brake);
 		
 		follower2.follow(master);
 		follower2.setInverted(true);
+		follower2.setNeutralMode(NeutralMode.Brake);
 		
 		position = getPosition();
 	}
@@ -119,7 +121,7 @@ public class Lift extends Subsystem {
 	}
 
 	public void gotoPosition() {
-		master.set(ControlMode.MotionMagic, position, DemandType.ArbitraryFeedForward, 0.05);
+		master.set(ControlMode.MotionMagic, position, DemandType.ArbitraryFeedForward, 0.07);
 	}
 
 	public void setPosition(int target) {
