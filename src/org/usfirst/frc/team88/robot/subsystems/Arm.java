@@ -5,6 +5,7 @@ import org.usfirst.frc.team88.robot.commands.ArmBasicControl;
 
 import com.ctre.phoenix.ParamEnum;
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
@@ -15,21 +16,23 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * Sam R., Brodie B.
- * 
+ * new technology
+ * behold our new found power
+ * as we score backwards
  */
 public class Arm extends Subsystem {
-	private static final boolean BASIC_CONTROL = true;
+	private static final boolean BASIC_CONTROL = false;
 
-	private static final int POS_START_OFFSET = 1700;
+	private static final int POS_START_OFFSET = 1550;
 	private static final int POS_UP_OFFSET = 2000;
 	
 	private static final int SLOTIDX = 0;
 	private static final int TIMEOUTMS = 0;
 	private static final double RAMPRATE = .30;
-	private static final double MAX_SPEED = 50; // TODO
-	private static final int CRUISE_VELOCITY = 50; // TODO
-	private static final int ACCELERATION = 500; // TODO
-	private static final double P = 0.0; // TODO
+	private static final double MAX_SPEED = 100;
+	private static final int CRUISE_VELOCITY = 100; // TODO
+	private static final int ACCELERATION = 1000; // TODO
+	private static final double P = 0.5; // TODO
 	private static final double I = 0.0; // TODO - probably 0
 	private static final double D = 0.0; // TODO
 	private static final double F = (1023 / MAX_SPEED) * 0.9;
@@ -56,12 +59,13 @@ public class Arm extends Subsystem {
 		master.configNeutralDeadband(0.04, TIMEOUTMS);
 		master.configClosedloopRamp(RAMPRATE, TIMEOUTMS);
 
-		master.configPeakCurrentLimit(35, TIMEOUTMS);
+		master.configPeakCurrentLimit(15, TIMEOUTMS);
 		master.configPeakCurrentDuration(0, TIMEOUTMS);
-		master.configContinuousCurrentLimit(30, TIMEOUTMS);
+		master.configContinuousCurrentLimit(14, TIMEOUTMS);
 		master.enableCurrentLimit(true);
 
-		master.setSensorPhase(false);
+		master.setSensorPhase(true);
+		master.setInverted(true);
 		master.setNeutralMode(NeutralMode.Brake);
 
 		master.configMotionCruiseVelocity(CRUISE_VELOCITY, TIMEOUTMS);
@@ -71,7 +75,8 @@ public class Arm extends Subsystem {
 	}
 
 	private void setPositionValues() {
-		int armBottom = (int) master.configGetParameter(ParamEnum.eReverseSoftLimitThreshold, 0, TIMEOUTMS); 
+		//int armBottom = (int) master.configGetParameter(ParamEnum.eReverseSoftLimitThreshold, 0, TIMEOUTMS); 
+		int armBottom = 981;
 		
 		posDown = armBottom;
 		posStart = armBottom + POS_START_OFFSET;
@@ -83,7 +88,8 @@ public class Arm extends Subsystem {
 	}
 
 	public void goToUp() {
-		master.set(ControlMode.MotionMagic, posUp);
+		double gravComp = 0.18 * Math.sin(master.getSelectedSensorPosition(SLOTIDX) * (Math.PI/POS_UP_OFFSET));
+		master.set(ControlMode.MotionMagic, posUp, DemandType.ArbitraryFeedForward, gravComp);
 	}
 	
 	public void goToDown() {
@@ -118,6 +124,10 @@ public class Arm extends Subsystem {
 		SmartDashboard.putNumber("Arm Error", master.getClosedLoopError(SLOTIDX));
 		SmartDashboard.putNumber("Arm Current", master.getOutputCurrent());
 		SmartDashboard.putNumber("Arm Voltage", master.getMotorOutputVoltage());
+		
+		SmartDashboard.putNumber("Arm posUp", posUp);
+		SmartDashboard.putNumber("Arm posStart", posStart);
+		SmartDashboard.putNumber("Arm posDown", posDown);
 		
 		SmartDashboard.putBoolean("Arm Up?", isUp());
 		SmartDashboard.putBoolean("Arm Start?", isStart());

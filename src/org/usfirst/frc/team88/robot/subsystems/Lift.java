@@ -54,8 +54,8 @@ public class Lift extends Subsystem {
 	private static final int POS_LOW_SCALE_BASE = 470;
 	private static final int POS_MID_SCALE_BASE = 570;
 	private static final int POS_HI_SCALE_BASE = 670;
-	private static final int POS_SAFE_BASE = 100; // TODO
-	private static final int POS_SAFE_BOTTOM_BASE = 80; // TODO
+	private static final int POS_SAFE_BASE = 210;
+	private static final int POS_SAFE_BOTTOM_BASE = 180;
 	private static final int UP_OFFSET = 30; // TODO
 
 	private static final int DISTANCE_THRESHOLD = 50;
@@ -128,7 +128,7 @@ public class Lift extends Subsystem {
 	}
 
 	public void gotoPosition() {
-		master.set(ControlMode.MotionMagic, position, DemandType.ArbitraryFeedForward, 0.05);
+		master.set(ControlMode.MotionMagic, position, DemandType.ArbitraryFeedForward, 0.18);
 	}
 
 	public void setPosition(int target) {
@@ -215,7 +215,7 @@ public class Lift extends Subsystem {
 			case POS_BOTTOM:
 				return posBottom;
 			case POS_ALMOST_BOTTOM:
-				return posBottom + 70;
+				return posBottom + 100;
 			case POS_SWITCH:
 				return posSwitch;
 			case POS_LOW_SCALE:
@@ -283,6 +283,7 @@ public class Lift extends Subsystem {
 		SmartDashboard.putBoolean("Lift Position Low Scale?", onTarget(positionMap(POS_LOW_SCALE)));
 		SmartDashboard.putBoolean("Lift Position Switch?", onTarget(positionMap(POS_SWITCH)));
 		SmartDashboard.putBoolean("Lift Position Bottom?", onTarget(positionMap(POS_BOTTOM)));
+		
 	}
 
 	public void initDefaultCommand() {
