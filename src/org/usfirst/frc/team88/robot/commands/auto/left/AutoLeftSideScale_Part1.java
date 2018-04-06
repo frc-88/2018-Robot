@@ -1,6 +1,8 @@
 package org.usfirst.frc.team88.robot.commands.auto.left;
 
 import org.usfirst.frc.team88.robot.commands.ArmDown;
+import org.usfirst.frc.team88.robot.commands.DingleDance;
+import org.usfirst.frc.team88.robot.commands.DingleballIn;
 import org.usfirst.frc.team88.robot.commands.DriveDisableTURBOMODE;
 import org.usfirst.frc.team88.robot.commands.DriveEnableTURBOMODE;
 import org.usfirst.frc.team88.robot.commands.DriveZeroYaw;
@@ -22,7 +24,9 @@ public class AutoLeftSideScale_Part1 extends CommandGroup {
 		
 		addSequential(new DriveZeroYaw());
 		// addSequential(new DriveEnableTURBOMODE());
+		addParallel(new DingleDance());
 		addSequential(new AutoDriveDistanceAngleFast("LeftScaleDist_1", "LeftScaleAngle_1"));
+		addParallel(new DingleballIn());
 		// addSequential(new DriveDisableTURBOMODE());
 		addParallel(new LiftGotoPosition(Lift.POS_HI_SCALE));
 		addSequential(new IntakeEjectCube(Lift.POS_HI_SCALE));
