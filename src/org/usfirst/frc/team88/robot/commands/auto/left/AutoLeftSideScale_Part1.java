@@ -9,6 +9,7 @@ import org.usfirst.frc.team88.robot.commands.DriveZeroYaw;
 import org.usfirst.frc.team88.robot.commands.IntakeEjectCube;
 import org.usfirst.frc.team88.robot.commands.IntakeIntakeCube;
 import org.usfirst.frc.team88.robot.commands.LiftGotoPosition;
+import org.usfirst.frc.team88.robot.commands.auto.AutoDriveDistanceAngle;
 import org.usfirst.frc.team88.robot.commands.auto.AutoDriveDistanceAngleFast;
 import org.usfirst.frc.team88.robot.subsystems.Lift;
 
@@ -31,7 +32,7 @@ public class AutoLeftSideScale_Part1 extends CommandGroup {
 		addParallel(new LiftGotoPosition(Lift.POS_HI_SCALE));
 		addSequential(new IntakeEjectCube(Lift.POS_HI_SCALE));
 		addParallel(new ArmDown());
-		addParallel(new AutoDriveDistanceAngleFast("LeftScaleDist_2", "LeftScaleAngle_2"));
+		addParallel(new AutoDriveDistanceAngle("LeftScaleDist_2", "LeftScaleAngle_2"));
 		addSequential(new IntakeIntakeCube(4));
 
 	}
