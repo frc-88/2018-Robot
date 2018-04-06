@@ -100,7 +100,8 @@ public class AutoCenterToSwitch extends Command {
 			if (avgPosition > STAGE_ONE * COUNTS_PER_INCH && !cubeUp) {
 				Robot.lift.setPosition(Lift.POS_SWITCH);
 				Robot.lift.gotoPosition();
-				Robot.arm.goToDown();
+				Robot.arm.setPositionToDown();
+				Robot.arm.gotoPosition();
 				Robot.dingleball.ballsFoward();
 				cubeUp = true;
 			}

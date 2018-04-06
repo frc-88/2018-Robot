@@ -19,7 +19,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * Dingleballs
  *    by Mr. Nick
  *
- * Dashing accross the field
+ * Dashing across the field
  * With a power cube yellow
  * To the switch we speed,
  * Yeah, we're not going slow!
@@ -72,6 +72,11 @@ public class Dingleball extends Subsystem {
 	public void set(double value){
 		leftDingle.set(value);
 		rightDingle.set(1 - value);
+	}
+	
+	public void dance(double value){
+		leftDingle.set(value);
+		rightDingle.set(value);
 	}
 	
 	public void ballsFoward(){

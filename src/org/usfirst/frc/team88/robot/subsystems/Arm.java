@@ -1,7 +1,9 @@
 package org.usfirst.frc.team88.robot.subsystems;
 
+import org.usfirst.frc.team88.robot.Robot;
 import org.usfirst.frc.team88.robot.RobotMap;
 import org.usfirst.frc.team88.robot.commands.ArmBasicControl;
+import org.usfirst.frc.team88.robot.commands.ArmMove;
 
 import com.ctre.phoenix.ParamEnum;
 import com.ctre.phoenix.motorcontrol.ControlMode;
@@ -42,6 +44,8 @@ public class Arm extends Subsystem {
 	private int posUp;
 	private int posStart;
 	private int posDown;
+
+	private double position;
 	
 	public Arm() {
 		master = new TalonSRX(RobotMap.armMotor);
@@ -87,17 +91,20 @@ public class Arm extends Subsystem {
 		master.set(ControlMode.PercentOutput, input);
 	}
 
-	public void goToUp() {
-		double gravComp = 0.18 * Math.sin(master.getSelectedSensorPosition(SLOTIDX) * (Math.PI/POS_UP_OFFSET));
-		master.set(ControlMode.MotionMagic, posUp, DemandType.ArbitraryFeedForward, gravComp);
+	public void gotoPosition() {
+		master.set(ControlMode.MotionMagic, position);
+	}
+
+	public void setPositionToUp() {
+		position = posUp;
 	}
 	
-	public void goToDown() {
-		master.set(ControlMode.MotionMagic, posDown);
+	public void setPositionToDown() {
+		position = posDown;
 	}
 	
-	public void goToStart() {
-		master.set(ControlMode.MotionMagic, posStart);
+	public void setPositionToStart() {
+		position = posStart;
 	}
 	
 	public int getPosition(){
@@ -110,16 +117,17 @@ public class Arm extends Subsystem {
 	
 	public boolean isDown(){
 		return master.getSelectedSensorPosition(SLOTIDX) > posDown - 10 
-				|| master.getSelectedSensorPosition(SLOTIDX) < posDown + 10;
+				&& master.getSelectedSensorPosition(SLOTIDX) < posDown + 10;
 	}
 	
 	public boolean isStart(){
 		return master.getSelectedSensorPosition(SLOTIDX) > posStart - 10 
-				|| master.getSelectedSensorPosition(SLOTIDX) < posStart + 10;
+				&& master.getSelectedSensorPosition(SLOTIDX) < posStart + 10;
 	}
 	
 	public void updateDashboard() {
 		SmartDashboard.putNumber("Arm Position", master.getSelectedSensorPosition(SLOTIDX));
+		SmartDashboard.putNumber("Arm Target", position);
 		SmartDashboard.putNumber("Arm Velocity", master.getSelectedSensorVelocity(SLOTIDX));
 		SmartDashboard.putNumber("Arm Error", master.getClosedLoopError(SLOTIDX));
 		SmartDashboard.putNumber("Arm Current", master.getOutputCurrent());
@@ -140,7 +148,7 @@ public class Arm extends Subsystem {
 		if (BASIC_CONTROL) {
 			setDefaultCommand(new ArmBasicControl());
 		} else {
-			setDefaultCommand(null);
+			setDefaultCommand(new ArmMove());
 		}
 	}
 }

@@ -7,12 +7,11 @@ import edu.wpi.first.wpilibj.command.Command;
 /**
  *
  */
-public class ArmStart extends Command {
+public class ArmMove extends Command {
 
-    public ArmStart() {
+    public ArmMove() {
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
-    	requires(Robot.lift);
     	requires(Robot.arm);
     }
 
@@ -22,13 +21,12 @@ public class ArmStart extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	Robot.arm.setPositionToStart();
     	Robot.arm.gotoPosition();
     }
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return Robot.arm.isStart();
+        return false;
     }
 
     // Called once after isFinished returns true

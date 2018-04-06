@@ -28,7 +28,8 @@ public class ArmDownPart_1 extends Command {
     		Robot.lift.gotoPosition();
     	}
     	else{
-    		Robot.arm.goToDown();
+    		Robot.arm.setPositionToDown();
+    		Robot.arm.gotoPosition();
     	}
     }
 

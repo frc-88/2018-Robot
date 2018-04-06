@@ -30,7 +30,8 @@ public class ArmUp extends Command {
 			Robot.lift.gotoPosition();
 		}
 		else{
-			Robot.arm.goToUp();
+			Robot.arm.setPositionToUp();
+			Robot.arm.gotoPosition();
 		}
 	}
 

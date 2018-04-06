@@ -15,6 +15,7 @@ import org.usfirst.frc.team88.robot.subsystems.Lift;
 import org.usfirst.frc.team88.robot.commands.ArmDown;
 import org.usfirst.frc.team88.robot.commands.StartingConfiguration;
 import org.usfirst.frc.team88.robot.commands.ArmUp;
+import org.usfirst.frc.team88.robot.commands.DingleDance;
 import org.usfirst.frc.team88.robot.commands.DingleballIn;
 import org.usfirst.frc.team88.robot.commands.DingleballOut;
 import org.usfirst.frc.team88.robot.commands.IntakePneumaticsDown;
@@ -57,6 +58,9 @@ public class OI {
 		
 		operator.buttonY.whenPressed(new LiftGotoPosition(Lift.POS_HI_SCALE));
 		operator.buttonY.whenReleased(new LiftSoftLanding());
+		
+		
+		operator.buttonBack.whenPressed(new DingleDance());
 	}
 	
 	
