@@ -1,7 +1,6 @@
 package org.usfirst.frc.team88.robot.commands.auto.left;
 
 import org.usfirst.frc.team88.robot.commands.DriveRotateToAngle;
-import org.usfirst.frc.team88.robot.commands.LiftCheckOnTarget;
 import org.usfirst.frc.team88.robot.commands.LiftGotoPosition;
 import org.usfirst.frc.team88.robot.commands.auto.AutoDriveDistanceAngle;
 import org.usfirst.frc.team88.robot.subsystems.Lift;
@@ -16,10 +15,8 @@ public class AutoLeftSideFarScale_Part2 extends CommandGroup {
     public AutoLeftSideFarScale_Part2() {
     	//Step 2: Prepare First Cube
     	
-    	addSequential(new DriveRotateToAngle("LeftFarScaleAngle_1"));
-		addParallel(new DriveRotateToAngle("LeftFarScaleAngle_1"));
-		addSequential(new LiftGotoPosition(Lift.POS_HI_SCALE));
-		addSequential(new LiftCheckOnTarget(Lift.POS_HI_SCALE));
-		addSequential(new AutoDriveDistanceAngle("LeftFarScaleDist_3", 0));
+		addParallel(new LiftGotoPosition(Lift.POS_HI_SCALE));
+		addSequential(new DriveRotateToAngle("LeftFarScaleAngle_2"));
+		addSequential(new AutoDriveDistanceAngle("LeftFarScaleDist_3", "LeftFarScaleAngle_3"));
     }
 }
