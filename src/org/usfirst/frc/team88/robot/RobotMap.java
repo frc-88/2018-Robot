@@ -14,7 +14,7 @@ package org.usfirst.frc.team88.robot;
  * floating around.
  */
 public class RobotMap {
-	public static final boolean isTripleStack = false;
+	public static final boolean isTripleStack = true;
 
 	// Drive - CAN
 	public static final int driveLeftMaster = isTripleStack ? 6 : 10;
