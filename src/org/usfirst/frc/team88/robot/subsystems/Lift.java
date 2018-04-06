@@ -110,12 +110,14 @@ public class Lift extends Subsystem {
 		// no clue if this is correct....the zero, in particular, is a mystery
 		setGlobalPositionValues((int) master.configGetParameter(ParamEnum.eReverseSoftLimitThreshold, 0, TIMEOUTMS));
 
-		follower.follow(master);
 		follower.setInverted(true);
+		follower.setNeutralMode(NeutralMode.Brake);
+		follower.follow(master);
 
-		follower2.follow(master);
 		follower2.setInverted(true);
-
+		follower2.setNeutralMode(NeutralMode.Brake);
+		follower2.follow(master);
+		
 		position = getPosition();
 	}
 
@@ -128,7 +130,7 @@ public class Lift extends Subsystem {
 	}
 
 	public void gotoPosition() {
-		master.set(ControlMode.MotionMagic, position, DemandType.ArbitraryFeedForward, 0.18);
+		master.set(ControlMode.MotionMagic, position, DemandType.ArbitraryFeedForward, 0.07);
 	}
 
 	public void setPosition(int target) {
