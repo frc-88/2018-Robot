@@ -74,6 +74,11 @@ public class Dingleball extends Subsystem {
 		rightDingle.set(1 - value);
 	}
 	
+	public void dance(double value){
+		leftDingle.set(value);
+		rightDingle.set(value);
+	}
+	
 	public void ballsFoward(){
 		set(1);
 	}
