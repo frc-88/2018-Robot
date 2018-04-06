@@ -101,6 +101,7 @@ public class AutoCenterToSwitch extends Command {
 				Robot.lift.setPosition(Lift.POS_SWITCH);
 				Robot.lift.gotoPosition();
 				Robot.arm.setPositionToDown();
+				Robot.arm.gotoPosition();
 				Robot.dingleball.ballsFoward();
 				cubeUp = true;
 			}
