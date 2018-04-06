@@ -3,6 +3,7 @@ package org.usfirst.frc.team88.robot.subsystems;
 import org.usfirst.frc.team88.robot.Robot;
 import org.usfirst.frc.team88.robot.RobotMap;
 import org.usfirst.frc.team88.robot.commands.ArmBasicControl;
+import org.usfirst.frc.team88.robot.commands.ArmMove;
 
 import com.ctre.phoenix.ParamEnum;
 import com.ctre.phoenix.motorcontrol.ControlMode;
@@ -116,12 +117,12 @@ public class Arm extends Subsystem {
 	
 	public boolean isDown(){
 		return master.getSelectedSensorPosition(SLOTIDX) > posDown - 10 
-				|| master.getSelectedSensorPosition(SLOTIDX) < posDown + 10;
+				&& master.getSelectedSensorPosition(SLOTIDX) < posDown + 10;
 	}
 	
 	public boolean isStart(){
 		return master.getSelectedSensorPosition(SLOTIDX) > posStart - 10 
-				|| master.getSelectedSensorPosition(SLOTIDX) < posStart + 10;
+				&& master.getSelectedSensorPosition(SLOTIDX) < posStart + 10;
 	}
 	
 	public void updateDashboard() {
@@ -147,7 +148,7 @@ public class Arm extends Subsystem {
 		if (BASIC_CONTROL) {
 			setDefaultCommand(new ArmBasicControl());
 		} else {
-			setDefaultCommand(null);
+			setDefaultCommand(new ArmMove());
 		}
 	}
 }

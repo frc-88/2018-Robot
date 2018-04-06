@@ -1,13 +1,12 @@
 package org.usfirst.frc.team88.robot.commands.auto.left;
 
+import org.usfirst.frc.team88.robot.commands.ArmDown;
 import org.usfirst.frc.team88.robot.commands.DriveDisableTURBOMODE;
 import org.usfirst.frc.team88.robot.commands.DriveEnableTURBOMODE;
-import org.usfirst.frc.team88.robot.commands.DriveRotateToAngle;
 import org.usfirst.frc.team88.robot.commands.DriveZeroYaw;
 import org.usfirst.frc.team88.robot.commands.IntakeEjectCube;
-import org.usfirst.frc.team88.robot.commands.IntakePneumaticsDown;
+import org.usfirst.frc.team88.robot.commands.IntakeIntakeCube;
 import org.usfirst.frc.team88.robot.commands.LiftGotoPosition;
-import org.usfirst.frc.team88.robot.commands.LiftSoftLanding;
 import org.usfirst.frc.team88.robot.commands.auto.AutoDriveDistanceAngleFast;
 import org.usfirst.frc.team88.robot.subsystems.Lift;
 
@@ -18,22 +17,18 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
  */
 public class AutoLeftSideScale_Part1 extends CommandGroup {
 
-    public AutoLeftSideScale_Part1() {
-    	//Step 1: Score first Cube
+	public AutoLeftSideScale_Part1() {
+		// Step 1: Score first and gets second cube
+		
 		addSequential(new DriveZeroYaw());
-		addParallel(new IntakePneumaticsDown());
-		addParallel(new LiftGotoPosition(Lift.POS_ALMOST_BOTTOM));
-		addSequential(new DriveEnableTURBOMODE());
-		addSequential(new AutoDriveDistanceAngleFast("LeftScaleDist", "LeftScaleAngle_1"));
-		addSequential(new DriveDisableTURBOMODE());
+		// addSequential(new DriveEnableTURBOMODE());
+		addSequential(new AutoDriveDistanceAngleFast("LeftScaleDist_1", "LeftScaleAngle_1"));
+		// addSequential(new DriveDisableTURBOMODE());
 		addParallel(new LiftGotoPosition(Lift.POS_HI_SCALE));
-		addSequential(new DriveRotateToAngle("LeftScaleAngle_2"));
-
 		addSequential(new IntakeEjectCube(Lift.POS_HI_SCALE));
+		addParallel(new ArmDown());
+		addParallel(new AutoDriveDistanceAngleFast("LeftScaleDist_2", "LeftScaleAngle_2"));
+		addSequential(new IntakeIntakeCube(4));
 
-		addParallel(new LiftSoftLanding());
-		addSequential(new DriveRotateToAngle("LeftScaleAngle_3"));
-		addSequential(new DriveRotateToAngle("LeftScaleAngle_3"));
-
-    }
+	}
 }
