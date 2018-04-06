@@ -29,29 +29,30 @@ public class AutoDriveDistanceTurn extends Command {
 	private String targetDistanceLeg1Pref;
 	private double targetDistanceLeg2;
 	private String targetDistanceLeg2Pref;
-	private double targetHeading;
-	private boolean isRightTurn;
+	private double targetTurnAngle;
+	private String targetTurnAnglePref;
 
 	private int state;
 	private double speed;
 	private double direction;
+	private double targetHeading;
 	private double accelerateDistance;
 
-	public AutoDriveDistanceTurn(String distanceLeg1Pref, String distanceLeg2Pref, boolean rightTurn) {
+	public AutoDriveDistanceTurn(String distanceLeg1Pref, String distanceLeg2Pref, String turnAnglePref) {
 		requires(Robot.drive);
 
 		targetDistanceLeg1Pref = distanceLeg1Pref;
 		targetDistanceLeg2Pref = distanceLeg2Pref;
-		isRightTurn = rightTurn;
+		targetTurnAnglePref = turnAnglePref;
 	}
 
-	public AutoDriveDistanceTurn(double distanceLeg1, double distanceLeg2, boolean rightTurn) {
+	public AutoDriveDistanceTurn(double distanceLeg1, double distanceLeg2, double turnAngle) {
 		requires(Robot.drive);
 
 		targetDistanceLeg1 = Math.abs(distanceLeg1 * COUNTS_PER_INCH);
 		targetDistanceLeg2 = Math.abs(distanceLeg2 * COUNTS_PER_INCH);
 		direction = Math.signum(distanceLeg1);
-		isRightTurn = rightTurn;
+		targetTurnAngle = turnAngle;
 	}
 
 	// Called just before this Command runs the first time
@@ -67,6 +68,9 @@ public class AutoDriveDistanceTurn extends Command {
 			targetDistanceLeg2 = Math.abs(prefs.getDouble(targetDistanceLeg2Pref, 0.0) * COUNTS_PER_INCH);
 		}
 
+		if (targetTurnAnglePref != null) {
+			targetTurnAngle = prefs.getDouble(targetTurnAnglePref, 0.0);
+		}
 		state = PREP;
 		speed = 0.0;
 	}
@@ -80,7 +84,7 @@ public class AutoDriveDistanceTurn extends Command {
 			if (avgPosition < targetDistanceLeg1) {
 				targetHeading = 0.0;
 			} else {
-				targetHeading = (isRightTurn ? 95 : -95);
+				targetHeading = targetTurnAngle;
 			}
 
 			curve = (targetHeading - (Robot.drive.getYaw())) * 0.01;
