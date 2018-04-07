@@ -9,6 +9,7 @@ public class ArmDown extends CommandGroup {
 
     public ArmDown() {
     	addSequential(new ArmDownPart_1());
+    	addSequential(new Delay(5));
     	addSequential(new LiftSoftLanding());
     }
 }

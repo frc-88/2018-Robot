@@ -34,10 +34,10 @@ public class Arm extends Subsystem {
 	private static final double MAX_SPEED = 100;
 	private static final int CRUISE_VELOCITY = 100; // TODO
 	private static final int ACCELERATION = 1000; // TODO
-	private static final double P = 0.5; // TODO
+	private static final double P = 2.0; // TODO
 	private static final double I = 0.0; // TODO - probably 0
 	private static final double D = 0.0; // TODO
-	private static final double F = (1023 / MAX_SPEED) * 0.9;
+	private static final double F = (1023 / MAX_SPEED);
 
 	private TalonSRX master;
 	
@@ -76,11 +76,13 @@ public class Arm extends Subsystem {
 		master.configMotionAcceleration(ACCELERATION, TIMEOUTMS);
 
 		setPositionValues();
+		
+		position = getPosition();
 	}
 
 	private void setPositionValues() {
 		//int armBottom = (int) master.configGetParameter(ParamEnum.eReverseSoftLimitThreshold, 0, TIMEOUTMS); 
-		int armBottom = 981;
+		int armBottom = 860;
 		
 		posDown = armBottom;
 		posStart = armBottom + POS_START_OFFSET;
@@ -92,7 +94,14 @@ public class Arm extends Subsystem {
 	}
 
 	public void gotoPosition() {
-		master.set(ControlMode.MotionMagic, position);
+		double constant = 0;
+		double currentPos = getPosition();
+		
+		if (currentPos < (posDown + 1024)) {
+			constant = -0.12;
+		}
+		
+		master.set(ControlMode.MotionMagic, position, DemandType.ArbitraryFeedForward, constant );
 	}
 
 	public void setPositionToUp() {
@@ -116,8 +125,8 @@ public class Arm extends Subsystem {
 	}
 	
 	public boolean isDown(){
-		return master.getSelectedSensorPosition(SLOTIDX) > posDown - 10 
-				&& master.getSelectedSensorPosition(SLOTIDX) < posDown + 10;
+		return master.getSelectedSensorPosition(SLOTIDX) > posDown - 30 
+				&& master.getSelectedSensorPosition(SLOTIDX) < posDown + 30;
 	}
 	
 	public boolean isStart(){

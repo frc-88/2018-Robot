@@ -46,6 +46,8 @@ public class Intake extends Subsystem {
 		leftSide = new TalonSRX(RobotMap.intakeLeft);
 		rightSide = new TalonSRX(RobotMap.intakeRight);
 
+		rightSide.setInverted(true);
+		
 		leftDistanceSensor = new SharpIR(RobotMap.intakeLeftIR);
 		rightDistanceSensor = new SharpIR(RobotMap.intakeRightIR);
 

@@ -54,9 +54,9 @@ public class Lift extends Subsystem {
 	private static final int POS_LOW_SCALE_BASE = 470;
 	private static final int POS_MID_SCALE_BASE = 570;
 	private static final int POS_HI_SCALE_BASE = 670;
-	private static final int POS_SAFE_BASE = 210;
-	private static final int POS_SAFE_BOTTOM_BASE = 180;
-	private static final int UP_OFFSET = 30; // TODO
+	private static final int POS_SAFE_BASE = 200;
+	private static final int POS_SAFE_BOTTOM_BASE = 170;
+	private static final int UP_OFFSET = 200; // TODO
 
 	private static final int DISTANCE_THRESHOLD = 50;
 
@@ -108,7 +108,8 @@ public class Lift extends Subsystem {
 		master.configMotionAcceleration(ACCELERATION, TIMEOUTMS);
 
 		// no clue if this is correct....the zero, in particular, is a mystery
-		setGlobalPositionValues((int) master.configGetParameter(ParamEnum.eReverseSoftLimitThreshold, 0, TIMEOUTMS));
+		//setGlobalPositionValues((int) master.configGetParameter(ParamEnum.eReverseSoftLimitThreshold, 0, TIMEOUTMS));
+		setGlobalPositionValues(102);
 
 		follower.setInverted(true);
 		follower.setNeutralMode(NeutralMode.Brake);
@@ -217,7 +218,7 @@ public class Lift extends Subsystem {
 			case POS_BOTTOM:
 				return posBottom;
 			case POS_ALMOST_BOTTOM:
-				return posBottom + 100;
+				return posBottom + 70;
 			case POS_SWITCH:
 				return posSwitch;
 			case POS_LOW_SCALE:
