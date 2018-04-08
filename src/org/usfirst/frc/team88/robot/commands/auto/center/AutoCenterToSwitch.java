@@ -167,11 +167,11 @@ public class AutoCenterToSwitch extends Command {
 			break;
 		}
 		
-		double jerkX = Math.abs(Robot.drive.getJerkX());
-		if(!scored && !shooting && (avgPosition > (STAGE_ONE + stageTwoDistanceInches) * COUNTS_PER_INCH) && jerkX > .6){
-			Robot.intake.wheelSpeed(0.75);
-			shooting = true;
-		}
+//		double jerkX = Math.abs(Robot.drive.getJerkX());
+//		if(!scored && !shooting && (avgPosition > (STAGE_ONE + stageTwoDistanceInches) * COUNTS_PER_INCH) && jerkX > .6){
+//			Robot.intake.wheelSpeed(0.75);
+//			shooting = true;
+//		}
 
 		if(shooting){
 			count++;

@@ -20,6 +20,7 @@ public class AutoLeftSideScale extends CommandGroup {
 		//	Step 3: Score second
 		//	Step 4: Drive under scale
 		addSequential(new StepConditionalCommand(new AutoLeftSideScale_Part1(), "AutoLeftSideScaleStep", 1));
+		addSequential(new StepConditionalCommand(new AutoLeftSideScale_Part2(), "AutoLeftSideScaleStep", 2));
 		addSequential(new HaveCubeConditionalCommand(new AutoLeftSideScale_HasCube()));
 	}
 }

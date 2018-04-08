@@ -7,6 +7,7 @@
 
 package org.usfirst.frc.team88.robot;
 
+import org.usfirst.frc.team88.robot.commands.ArmDownPart_1_v2;
 import org.usfirst.frc.team88.robot.commands.DingleballTest;
 import org.usfirst.frc.team88.robot.commands.DriveResetEncoders;
 import org.usfirst.frc.team88.robot.commands.DriveRotateToAngle;
@@ -70,8 +71,8 @@ public class Robot extends TimedRobot {
 		oi = new OI();
 
 		// Autonomous mode selector
-		chooser.addDefault("Center", new AutoCenter());
-		chooser.addObject("Left", new AutoLeft());
+		chooser.addDefault("Left", new AutoLeft());
+		chooser.addObject("Center", new AutoCenter());
 		chooser.addObject("Right", new AutoRight());
 		chooser.addObject("Cross the Line", new AutoCrossTheLine());
 		// testing modes below
@@ -102,6 +103,9 @@ public class Robot extends TimedRobot {
 		
 		SmartDashboard.putData("DingleballOut", new DingleballTest());
 		SmartDashboard.putData("GOTO LIFT SWITCH", new LiftGotoPosition(Lift.POS_SWITCH));
+
+		SmartDashboard.putData("TEST ARMDOWNv2", new ArmDownPart_1_v2());
+
 	}
 
 	/**

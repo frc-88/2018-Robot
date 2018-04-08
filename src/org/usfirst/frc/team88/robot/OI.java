@@ -58,9 +58,7 @@ public class OI {
 		
 		operator.buttonY.whenPressed(new LiftGotoPosition(Lift.POS_HI_SCALE));
 		operator.buttonY.whenReleased(new LiftSoftLanding());
-		
-		
-		operator.buttonBack.whenPressed(new DingleDance());
+		operator.buttonBack.whenPressed(new LiftSoftLanding(true));
 	}
 	
 	

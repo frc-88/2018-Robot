@@ -23,14 +23,12 @@ public class ArmDownPart_1 extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	if(Robot.lift.belowTarget(Lift.POS_SAFE_BOTTOM)){
-    		Robot.lift.setPosition(Lift.POS_SAFE);
+    	if(Robot.arm.isSafe()){
+    		Robot.lift.setPosition(Lift.POS_ALMOST_BOTTOM, true);
     		Robot.lift.gotoPosition();
     	}
-    	else{
-    		Robot.arm.setPositionToDown();
-    		Robot.arm.gotoPosition();
-    	}
+    	Robot.arm.setPositionToDown();
+    	Robot.arm.gotoPosition();
     }
 
     // Make this return true when this Command no longer needs to run execute()
