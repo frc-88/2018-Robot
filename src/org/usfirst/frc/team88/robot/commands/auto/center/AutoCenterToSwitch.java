@@ -79,7 +79,6 @@ public class AutoCenterToSwitch extends Command {
 			stageThreeDistance = 80;
 		}
 		targetDistanceCounts = (STAGE_ONE + stageTwoDistanceInches + stageThreeDistance) * COUNTS_PER_INCH;
-		System.out.println("TJAUTO:CenterToSwitch Begin");
 	}
 
 	// Called repeatedly when this Command is scheduled to run
@@ -168,7 +167,7 @@ public class AutoCenterToSwitch extends Command {
 			break;
 		}
 		
-		double jerkX = Math.abs(Robot.drive.getJerkX());
+//		double jerkX = Math.abs(Robot.drive.getJerkX());
 //		if(!scored && !shooting && (avgPosition > (STAGE_ONE + stageTwoDistanceInches) * COUNTS_PER_INCH) && jerkX > .6){
 //			Robot.intake.wheelSpeed(0.75);
 //			shooting = true;
@@ -187,10 +186,6 @@ public class AutoCenterToSwitch extends Command {
 		if (state != PREP) {
 			Robot.drive.driveCurve(speed, curve);
 		}
-		
-		System.out.format("TJAUTO:%d,%.2f,%.2f,%.2f,%.2f,%.2f,%.3f,%b,%b,%b",
-				state, speed, curve, Robot.drive.getYaw(), targetYaw, 
-				avgPosition, jerkX, cubeUp, shooting, scored);
 	}
 
 	// Make this return true when this Command no longer needs to run execute()
@@ -201,7 +196,6 @@ public class AutoCenterToSwitch extends Command {
 	// Called once after isFinished returns true
 	protected void end() {
 		Robot.drive.wheelSpeed(0, 0);
-		System.out.println("TJAUTO:CenterToSwitch End");
 	}
 
 	// Called when another command which requires one or more of the same
@@ -209,6 +203,5 @@ public class AutoCenterToSwitch extends Command {
 	protected void interrupted() {
 		Robot.drive.wheelSpeed(0, 0);
 		Robot.intake.wheelSpeed(0.0);
-		System.out.println("TJAUTO:CenterToSwitch Interrupted");
 	}
 }
