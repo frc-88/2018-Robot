@@ -37,6 +37,7 @@ public class AutoCenterToSwitch extends Command {
 	private boolean done;
 	private String gameData;
 	private int count;
+	private double curve;
 	
 	private boolean shooting;
 	private boolean scored;
@@ -62,7 +63,7 @@ public class AutoCenterToSwitch extends Command {
 		done = false;
 		speed = 0.0;
 		count = 0;
-
+		curve = 0.0;
 		Robot.drive.zeroYaw();
 		Robot.drive.resetEncoders();
 
@@ -83,7 +84,7 @@ public class AutoCenterToSwitch extends Command {
 
 	// Called repeatedly when this Command is scheduled to run
 	protected void execute() {
-		double curve;
+		//double curve;
 		double avgPosition = Robot.drive.getAvgPosition();
 
 		if (state != PREP) {
@@ -186,6 +187,7 @@ public class AutoCenterToSwitch extends Command {
 		if (state != PREP) {
 			Robot.drive.driveCurve(speed, curve);
 		}
+		updateLog();
 	}
 
 	// Make this return true when this Command no longer needs to run execute()
@@ -203,5 +205,16 @@ public class AutoCenterToSwitch extends Command {
 	protected void interrupted() {
 		Robot.drive.wheelSpeed(0, 0);
 		Robot.intake.wheelSpeed(0.0);
+	}
+	
+	public void updateLog(){
+		System.out.println("TJ_AUTO" + Robot.drive.getYaw() 
+		+"," + Robot.drive.getAvgPosition() 
+		+"," + Robot.drive.getJerkX()
+		+"," + Robot.drive
+		+"," + curve
+		+"," + speed
+		+"," + shooting
+		+"," + scored);
 	}
 }
