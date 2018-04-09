@@ -193,13 +193,17 @@ public class Robot extends TimedRobot {
 		SmartDashboard.putData("Drive", drive);
 		SmartDashboard.putData("Intake", intake);
 		SmartDashboard.putData("Lift", lift);
-		SmartDashboard.putData("Arm", arm);
 		SmartDashboard.putData("Dingle", dingleball);
+		if (RobotMap.isTripleStack) {
+			SmartDashboard.putData("Arm", arm);
+		}
 
 		drive.updateDashboard();
 		intake.updateDashboard();
 		lift.updateDashboard();
-		arm.updateDashboard();
 		dingleball.updateDashboard();
+		if (RobotMap.isTripleStack) {
+			arm.updateDashboard();
+		}
 	}
 }

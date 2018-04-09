@@ -1,6 +1,7 @@
 package org.usfirst.frc.team88.robot.commands;
 
 import org.usfirst.frc.team88.robot.Robot;
+import org.usfirst.frc.team88.robot.RobotMap;
 
 import edu.wpi.first.wpilibj.command.Command;
 
@@ -21,7 +22,9 @@ public class DingleballOut extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	if(Robot.arm.isUp()){
+    	if (!RobotMap.isTripleStack) {
+    		Robot.dingleball.ballsFoward();
+    	} else if(Robot.arm.isUp()){
     		Robot.dingleball.ballsBackward();
     	} else {
     		Robot.dingleball.ballsFoward();
