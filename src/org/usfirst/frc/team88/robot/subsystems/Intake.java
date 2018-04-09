@@ -35,9 +35,11 @@ public class Intake extends Subsystem {
 	private static final double MAX_EJECT_SPEED = 1.0;
 	private static final double MIN_SPEED = 0.5;
 	private static final double MAX_DISTANCE = 16;
-	private static final double MIN_DISTANCE = 4;
+	private static final double MIN_DISTANCE = 5;
 	private static final double MAX_DIFF = 2.0;
+	private static final int TIMEOUTMS = 0;
 
+	
 	private TalonSRX leftSide, rightSide;
 	private SharpIR leftDistanceSensor, rightDistanceSensor;
 	private DoubleSolenoid upDown;
@@ -45,7 +47,19 @@ public class Intake extends Subsystem {
 	public Intake() {
 		leftSide = new TalonSRX(RobotMap.intakeLeft);
 		rightSide = new TalonSRX(RobotMap.intakeRight);
+		rightSide.setInverted(true);
 
+		leftSide.configPeakCurrentLimit(15, TIMEOUTMS);
+		leftSide.configPeakCurrentDuration(0, TIMEOUTMS);
+		leftSide.configContinuousCurrentLimit(15, TIMEOUTMS);
+		leftSide.enableCurrentLimit(true);
+
+		rightSide.configPeakCurrentLimit(15, TIMEOUTMS);
+		rightSide.configPeakCurrentDuration(0, TIMEOUTMS);
+		rightSide.configContinuousCurrentLimit(15, TIMEOUTMS);
+		rightSide.enableCurrentLimit(true);
+
+		
 		leftDistanceSensor = new SharpIR(RobotMap.intakeLeftIR);
 		rightDistanceSensor = new SharpIR(RobotMap.intakeRightIR);
 

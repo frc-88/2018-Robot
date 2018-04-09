@@ -56,7 +56,7 @@ public class Lift extends Subsystem {
 	private static final int POS_HI_SCALE_BASE = 670;
 	private static final int POS_SAFE_BASE = 210;
 	private static final int POS_SAFE_BOTTOM_BASE = 180;
-	private static final int UP_OFFSET = 30; // TODO
+	private static final int UP_OFFSET = 250; // TODO
 
 	private static final int DISTANCE_THRESHOLD = 50;
 
@@ -94,9 +94,9 @@ public class Lift extends Subsystem {
 		master.configNominalOutputForward(0.0, TIMEOUTMS);
 		master.configNominalOutputReverse(0.0, TIMEOUTMS);
 		master.configPeakOutputForward(+1.0, TIMEOUTMS);
+		master.configClosedloopRamp(RAMPRATE, TIMEOUTMS);
 		master.configPeakOutputReverse(-1.0, TIMEOUTMS);
 		master.configNeutralDeadband(0.04, TIMEOUTMS);
-		master.configClosedloopRamp(RAMPRATE, TIMEOUTMS);
 		master.configPeakCurrentLimit(35, TIMEOUTMS);
 		master.configPeakCurrentDuration(0, TIMEOUTMS);
 		master.configContinuousCurrentLimit(30, TIMEOUTMS);
@@ -108,7 +108,9 @@ public class Lift extends Subsystem {
 		master.configMotionAcceleration(ACCELERATION, TIMEOUTMS);
 
 		// no clue if this is correct....the zero, in particular, is a mystery
-		setGlobalPositionValues((int) master.configGetParameter(ParamEnum.eReverseSoftLimitThreshold, 0, TIMEOUTMS));
+		//setGlobalPositionValues((int) master.configGetParameter(ParamEnum.eReverseSoftLimitThreshold, 0, TIMEOUTMS));
+		setGlobalPositionValues();
+		setReverseLimit();
 
 		follower.setInverted(true);
 		follower.setNeutralMode(NeutralMode.Brake);
@@ -132,9 +134,12 @@ public class Lift extends Subsystem {
 	public void gotoPosition() {
 		master.set(ControlMode.MotionMagic, position, DemandType.ArbitraryFeedForward, 0.07);
 	}
-
-	public void setPosition(int target) {
-		target = positionMap(target);
+	
+	public void setPosition(int target){
+		setPosition(target, false);
+	}
+	public void setPosition(int target, boolean dangermode) {
+		target = positionMap(target, dangermode);
 
 		if (target < posReverseLimit) {
 			target = posReverseLimit;
@@ -142,10 +147,10 @@ public class Lift extends Subsystem {
 			target = posForwardLimit;
 		}
 
-		if (target < posSafe && !Robot.arm.isDown()) {
+		if (target < posSafe && !Robot.arm.isDown() && !dangermode) {
 			target = posSafe;
 		}
-
+		
 		position = target;
 	}
 
@@ -157,14 +162,20 @@ public class Lift extends Subsystem {
 		return (double) (getPosition() - posReverseLimit) / (double) FORWARD_LIMIT_BASE;
 	}
 
-	public boolean onTarget(int target) {
-		target = positionMap(target);
+	public boolean onTarget(int target){
+			return onTarget(target, false);
+	}
+	public boolean onTarget(int target, boolean dangermode) {
+		target = positionMap(target, dangermode);
 
 		return Math.abs(master.getSelectedSensorPosition(SLOTIDX) - target) < DISTANCE_THRESHOLD;
 	}
-
-	public boolean belowTarget(int target) {
-		target = positionMap(target);
+	
+	public boolean belowTarget(int target){
+		return belowTarget(target, false);
+	}
+	public boolean belowTarget(int target, boolean dangermode) {
+		target = positionMap(target, dangermode);
 
 		return master.getSelectedSensorPosition(SLOTIDX) < target;
 	}
@@ -173,11 +184,7 @@ public class Lift extends Subsystem {
 		return master.getOutputCurrent();
 	}
 
-	// This should only be called when at the reverse limit, used only be
-	// calibration routine
 	public void setReverseLimit() {
-		setGlobalPositionValues(getPosition());
-
 		master.configForwardSoftLimitThreshold(posForwardLimit, TIMEOUTMS);
 		master.configForwardSoftLimitEnable(true, TIMEOUTMS);
 		master.configReverseSoftLimitThreshold(posReverseLimit, TIMEOUTMS);
@@ -199,7 +206,11 @@ public class Lift extends Subsystem {
 		master.overrideLimitSwitchesEnable(false);
 	}
 
-	private void setGlobalPositionValues(int reverseLimit) {
+	private void setGlobalPositionValues() {
+		Preferences prefs = Preferences.getInstance();
+		
+		int reverseLimit = prefs.getInt("LiftBottom", 289);
+	
 		posReverseLimit = reverseLimit;
 		posForwardLimit = posReverseLimit + FORWARD_LIMIT_BASE;
 		posSafeBottom = posReverseLimit + POS_SAFE_BOTTOM_BASE;
@@ -210,14 +221,16 @@ public class Lift extends Subsystem {
 		posMidScale = posReverseLimit + POS_MID_SCALE_BASE;
 		posHighScale = posReverseLimit + POS_HI_SCALE_BASE;
 	}
-
 	private int positionMap(int position) {
-		if (Robot.arm.isDown()) {
+		return positionMap(position, false);
+	}
+	private int positionMap(int position, boolean dangermode) {
+		if (Robot.arm.isDown() || dangermode) {
 			switch (position) {
 			case POS_BOTTOM:
 				return posBottom;
 			case POS_ALMOST_BOTTOM:
-				return posBottom + 100;
+				return posBottom + 90;
 			case POS_SWITCH:
 				return posSwitch;
 			case POS_LOW_SCALE:
@@ -263,9 +276,9 @@ public class Lift extends Subsystem {
 		SmartDashboard.putNumber("Lift Mid Scale", positionMap(POS_MID_SCALE));
 		SmartDashboard.putNumber("Lift Low Scale", positionMap(POS_LOW_SCALE));
 		SmartDashboard.putNumber("Lift Switch", positionMap(POS_SWITCH));
-		SmartDashboard.putNumber("Lift Bottom", positionMap(POS_SAFE));
-		SmartDashboard.putNumber("Lift Bottom", positionMap(POS_SAFE_BOTTOM));
-		SmartDashboard.putNumber("Lift Bottom", positionMap(POS_ALMOST_BOTTOM));
+		SmartDashboard.putNumber("Lift Safe ", positionMap(POS_SAFE));
+		SmartDashboard.putNumber("Lift Safe Bottom", positionMap(POS_SAFE_BOTTOM));
+		SmartDashboard.putNumber("Lift Almost Bottom", positionMap(POS_ALMOST_BOTTOM));
 		SmartDashboard.putNumber("Lift Bottom", positionMap(POS_BOTTOM));
 		SmartDashboard.putNumber("Lift Reverse Limit", posReverseLimit);
 

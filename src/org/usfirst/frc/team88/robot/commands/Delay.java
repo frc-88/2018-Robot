@@ -1,43 +1,35 @@
 package org.usfirst.frc.team88.robot.commands;
 
-import org.usfirst.frc.team88.robot.Robot;
-import org.usfirst.frc.team88.robot.subsystems.Lift;
-
 import edu.wpi.first.wpilibj.command.Command;
 
 /**
  *
  */
-public class ArmDownPart_1 extends Command {
-
-    public ArmDownPart_1() {
+public class Delay extends Command {
+	private int duration,i;
+	
+    public Delay(int counts) {
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
-    	requires(Robot.arm);
-    	requires(Robot.lift);
+    	duration = counts;
     }
 
     // Called just before this Command runs the first time
     protected void initialize() {
+    	i=0;
     }
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	if(Robot.arm.isSafe()){
-    		Robot.lift.setPosition(Lift.POS_ALMOST_BOTTOM, true);
-    		Robot.lift.gotoPosition();
-    	}
-    	Robot.arm.setPositionToDown();
-    	Robot.arm.gotoPosition();
     }
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return Robot.arm.isDown();
+        return i++ > duration;
     }
 
     // Called once after isFinished returns true
-    protected void end() {  		
+    protected void end() {
     }
 
     // Called when another command which requires one or more of the same

@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj.command.Command;
  */
 public class LiftMove extends Command {
 	private static final double DEADZONE = 0.1;
-	private static final int MAX_MOVE = 40;
+	private static final int MAX_MOVE = 60;
 	
     public LiftMove() {
     	requires(Robot.lift);
