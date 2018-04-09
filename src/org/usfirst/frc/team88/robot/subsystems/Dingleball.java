@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  *
  * Dingleballs
  *    by Mr. Nick
+ *    sung to the tune of Jinglebells
  *
  * Dashing across the field
  * With a power cube yellow
@@ -31,16 +32,16 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * Oh, dingleballs, dingleballs
  * Floopy dingleballs
  * Oh, what fun it is to score
- * From over a foot away
+ * Without touching the walls
  * Dingleballs, dingleballs
- * Floopy dingleballs
+ * Dingle all the way
  * Oh, what fun it is to score
  * From over a foot away
  * 
  * A match or two ago,
  * We thought we'd take the scale,
- * And soon it tilted left
- * The wind was in our sail!
+ * We got two in auto
+ * Flip Shot made those cubes sail!
  * The other switch was bare
  * Misfortune for that lot
  * We got a cube from the portal,
@@ -49,9 +50,27 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * Oh, dingleballs, dingleballs
  * Floopy dingleballs
  * Oh, what fun it is to score
- * From over a foot away
+ * Without touching the walls
  * Dingleballs, dingleballs
+ * Dingle all the way
+ * Oh, what fun it is to score
+ * From over a foot away
+ * 
+ * You've got to touch the fence
+ * When launching at the switch
+ * Unless you want to see
+ * The ref's flag wave and twitch
+ * But if you can extend
+ * A part across the wall
+ * Then you can launch as many cubes
+ * As your robot can haul!
+ * 
+ * Oh, dingleballs, dingleballs
  * Floopy dingleballs
+ * Oh, what fun it is to score
+ * Without touching the walls
+ * Dingleballs, dingleballs
+ * Dingle all the way
  * Oh, what fun it is to score
  * From over a foot away
  * 
