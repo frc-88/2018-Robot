@@ -211,7 +211,8 @@ public class AutoCenterToSwitch extends Command {
 		System.out.println("TJ_AUTO" + Robot.drive.getYaw() 
 		+"," + Robot.drive.getAvgPosition() 
 		+"," + Robot.drive.getJerkX()
-		+"," + Robot.drive
+		+"," + targetYaw
+		+"," + cubeUp		   
 		+"," + curve
 		+"," + speed
 		+"," + shooting
