@@ -14,7 +14,7 @@ public class AutoDriveDistanceAngleFast extends Command {
 	// performance constants
 	// TODO roll cruising speed and acceleration into constructor
 	private static final double CRUISING_SPEED = 1;
-	private static final double ACCELERATION = 0.03;
+	private static final double ACCELERATION_DFT = 0.03;
 	private static final double COUNTS_PER_INCH = 1086;
 
 	// states
@@ -32,6 +32,7 @@ public class AutoDriveDistanceAngleFast extends Command {
 	
 	private int state;
 	private double speed;
+	private double acceleration;
 	private double direction;
 	private double accelerateDistance;
 	
@@ -79,6 +80,7 @@ public class AutoDriveDistanceAngleFast extends Command {
 		
 		state = PREP;
 		speed = 0.0;
+		acceleration = prefs.getDouble("ADDAF_accel", ACCELERATION_DFT);
 	}
 
 	// Called repeatedly when this Command is scheduled to run
@@ -94,7 +96,7 @@ public class AutoDriveDistanceAngleFast extends Command {
 			break;
 			
 		case ACCELERATE:
-			speed = speed + ACCELERATION;
+			speed = speed + acceleration;
 			if(Math.abs(Robot.drive.getAvgPosition())> 3*targetDistance/7){
 				state = DECELERATE;	
 				accelerateDistance = Math.abs(Robot.drive.getAvgPosition()); 
@@ -114,7 +116,7 @@ public class AutoDriveDistanceAngleFast extends Command {
 			break;
 			
 		case DECELERATE:
-			speed = speed - ACCELERATION;
+			speed = speed - acceleration;
 			if (speed < 0) {
 				speed = 0.0;
 				state = STOP;
