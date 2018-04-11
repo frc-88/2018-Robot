@@ -8,6 +8,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -99,7 +100,10 @@ public class Intake extends Subsystem {
 	}
 
 	public boolean haveCube() {
-		return (getLeftDistance() < MIN_DISTANCE) && (getRightDistance() < MIN_DISTANCE);
+		Preferences prefs = Preferences.getInstance();
+		double haveCubeDistance = prefs.getDouble("HaveCubeDistance", MIN_DISTANCE); 
+		
+		return (getLeftDistance() < haveCubeDistance) && (getRightDistance() < haveCubeDistance);
 	}
 
 	// Gets the cube distance from left sensor
