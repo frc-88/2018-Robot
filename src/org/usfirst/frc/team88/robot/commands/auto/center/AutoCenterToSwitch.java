@@ -55,7 +55,7 @@ public class AutoCenterToSwitch extends Command {
 
 	// Called just before this Command runs the first time
 	protected void initialize() {
-
+		System.out.println("TJ_AUTO:AutoCenterToSwitch:initialize");
 		state = PREP;
 		cubeUp=false;
 		shooting = false;
@@ -197,25 +197,29 @@ public class AutoCenterToSwitch extends Command {
 
 	// Called once after isFinished returns true
 	protected void end() {
+		System.out.println("TJ_AUTO:AutoCenterToSwitch:end");
 		Robot.drive.wheelSpeed(0, 0);
 	}
 
 	// Called when another command which requires one or more of the same
 	// subsystems is scheduled to run
 	protected void interrupted() {
+		System.out.println("TJ_AUTO:AutoCenterToSwitch:interrupted");
 		Robot.drive.wheelSpeed(0, 0);
 		Robot.intake.wheelSpeed(0.0);
 	}
 	
 	public void updateLog(){
-		System.out.println("TJ_AUTO" + Robot.drive.getYaw() 
-		+"," + Robot.drive.getAvgPosition() 
-		+"," + Robot.drive.getJerkX()
-		+"," + targetYaw
-		+"," + cubeUp		   
-		+"," + curve
-		+"," + speed
-		+"," + shooting
-		+"," + scored);
+		System.out.format("TJ_AUTO:%d,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%b,%b,%b",
+				state,
+				Robot.drive.getAvgPosition(), 
+				Robot.drive.getYaw(), 
+				targetYaw,
+				Robot.drive.getJerkX(),
+				speed,
+				curve,
+				cubeUp,		   
+				shooting,
+				scored);
 	}
 }
