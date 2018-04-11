@@ -62,6 +62,8 @@ public class AutoDriveDistanceAngleFast extends Command {
 	protected void initialize() {
 		Preferences prefs = Preferences.getInstance();
 		
+		System.out.println("TJ_AUTO:ADDAF:initialize");
+		
 		if (targetDistancePref != null) {
 			targetDistance = Math.abs(prefs.getDouble(targetDistancePref, 0.0) * COUNTS_PER_INCH);
 			System.out.println(targetDistancePref);
@@ -136,7 +138,15 @@ public class AutoDriveDistanceAngleFast extends Command {
 		if(state != PREP){
 			Robot.drive.driveCurve(speed * direction, curve);
 		}
-		Robot.drive.updateDashboard();
+
+		System.out.format("TJ_AUTO:%d,%.2f,%.2f,%.2f,%.2f,%.2f",
+				state,
+				Robot.drive.getAvgPosition(), 
+				Robot.drive.getYaw(), 
+				targetHeading,
+				speed,
+				curve);
+
 	}
 
 	// Make this return true when this Command no longer needs to run execute()
@@ -146,12 +156,14 @@ public class AutoDriveDistanceAngleFast extends Command {
 
 	// Called once after isFinished returns true
 	protected void end() {
+		System.out.println("TJ_AUTO:ADDAF:end");
 		Robot.drive.wheelSpeed(0, 0);
 	}
 
 	// Called when another command which requires one or more of the same
 	// subsystems is scheduled to run
 	protected void interrupted() {
+		System.out.println("TJ_AUTO:ADDAF:interrupted");
 		Robot.drive.wheelSpeed(0, 0);
 	}
 }
