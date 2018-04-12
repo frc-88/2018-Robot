@@ -56,7 +56,7 @@ public class Lift extends Subsystem {
 	private static final int POS_HI_SCALE_BASE = 670;
 	private static final int POS_SAFE_BASE = 210;
 	private static final int POS_SAFE_BOTTOM_BASE = 180;
-	private static final int UP_OFFSET = 250; // TODO
+	private static final int UP_OFFSET = 220; // TODO
 
 	private static final int DISTANCE_THRESHOLD = 50;
 
@@ -97,9 +97,9 @@ public class Lift extends Subsystem {
 		master.configClosedloopRamp(RAMPRATE, TIMEOUTMS);
 		master.configPeakOutputReverse(-1.0, TIMEOUTMS);
 		master.configNeutralDeadband(0.04, TIMEOUTMS);
-		master.configPeakCurrentLimit(35, TIMEOUTMS);
+		master.configPeakCurrentLimit(25, TIMEOUTMS);
 		master.configPeakCurrentDuration(0, TIMEOUTMS);
-		master.configContinuousCurrentLimit(30, TIMEOUTMS);
+		master.configContinuousCurrentLimit(20, TIMEOUTMS);
 		master.enableCurrentLimit(true);
 		master.setSensorPhase(false);
 		master.setNeutralMode(NeutralMode.Brake);

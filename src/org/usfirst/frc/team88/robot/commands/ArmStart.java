@@ -12,7 +12,6 @@ public class ArmStart extends Command {
     public ArmStart() {
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
-    	requires(Robot.lift);
     	requires(Robot.arm);
     }
 

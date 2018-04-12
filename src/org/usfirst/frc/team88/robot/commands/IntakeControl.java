@@ -60,10 +60,11 @@ public class IntakeControl extends Command {
 		}
 		
 		if (!ejecting && input == 0 && Robot.lift.getPercentHeight() > 0.1){
-			input = -0.1; 
+			input = -0.15
+					; 
 		}
 		if(!ejecting && input == 0 && Robot.intake.haveCube()){
-			input = -0.1;
+			input = -0.2;
 		}
 		
 		Robot.intake.wheelSpeed(input);

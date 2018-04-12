@@ -16,7 +16,7 @@ public class AutoLeftSideScale_Part4 extends CommandGroup {
 	public AutoLeftSideScale_Part4() {
 		// Step 3: Score second
 		
-		addParallel(new DriveRotateToAngle("LeftScaleAngle_4"));
+		//addParallel(new DriveRotateToAngle("LeftScaleAngle_4"));
 		addParallel(new LiftGotoPosition(Lift.POS_HI_SCALE));
 		addSequential(new IntakeEjectCube(Lift.POS_HI_SCALE));
 		addParallel(new ArmDown());

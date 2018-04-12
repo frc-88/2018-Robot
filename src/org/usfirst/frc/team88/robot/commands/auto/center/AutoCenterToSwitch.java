@@ -19,7 +19,7 @@ public class AutoCenterToSwitch extends Command {
 	private static final int DECELERATE = 5;
 	private static final int STOP = 2;
 	private static final int END = 3;
-	private static final double CRUISING_SPEED = 0.5;
+	private static final double CRUISING_SPEED = 0.6;
 	private static final double ACCELERATION = 0.01;
 	private static final double COUNTS_PER_INCH = 1086;
 	private static final double STAGE_ONE = 10;

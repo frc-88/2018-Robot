@@ -13,6 +13,7 @@ import org.usfirst.frc.team88.robot.commands.LiftSoftLanding;
 import org.usfirst.frc.team88.robot.commands.LiftSwitchAndDingleOut;
 import org.usfirst.frc.team88.robot.subsystems.Lift;
 import org.usfirst.frc.team88.robot.commands.ArmDown;
+import org.usfirst.frc.team88.robot.commands.ArmStart;
 import org.usfirst.frc.team88.robot.commands.StartingConfiguration;
 import org.usfirst.frc.team88.robot.commands.ArmUp;
 import org.usfirst.frc.team88.robot.commands.DingleDance;
@@ -39,8 +40,8 @@ public class OI {
 		// for fine driver control. Do not add commands to them here
 		
 		if (RobotMap.isTripleStack) {
-			driver.buttonStart.whenPressed(new StartingConfiguration());
-			operator.buttonStart.whenPressed(new StartingConfiguration());
+			driver.buttonStart.whenPressed(new ArmStart());
+			operator.buttonStart.whenPressed(new ArmStart());
 		}
 		
 		driver.buttonA.whenPressed(new DingleballOut());
