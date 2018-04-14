@@ -20,7 +20,7 @@ public class AutoCenterToSwitch extends Command {
 	private static final int STOP = 2;
 	private static final int END = 3;
 	private static final double CRUISING_SPEED = 0.6;
-	private static final double ACCELERATION = 0.01;
+	private static final double ACCELERATION = 0.05;
 	private static final double COUNTS_PER_INCH = 1086;
 	private static final double STAGE_ONE = 10;
 	
@@ -72,7 +72,7 @@ public class AutoCenterToSwitch extends Command {
 			stageTwoYaw = -90;
 			stageTwoDistanceInches = 45;
 			stageThreeYaw = 20;
-			stageThreeDistance = 95;
+			stageThreeDistance = 85;
 		} else if (gameData.charAt(0) == 'R') {
 			stageTwoYaw = 75;
 			stageTwoDistanceInches = 50;

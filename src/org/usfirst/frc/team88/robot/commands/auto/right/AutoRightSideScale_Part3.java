@@ -18,7 +18,7 @@ public class AutoRightSideScale_Part3 extends CommandGroup {
     public AutoRightSideScale_Part3() {
     	// Step 2: Get in position to score second
 		addSequential(new AutoDriveDistanceAngleFast("RightScaleDist_3","RightScaleAngle_3"));
-		addSequential(new Delay(20));
+		addSequential(new Delay(15));
 		addSequential(new ArmStart());
 
     }

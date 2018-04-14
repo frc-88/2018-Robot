@@ -17,6 +17,7 @@ import org.usfirst.frc.team88.robot.commands.auto.AutoCrossTheLine;
 import org.usfirst.frc.team88.robot.commands.auto.AutoDriveDistance;
 import org.usfirst.frc.team88.robot.commands.auto.center.AutoCenter;
 import org.usfirst.frc.team88.robot.commands.auto.left.AutoLeft;
+import org.usfirst.frc.team88.robot.commands.auto.left.AutoLeftOutOfWay;
 import org.usfirst.frc.team88.robot.commands.auto.left.AutoLeftSideFarScale;
 import org.usfirst.frc.team88.robot.commands.auto.left.AutoLeftSideScale;
 import org.usfirst.frc.team88.robot.commands.auto.right.AutoRight;
@@ -71,9 +72,10 @@ public class Robot extends TimedRobot {
 		oi = new OI();
 
 		// Autonomous mode selector
-		chooser.addDefault("Left", new AutoLeft());
+		chooser.addDefault("Right", new AutoRight());
+		chooser.addObject("Left", new AutoLeft());
+		chooser.addObject("Left OOW", new AutoLeftOutOfWay());
 		chooser.addObject("Center", new AutoCenter());
-		chooser.addObject("Right", new AutoRight());
 		chooser.addObject("Cross the Line", new AutoCrossTheLine());
 		// testing modes below
 		chooser.addObject("TEST:RNS", new AutoRightSideScale());
@@ -86,6 +88,7 @@ public class Robot extends TimedRobot {
 		// Autonomous mode buttons for testing
 		SmartDashboard.putData("Auto Cross the Line", new AutoCrossTheLine());
 		SmartDashboard.putData("Auto Left", new AutoLeft());
+		SmartDashboard.putData("Auto Left OOW", new AutoLeftOutOfWay());
 		SmartDashboard.putData("Auto Center", new AutoCenter());
 		SmartDashboard.putData("Auto Right", new AutoRight());
 

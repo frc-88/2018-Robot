@@ -45,7 +45,7 @@ public class IntakeEjectCube extends Command {
 			
 			count++;
 			
-			if (count > 50) {
+			if (count > 20) {
 				Robot.intake.wheelSpeed(0.0);
 				isDone = true;
 			} 

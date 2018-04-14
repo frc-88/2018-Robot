@@ -24,7 +24,7 @@ public class AutoRightSideScale_Part2 extends CommandGroup {
 		// Step 1.5: Score first cube and get second cube
 
     	addParallel(new LiftGotoPosition(Lift.POS_HI_SCALE));
-		addSequential(new DriveRotateToAngle(-90));
+		addSequential(new DriveRotateToAngle(-40));
 		addSequential(new IntakeEjectCube(Lift.POS_HI_SCALE));
 		addParallel(new ArmDown());
 //		addSequential(new DriveRotateToAngle("RightScaleAngle_2"));

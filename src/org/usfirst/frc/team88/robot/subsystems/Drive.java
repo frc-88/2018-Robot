@@ -128,6 +128,12 @@ public class Drive extends Subsystem implements PIDOutput {
 		leftMaster.configNeutralDeadband(0.04, TIMEOUTMS);
 		leftMaster.configOpenloopRamp(RAMPRATE, TIMEOUTMS);
 		leftMaster.configClosedloopRamp(RAMPRATE, TIMEOUTMS);
+
+		leftMaster.configPeakCurrentLimit(30, TIMEOUTMS);
+		leftMaster.configPeakCurrentDuration(0, TIMEOUTMS);
+		leftMaster.configContinuousCurrentLimit(30, TIMEOUTMS);
+		leftMaster.enableCurrentLimit(true);
+		
 		leftMaster.setSensorPhase(false);
 		leftMaster.setNeutralMode(NeutralMode.Coast);
 
@@ -148,6 +154,12 @@ public class Drive extends Subsystem implements PIDOutput {
 		rightMaster.configNeutralDeadband(0.04, TIMEOUTMS);
 		rightMaster.configOpenloopRamp(RAMPRATE, TIMEOUTMS);
 		rightMaster.configClosedloopRamp(RAMPRATE, TIMEOUTMS);
+
+		rightMaster.configPeakCurrentLimit(30, TIMEOUTMS);
+		rightMaster.configPeakCurrentDuration(0, TIMEOUTMS);
+		rightMaster.configContinuousCurrentLimit(30, TIMEOUTMS);
+		rightMaster.enableCurrentLimit(true);
+		
 		rightMaster.setSensorPhase(false);
 		rightMaster.setNeutralMode(NeutralMode.Coast);
 
