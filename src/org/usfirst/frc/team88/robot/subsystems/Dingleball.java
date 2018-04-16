@@ -86,6 +86,8 @@ public class Dingleball extends Subsystem {
 	public Dingleball(){
 		leftDingle = new Servo(RobotMap.leftDingle);
 		rightDingle = new Servo(RobotMap.rightDingle);
+		
+		ballsDown();
 	}
 	
 	public void set(double value){
@@ -118,7 +120,7 @@ public class Dingleball extends Subsystem {
 	
 	public void updateDashboard() {
 		SmartDashboard.putNumber("Dingle Left Position", leftDingle.get());
-		SmartDashboard.putNumber("Dingle Left Position", rightDingle.get());
+		SmartDashboard.putNumber("Dingle Right Position", rightDingle.get());
 	}
 
 	public void initDefaultCommand() {

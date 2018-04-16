@@ -13,7 +13,9 @@ public class IntakeControl extends Command {
 	private static final double POLY_A = 0.6;
 	private static final double POLY_B = 0.1;
 	private static final double POLY_C = 0.3;
-
+	
+	private static boolean ejecting = false;
+	
 	public IntakeControl() {
 		// Use requires() here to declare subsystem dependencies
 		// eg. requires(chassis);
@@ -22,6 +24,7 @@ public class IntakeControl extends Command {
 
 	// Called just before this Command runs the first time
 	protected void initialize() {
+		ejecting = false;
 	}
 
 	// Called repeatedly when this Command is scheduled to run
@@ -32,7 +35,7 @@ public class IntakeControl extends Command {
 		double intake = TJUtility.polynomial(Math.sqrt(Math.pow(Robot.oi.operator.getRightStickX(), 2) + Math.pow(Robot.oi.operator.getRightStickY(), 2)), POLY_A, POLY_B, POLY_C, DEADZONE);
 
 		if (slow != 0) {
-			input = slow * 0.5;
+			input = slow * 0.4;
 		} else if (fast != 0) {
 			input = fast;
 		} else {
@@ -49,12 +52,19 @@ public class IntakeControl extends Command {
 		else {
 			Robot.oi.operator.rumble(0);
 		}
-
-		if (input == 0 && Robot.lift.getPercentHeight() > 0.1){
-			input = -0.1; 
+		if(input > 0){
+			ejecting = true;
 		}
-		if(input == 0 && Robot.intake.haveCube()){
-			input = -0.1;
+		else if(input < 0){
+			ejecting = false;
+		}
+		
+		if (!ejecting && input == 0 && Robot.lift.getPercentHeight() > 0.1){
+			input = -0.15
+					; 
+		}
+		if(!ejecting && input == 0 && Robot.intake.haveCube()){
+			input = -0.2;
 		}
 		
 		Robot.intake.wheelSpeed(input);

@@ -13,6 +13,6 @@ public class AutoCenter extends CommandGroup {
 	public AutoCenter() {
 		addSequential(new StepConditionalCommand(new AutoCenter_Part1(), "AutoCenterStep", 1));
 		addSequential(new StepConditionalCommand(new AutoCenter_Part2(), "AutoCenterStep", 2));
-		addSequential(new StepConditionalCommand(new HaveCubeConditionalCommand(new AutoCenter_Part3()), "AutoCenterStep", 2));
+		addSequential(new StepConditionalCommand(new HaveCubeConditionalCommand(new AutoCenter_Part35()), "AutoCenterStep", 2));
 	}
 }

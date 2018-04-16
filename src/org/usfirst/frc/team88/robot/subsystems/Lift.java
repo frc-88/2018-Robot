@@ -48,7 +48,7 @@ public class Lift extends Subsystem {
 	private static final double D = 150.0;
 	private static final double F = (1023 / MAX_SPEED) * 0.9;
 
-	private static final int FORWARD_LIMIT_BASE = 700;
+	private static final int FORWARD_LIMIT_BASE = 730;
 	private static final int POS_BOTTOM_BASE = 2;
 	private static final int POS_SWITCH_BASE = 250;
 	private static final int POS_LOW_SCALE_BASE = 470;
@@ -56,7 +56,7 @@ public class Lift extends Subsystem {
 	private static final int POS_HI_SCALE_BASE = 670;
 	private static final int POS_SAFE_BASE = 210;
 	private static final int POS_SAFE_BOTTOM_BASE = 180;
-	private static final int UP_OFFSET = 250; // TODO
+	private static final int UP_OFFSET = 220; // TODO
 
 	private static final int DISTANCE_THRESHOLD = 50;
 
@@ -97,9 +97,9 @@ public class Lift extends Subsystem {
 		master.configClosedloopRamp(RAMPRATE, TIMEOUTMS);
 		master.configPeakOutputReverse(-1.0, TIMEOUTMS);
 		master.configNeutralDeadband(0.04, TIMEOUTMS);
-		master.configPeakCurrentLimit(35, TIMEOUTMS);
+		master.configPeakCurrentLimit(25, TIMEOUTMS);
 		master.configPeakCurrentDuration(0, TIMEOUTMS);
-		master.configContinuousCurrentLimit(30, TIMEOUTMS);
+		master.configContinuousCurrentLimit(20, TIMEOUTMS);
 		master.enableCurrentLimit(true);
 		master.setSensorPhase(false);
 		master.setNeutralMode(NeutralMode.Brake);
@@ -107,11 +107,8 @@ public class Lift extends Subsystem {
 		master.configMotionCruiseVelocity(CRUISE_VELOCITY, TIMEOUTMS);
 		master.configMotionAcceleration(ACCELERATION, TIMEOUTMS);
 
-		// no clue if this is correct....the zero, in particular, is a mystery
-		//setGlobalPositionValues((int) master.configGetParameter(ParamEnum.eReverseSoftLimitThreshold, 0, TIMEOUTMS));
-		setGlobalPositionValues();
-		setReverseLimit();
-
+		zeroOnPref();
+		
 		follower.setInverted(true);
 		follower.setNeutralMode(NeutralMode.Brake);
 		follower.follow(master);
@@ -208,11 +205,23 @@ public class Lift extends Subsystem {
 		master.overrideLimitSwitchesEnable(false);
 	}
 
-	private void setGlobalPositionValues() {
+	private void zeroOnPref() {
 		Preferences prefs = Preferences.getInstance();
 		
-		int reverseLimit = prefs.getInt("LiftBottom", 289);
+		setGlobalPositionValues(prefs.getInt("LiftBottom", 289));
+		setReverseLimit();
+	}
+
+	public void zeroOnCurrentPosition() {
+		Preferences prefs = Preferences.getInstance();
+		int position = getPosition();
+		
+		prefs.putInt("LiftBottom", position);
+		setGlobalPositionValues(position);
+		setReverseLimit();
+	}
 	
+	private void setGlobalPositionValues(int reverseLimit) {
 		posReverseLimit = reverseLimit;
 		posForwardLimit = posReverseLimit + FORWARD_LIMIT_BASE;
 		posSafeBottom = posReverseLimit + POS_SAFE_BOTTOM_BASE;
@@ -222,10 +231,12 @@ public class Lift extends Subsystem {
 		posLowScale = posReverseLimit + POS_LOW_SCALE_BASE;
 		posMidScale = posReverseLimit + POS_MID_SCALE_BASE;
 		posHighScale = posReverseLimit + POS_HI_SCALE_BASE;
-	}
+	}	
+
 	private int positionMap(int position) {
 		return positionMap(position, false);
 	}
+	
 	@SuppressWarnings("unused")
 	private int positionMap(int position, boolean dangermode) {
 		if (!RobotMap.isTripleStack || dangermode || Robot.arm.isDown()) {

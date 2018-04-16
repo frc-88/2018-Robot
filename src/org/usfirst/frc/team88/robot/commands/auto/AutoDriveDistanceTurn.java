@@ -83,8 +83,10 @@ public class AutoDriveDistanceTurn extends Command {
 		if (state != PREP) {
 			if (avgPosition < targetDistanceLeg1) {
 				targetHeading = 0.0;
-			} else {
+			} else if (avgPosition < (targetDistanceLeg1 + (targetDistanceLeg2 - targetDistanceLeg1)/2)){
 				targetHeading = targetTurnAngle;
+			} else {
+				targetHeading = (Math.abs(targetTurnAngle) - 10) * Math.signum(targetTurnAngle);
 			}
 
 			curve = (targetHeading - (Robot.drive.getYaw())) * 0.01;

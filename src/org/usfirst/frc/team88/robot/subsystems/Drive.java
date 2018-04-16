@@ -5,6 +5,7 @@ import org.usfirst.frc.team88.robot.RobotMap;
 import org.usfirst.frc.team88.robot.commands.DriveSplitArcade;
 import org.usfirst.frc.team88.robot.commands.DriveTank;
 import org.usfirst.frc.team88.robot.util.PIDHeadingCorrection;
+import org.usfirst.frc.team88.robot.util.TJUtility;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
@@ -127,6 +128,12 @@ public class Drive extends Subsystem implements PIDOutput {
 		leftMaster.configNeutralDeadband(0.04, TIMEOUTMS);
 		leftMaster.configOpenloopRamp(RAMPRATE, TIMEOUTMS);
 		leftMaster.configClosedloopRamp(RAMPRATE, TIMEOUTMS);
+
+		leftMaster.configPeakCurrentLimit(30, TIMEOUTMS);
+		leftMaster.configPeakCurrentDuration(0, TIMEOUTMS);
+		leftMaster.configContinuousCurrentLimit(30, TIMEOUTMS);
+		leftMaster.enableCurrentLimit(true);
+		
 		leftMaster.setSensorPhase(false);
 		leftMaster.setNeutralMode(NeutralMode.Coast);
 
@@ -147,6 +154,12 @@ public class Drive extends Subsystem implements PIDOutput {
 		rightMaster.configNeutralDeadband(0.04, TIMEOUTMS);
 		rightMaster.configOpenloopRamp(RAMPRATE, TIMEOUTMS);
 		rightMaster.configClosedloopRamp(RAMPRATE, TIMEOUTMS);
+
+		rightMaster.configPeakCurrentLimit(30, TIMEOUTMS);
+		rightMaster.configPeakCurrentDuration(0, TIMEOUTMS);
+		rightMaster.configContinuousCurrentLimit(30, TIMEOUTMS);
+		rightMaster.enableCurrentLimit(true);
+		
 		rightMaster.setSensorPhase(false);
 		rightMaster.setNeutralMode(NeutralMode.Coast);
 
@@ -267,6 +280,8 @@ public class Drive extends Subsystem implements PIDOutput {
 			curve = curve * Math.signum(outputMagnitude);
 		}
 
+		curve = TJUtility.maxValue(curve, 1);
+		
 		if ((outputMagnitude == 0) && (Math.abs(getAvgVelocity()) < 0.3 * MAX_SPEED)) {
 			leftOutput = curve * 0.5;
 			rightOutput = -curve * 0.5;
