@@ -1,10 +1,10 @@
 package org.usfirst.frc.team88.robot.commands.auto.center;
 
-import org.usfirst.frc.team88.robot.commands.DingleballIn;
-import org.usfirst.frc.team88.robot.commands.DriveRotateToAngle;
-import org.usfirst.frc.team88.robot.commands.LiftSoftLanding;
 import org.usfirst.frc.team88.robot.commands.PowerUpConditionalCommand;
 import org.usfirst.frc.team88.robot.commands.auto.AutoDriveDistanceAngleFast;
+import org.usfirst.frc.team88.robot.commands.dingles.DingleballIn;
+import org.usfirst.frc.team88.robot.commands.drive.DriveRotateToAngle;
+import org.usfirst.frc.team88.robot.commands.lift.LiftSoftLanding;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
 

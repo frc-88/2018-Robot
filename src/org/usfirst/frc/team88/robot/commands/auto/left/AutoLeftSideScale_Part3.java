@@ -1,7 +1,7 @@
 package org.usfirst.frc.team88.robot.commands.auto.left;
 
-import org.usfirst.frc.team88.robot.commands.ArmStart;
 import org.usfirst.frc.team88.robot.commands.Delay;
+import org.usfirst.frc.team88.robot.commands.arm.ArmStart;
 import org.usfirst.frc.team88.robot.commands.auto.AutoDriveDistanceAngleFast;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;

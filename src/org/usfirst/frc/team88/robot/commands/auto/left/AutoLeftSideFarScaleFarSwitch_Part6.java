@@ -1,8 +1,8 @@
 package org.usfirst.frc.team88.robot.commands.auto.left;
 
-import org.usfirst.frc.team88.robot.commands.IntakeEjectCube;
-import org.usfirst.frc.team88.robot.commands.LiftSoftLanding;
 import org.usfirst.frc.team88.robot.commands.auto.AutoDriveDistance;
+import org.usfirst.frc.team88.robot.commands.intake.IntakeEjectCube;
+import org.usfirst.frc.team88.robot.commands.lift.LiftSoftLanding;
 import org.usfirst.frc.team88.robot.subsystems.Lift;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;

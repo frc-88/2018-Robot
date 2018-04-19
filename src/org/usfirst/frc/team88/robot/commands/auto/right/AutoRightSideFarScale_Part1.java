@@ -1,11 +1,11 @@
 package org.usfirst.frc.team88.robot.commands.auto.right;
 
-import org.usfirst.frc.team88.robot.commands.DriveRotateToAngle;
-import org.usfirst.frc.team88.robot.commands.DriveZeroYaw;
-import org.usfirst.frc.team88.robot.commands.IntakePneumaticsDown;
-import org.usfirst.frc.team88.robot.commands.LiftGotoPosition;
 import org.usfirst.frc.team88.robot.commands.auto.AutoDriveDistanceAngleFast;
 import org.usfirst.frc.team88.robot.commands.auto.AutoDriveDistanceTurn;
+import org.usfirst.frc.team88.robot.commands.drive.DriveRotateToAngle;
+import org.usfirst.frc.team88.robot.commands.drive.DriveZeroYaw;
+import org.usfirst.frc.team88.robot.commands.intake.IntakePneumaticsDown;
+import org.usfirst.frc.team88.robot.commands.lift.LiftGotoPosition;
 import org.usfirst.frc.team88.robot.subsystems.Lift;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;

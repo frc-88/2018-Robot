@@ -7,12 +7,7 @@
 
 package org.usfirst.frc.team88.robot;
 
-import org.usfirst.frc.team88.robot.commands.ArmDownPart_1_v2;
-import org.usfirst.frc.team88.robot.commands.DingleballTest;
-import org.usfirst.frc.team88.robot.commands.DriveResetEncoders;
-import org.usfirst.frc.team88.robot.commands.DriveRotateToAngle;
-import org.usfirst.frc.team88.robot.commands.DriveZeroYaw;
-import org.usfirst.frc.team88.robot.commands.LiftGotoPosition;
+import org.usfirst.frc.team88.robot.commands.arm.ArmDownPart_1_v2;
 import org.usfirst.frc.team88.robot.commands.auto.AutoCrossTheLine;
 import org.usfirst.frc.team88.robot.commands.auto.AutoDriveDistance;
 import org.usfirst.frc.team88.robot.commands.auto.center.AutoCenter;
@@ -23,6 +18,11 @@ import org.usfirst.frc.team88.robot.commands.auto.left.AutoLeftSideScale;
 import org.usfirst.frc.team88.robot.commands.auto.right.AutoRight;
 import org.usfirst.frc.team88.robot.commands.auto.right.AutoRightSideFarScale;
 import org.usfirst.frc.team88.robot.commands.auto.right.AutoRightSideScale;
+import org.usfirst.frc.team88.robot.commands.dingles.DingleballTest;
+import org.usfirst.frc.team88.robot.commands.drive.DriveResetEncoders;
+import org.usfirst.frc.team88.robot.commands.drive.DriveRotateToAngle;
+import org.usfirst.frc.team88.robot.commands.drive.DriveZeroYaw;
+import org.usfirst.frc.team88.robot.commands.lift.LiftGotoPosition;
 import org.usfirst.frc.team88.robot.subsystems.Arm;
 import org.usfirst.frc.team88.robot.subsystems.Dingleball;
 import org.usfirst.frc.team88.robot.subsystems.Drive;

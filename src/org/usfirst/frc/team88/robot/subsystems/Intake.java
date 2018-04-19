@@ -1,7 +1,7 @@
 package org.usfirst.frc.team88.robot.subsystems;
 
 import org.usfirst.frc.team88.robot.RobotMap;
-import org.usfirst.frc.team88.robot.commands.IntakeControl;
+import org.usfirst.frc.team88.robot.commands.intake.IntakeControl;
 import org.usfirst.frc.team88.robot.util.SharpIR;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;

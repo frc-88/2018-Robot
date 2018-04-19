@@ -2,8 +2,8 @@ package org.usfirst.frc.team88.robot.subsystems;
 
 import org.usfirst.frc.team88.robot.Robot;
 import org.usfirst.frc.team88.robot.RobotMap;
-import org.usfirst.frc.team88.robot.commands.LiftBasicControl;
-import org.usfirst.frc.team88.robot.commands.LiftMove;
+import org.usfirst.frc.team88.robot.commands.lift.LiftBasicControl;
+import org.usfirst.frc.team88.robot.commands.lift.LiftMove;
 
 import com.ctre.phoenix.ParamEnum;
 import com.ctre.phoenix.motorcontrol.ControlMode;

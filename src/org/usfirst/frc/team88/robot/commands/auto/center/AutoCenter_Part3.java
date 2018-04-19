@@ -1,8 +1,8 @@
 package org.usfirst.frc.team88.robot.commands.auto.center;
 
-import org.usfirst.frc.team88.robot.commands.DriveRotateToAngle;
 import org.usfirst.frc.team88.robot.commands.PowerUpConditionalCommand;
 import org.usfirst.frc.team88.robot.commands.auto.AutoDriveDistance;
+import org.usfirst.frc.team88.robot.commands.drive.DriveRotateToAngle;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
