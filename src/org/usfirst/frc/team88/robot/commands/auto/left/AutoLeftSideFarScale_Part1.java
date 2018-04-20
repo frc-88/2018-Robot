@@ -1,7 +1,7 @@
 package org.usfirst.frc.team88.robot.commands.auto.left;
 
-import org.usfirst.frc.team88.robot.commands.DriveZeroYaw;
 import org.usfirst.frc.team88.robot.commands.auto.AutoDriveDistanceTurn;
+import org.usfirst.frc.team88.robot.commands.drive.DriveZeroYaw;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
 

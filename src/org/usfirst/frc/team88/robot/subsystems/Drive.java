@@ -2,8 +2,8 @@ package org.usfirst.frc.team88.robot.subsystems;
 
 import org.usfirst.frc.team88.robot.Robot;
 import org.usfirst.frc.team88.robot.RobotMap;
-import org.usfirst.frc.team88.robot.commands.DriveSplitArcade;
-import org.usfirst.frc.team88.robot.commands.DriveTank;
+import org.usfirst.frc.team88.robot.commands.drive.DriveSplitArcade;
+import org.usfirst.frc.team88.robot.commands.drive.DriveTank;
 import org.usfirst.frc.team88.robot.util.PIDHeadingCorrection;
 import org.usfirst.frc.team88.robot.util.TJUtility;
 

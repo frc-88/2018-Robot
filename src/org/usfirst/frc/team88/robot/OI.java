@@ -7,20 +7,20 @@
 
 package org.usfirst.frc.team88.robot;
 
-import org.usfirst.frc.team88.robot.commands.LiftGotoPosition;
-import org.usfirst.frc.team88.robot.commands.LiftLandAndDingleIn;
-import org.usfirst.frc.team88.robot.commands.LiftSoftLanding;
-import org.usfirst.frc.team88.robot.commands.LiftSwitchAndDingleOut;
 import org.usfirst.frc.team88.robot.subsystems.Lift;
-import org.usfirst.frc.team88.robot.commands.ArmDown;
-import org.usfirst.frc.team88.robot.commands.ArmStart;
-import org.usfirst.frc.team88.robot.commands.StartingConfiguration;
-import org.usfirst.frc.team88.robot.commands.ArmUp;
-import org.usfirst.frc.team88.robot.commands.DingleDance;
-import org.usfirst.frc.team88.robot.commands.DingleballIn;
-import org.usfirst.frc.team88.robot.commands.DingleballOut;
-import org.usfirst.frc.team88.robot.commands.IntakePneumaticsDown;
-import org.usfirst.frc.team88.robot.commands.IntakePneumaticsUp;
+import org.usfirst.frc.team88.robot.commands.arm.ArmDown;
+import org.usfirst.frc.team88.robot.commands.arm.ArmStart;
+import org.usfirst.frc.team88.robot.commands.arm.ArmUp;
+import org.usfirst.frc.team88.robot.commands.arm.StartingConfiguration;
+import org.usfirst.frc.team88.robot.commands.dingles.DingleDance;
+import org.usfirst.frc.team88.robot.commands.dingles.DingleballIn;
+import org.usfirst.frc.team88.robot.commands.dingles.DingleballOut;
+import org.usfirst.frc.team88.robot.commands.intake.IntakePneumaticsDown;
+import org.usfirst.frc.team88.robot.commands.intake.IntakePneumaticsUp;
+import org.usfirst.frc.team88.robot.commands.lift.LiftGotoPosition;
+import org.usfirst.frc.team88.robot.commands.lift.LiftLandAndDingleIn;
+import org.usfirst.frc.team88.robot.commands.lift.LiftSoftLanding;
+import org.usfirst.frc.team88.robot.commands.lift.LiftSwitchAndDingleOut;
 import org.usfirst.frc.team88.robot.util.TJController;
 
 /**
