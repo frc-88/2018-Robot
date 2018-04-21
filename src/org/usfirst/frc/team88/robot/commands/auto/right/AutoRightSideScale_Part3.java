@@ -3,10 +3,6 @@ package org.usfirst.frc.team88.robot.commands.auto.right;
 import org.usfirst.frc.team88.robot.commands.Delay;
 import org.usfirst.frc.team88.robot.commands.arm.ArmStart;
 import org.usfirst.frc.team88.robot.commands.auto.AutoDriveDistanceAngleFast;
-import org.usfirst.frc.team88.robot.commands.drive.DriveRotateToAngle;
-import org.usfirst.frc.team88.robot.commands.intake.IntakeIntakeCube;
-import org.usfirst.frc.team88.robot.commands.lift.LiftGotoPosition;
-import org.usfirst.frc.team88.robot.subsystems.Lift;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
 

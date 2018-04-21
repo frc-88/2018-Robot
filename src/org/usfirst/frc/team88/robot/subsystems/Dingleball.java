@@ -1,7 +1,6 @@
 package org.usfirst.frc.team88.robot.subsystems;
 
 import org.usfirst.frc.team88.robot.RobotMap;
-import org.usfirst.frc.team88.robot.commands.dingles.DingleballIn;
 
 import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.command.Subsystem;

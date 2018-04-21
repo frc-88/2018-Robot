@@ -11,8 +11,6 @@ import org.usfirst.frc.team88.robot.subsystems.Lift;
 import org.usfirst.frc.team88.robot.commands.arm.ArmDown;
 import org.usfirst.frc.team88.robot.commands.arm.ArmStart;
 import org.usfirst.frc.team88.robot.commands.arm.ArmUp;
-import org.usfirst.frc.team88.robot.commands.arm.StartingConfiguration;
-import org.usfirst.frc.team88.robot.commands.dingles.DingleDance;
 import org.usfirst.frc.team88.robot.commands.dingles.DingleballIn;
 import org.usfirst.frc.team88.robot.commands.dingles.DingleballOut;
 import org.usfirst.frc.team88.robot.commands.lift.LiftGotoPosition;

@@ -1,6 +1,5 @@
 package org.usfirst.frc.team88.robot.commands.auto.right;
 
-import org.usfirst.frc.team88.robot.commands.HaveCubeConditionalCommand;
 import org.usfirst.frc.team88.robot.commands.StepConditionalCommand;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
