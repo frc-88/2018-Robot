@@ -5,7 +5,6 @@ import org.usfirst.frc.team88.robot.commands.auto.AutoDriveDistanceAngleFast;
 import org.usfirst.frc.team88.robot.commands.drive.DriveRotateToAngle;
 import org.usfirst.frc.team88.robot.commands.drive.DriveZeroYaw;
 import org.usfirst.frc.team88.robot.commands.intake.IntakeEjectCube;
-import org.usfirst.frc.team88.robot.commands.intake.IntakePneumaticsDown;
 import org.usfirst.frc.team88.robot.commands.lift.LiftGotoPosition;
 import org.usfirst.frc.team88.robot.commands.lift.LiftSoftLanding;
 import org.usfirst.frc.team88.robot.subsystems.Lift;
@@ -19,7 +18,6 @@ public class AutoLeftSideSwitch extends CommandGroup {
 
 	public AutoLeftSideSwitch() {
 		addSequential(new DriveZeroYaw());
-		addParallel(new IntakePneumaticsDown());
 		addSequential(new AutoDriveDistanceAngleFast("LeftSwitchDist_1", 0));
 		addParallel(new LiftGotoPosition(Lift.POS_SWITCH));
 		addSequential(new DriveRotateToAngle(90));
