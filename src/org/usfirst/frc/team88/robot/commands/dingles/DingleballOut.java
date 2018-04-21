@@ -22,9 +22,7 @@ public class DingleballOut extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	if (!RobotMap.isTripleStack) {
-    		Robot.dingleball.ballsFoward();
-    	} else if(Robot.arm.isUp()){
+    	if(Robot.arm.isUp()){
     		Robot.dingleball.ballsBackward();
     	} else {
     		Robot.dingleball.ballsFoward();

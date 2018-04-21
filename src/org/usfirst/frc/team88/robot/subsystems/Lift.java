@@ -144,10 +144,8 @@ public class Lift extends Subsystem {
 			target = posForwardLimit;
 		}
 
-		if (RobotMap.isTripleStack) {
-			if (target < posSafe && !Robot.arm.isDown() && !dangermode) {
-				target = posSafe;
-			}
+		if (target < posSafe && !Robot.arm.isDown() && !dangermode) {
+			target = posSafe;
 		}
 		
 		position = target;
@@ -239,7 +237,7 @@ public class Lift extends Subsystem {
 	
 	@SuppressWarnings("unused")
 	private int positionMap(int position, boolean dangermode) {
-		if (!RobotMap.isTripleStack || dangermode || Robot.arm.isDown()) {
+		if (dangermode || Robot.arm.isDown()) {
 			switch (position) {
 			case POS_BOTTOM:
 				return posBottom;

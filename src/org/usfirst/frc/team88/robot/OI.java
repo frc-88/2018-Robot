@@ -36,19 +36,14 @@ public class OI {
 		// IMPORTANT!!!
 		// The driver triggers and bumpers are used in DriveSplitArcade
 		// for fine driver control. Do not add commands to them here
-		
-		if (RobotMap.isTripleStack) {
-			driver.buttonStart.whenPressed(new ArmStart());
-			operator.buttonStart.whenPressed(new ArmStart());
-		}
+		driver.buttonStart.whenPressed(new ArmStart());
+		operator.buttonStart.whenPressed(new ArmStart());
 		
 		driver.buttonA.whenPressed(new DingleballOut());
 		driver.buttonA.whenReleased(new DingleballIn());
 
-		if (RobotMap.isTripleStack) {
-			operator.buttonRightBumper.whenPressed(new ArmUp());
-			operator.buttonLeftBumper.whenPressed(new ArmDown());
-		}
+		operator.buttonRightBumper.whenPressed(new ArmUp());
+		operator.buttonLeftBumper.whenPressed(new ArmDown());
 			
 		operator.buttonB.whenPressed(new LiftSwitchAndDingleOut());
 		operator.buttonB.whenReleased(new LiftLandAndDingleIn());
