@@ -25,7 +25,7 @@ public class DriveSplitArcade extends Command {
 
 	// Called repeatedly when this Command is scheduled to run
 	protected void execute() {
-		double magnitude, curve, targetHeading, error;
+		double magnitude, curve;
 
 		// normal speed controlled by left joystick
 		magnitude = TJUtility.polynomial(Robot.oi.driver.getLeftStickY(), POLY_A, POLY_B, POLY_C, DEADZONE);

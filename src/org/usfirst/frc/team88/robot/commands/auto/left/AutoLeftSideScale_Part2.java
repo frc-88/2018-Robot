@@ -1,14 +1,8 @@
 package org.usfirst.frc.team88.robot.commands.auto.left;
 
 import org.usfirst.frc.team88.robot.commands.arm.ArmDown;
-import org.usfirst.frc.team88.robot.commands.auto.AutoDriveDistanceAngle;
 import org.usfirst.frc.team88.robot.commands.auto.AutoDriveDistanceAngleFast;
-import org.usfirst.frc.team88.robot.commands.dingles.DingleDance;
-import org.usfirst.frc.team88.robot.commands.dingles.DingleballIn;
-import org.usfirst.frc.team88.robot.commands.drive.DriveDisableTURBOMODE;
-import org.usfirst.frc.team88.robot.commands.drive.DriveEnableTURBOMODE;
 import org.usfirst.frc.team88.robot.commands.drive.DriveRotateToAngle;
-import org.usfirst.frc.team88.robot.commands.drive.DriveZeroYaw;
 import org.usfirst.frc.team88.robot.commands.intake.IntakeEjectCube;
 import org.usfirst.frc.team88.robot.commands.intake.IntakeIntakeCube;
 import org.usfirst.frc.team88.robot.commands.lift.LiftGotoPosition;

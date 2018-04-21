@@ -1,6 +1,7 @@
 package org.usfirst.frc.team88.robot.commands.auto;
 
 import org.usfirst.frc.team88.robot.Robot;
+import org.usfirst.frc.team88.robot.util.TJUtility;
 
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.command.Command;
@@ -63,7 +64,7 @@ public class AutoDriveDistanceAngleFast extends Command {
 	protected void initialize() {
 		Preferences prefs = Preferences.getInstance();
 		
-		System.out.println("TJ_AUTO:ADDAF:initialize");
+		TJUtility.log("ADDAF:initialize");
 		
 		if (targetDistancePref != null) {
 			targetDistance = Math.abs(prefs.getDouble(targetDistancePref, 0.0) * COUNTS_PER_INCH);
@@ -85,8 +86,6 @@ public class AutoDriveDistanceAngleFast extends Command {
 
 	// Called repeatedly when this Command is scheduled to run
 	protected void execute() {
-		double curve = (targetHeading - (Robot.drive.getYaw())) * 0.02;
-
 		switch (state){
 		case PREP:
 			Robot.drive.resetEncoders();
@@ -135,19 +134,18 @@ public class AutoDriveDistanceAngleFast extends Command {
 
 			break;
 		}
-		SmartDashboard.putNumber("State", state);
 
 		if(state != PREP){
-			Robot.drive.driveCurve(speed * direction, curve);
+			Robot.drive.driveCurveLockHeading(speed * direction, targetHeading);
 		}
 
-		System.out.format("TJ_AUTO:%d,%.2f,%.2f,%.2f,%.2f,%.2f",
+		TJUtility.log(String.format("ADDAF:execute:%d,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f",
 				state,
+				Robot.drive.getAvgVelocity(),
 				Robot.drive.getAvgPosition(), 
 				Robot.drive.getYaw(), 
 				targetHeading,
-				speed,
-				curve);
+				speed));
 
 	}
 
@@ -158,14 +156,14 @@ public class AutoDriveDistanceAngleFast extends Command {
 
 	// Called once after isFinished returns true
 	protected void end() {
-		System.out.println("TJ_AUTO:ADDAF:end");
+		TJUtility.log("ADDAF:end");
 		Robot.drive.wheelSpeed(0, 0);
 	}
 
 	// Called when another command which requires one or more of the same
 	// subsystems is scheduled to run
 	protected void interrupted() {
-		System.out.println("TJ_AUTO:ADDAF:interrupted");
+		TJUtility.log("ADDAF:interrupted");
 		Robot.drive.wheelSpeed(0, 0);
 	}
 }

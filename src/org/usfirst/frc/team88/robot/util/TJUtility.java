@@ -52,4 +52,8 @@ public class TJUtility {
 
 		return angle;
 	}
+	
+	public static void log(String msg) {
+		System.out.format("<TJLOG>%s</TJLOG>%n", msg);
+	}
 }

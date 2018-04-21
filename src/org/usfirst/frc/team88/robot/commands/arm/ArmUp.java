@@ -2,7 +2,6 @@ package org.usfirst.frc.team88.robot.commands.arm;
 
 import org.usfirst.frc.team88.robot.Robot;
 import org.usfirst.frc.team88.robot.subsystems.Lift;
-import org.usfirst.frc.team88.robot.util.TJUtility;
 
 import edu.wpi.first.wpilibj.command.Command;
 

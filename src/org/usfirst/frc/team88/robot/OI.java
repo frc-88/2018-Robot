@@ -11,12 +11,8 @@ import org.usfirst.frc.team88.robot.subsystems.Lift;
 import org.usfirst.frc.team88.robot.commands.arm.ArmDown;
 import org.usfirst.frc.team88.robot.commands.arm.ArmStart;
 import org.usfirst.frc.team88.robot.commands.arm.ArmUp;
-import org.usfirst.frc.team88.robot.commands.arm.StartingConfiguration;
-import org.usfirst.frc.team88.robot.commands.dingles.DingleDance;
 import org.usfirst.frc.team88.robot.commands.dingles.DingleballIn;
 import org.usfirst.frc.team88.robot.commands.dingles.DingleballOut;
-import org.usfirst.frc.team88.robot.commands.intake.IntakePneumaticsDown;
-import org.usfirst.frc.team88.robot.commands.intake.IntakePneumaticsUp;
 import org.usfirst.frc.team88.robot.commands.lift.LiftGotoPosition;
 import org.usfirst.frc.team88.robot.commands.lift.LiftLandAndDingleIn;
 import org.usfirst.frc.team88.robot.commands.lift.LiftSoftLanding;
@@ -38,19 +34,14 @@ public class OI {
 		// IMPORTANT!!!
 		// The driver triggers and bumpers are used in DriveSplitArcade
 		// for fine driver control. Do not add commands to them here
-		
-		if (RobotMap.isTripleStack) {
-			driver.buttonStart.whenPressed(new ArmStart());
-			operator.buttonStart.whenPressed(new ArmStart());
-		}
+		driver.buttonStart.whenPressed(new ArmStart());
+		operator.buttonStart.whenPressed(new ArmStart());
 		
 		driver.buttonA.whenPressed(new DingleballOut());
 		driver.buttonA.whenReleased(new DingleballIn());
 
-		if (RobotMap.isTripleStack) {
-			operator.buttonRightBumper.whenPressed(new ArmUp());
-			operator.buttonLeftBumper.whenPressed(new ArmDown());
-		}
+		operator.buttonRightBumper.whenPressed(new ArmUp());
+		operator.buttonLeftBumper.whenPressed(new ArmDown());
 			
 		operator.buttonB.whenPressed(new LiftSwitchAndDingleOut());
 		operator.buttonB.whenReleased(new LiftLandAndDingleIn());

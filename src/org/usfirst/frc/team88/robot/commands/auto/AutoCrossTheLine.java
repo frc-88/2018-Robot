@@ -1,7 +1,6 @@
 package org.usfirst.frc.team88.robot.commands.auto;
 
 import org.usfirst.frc.team88.robot.commands.arm.ArmDown;
-import org.usfirst.frc.team88.robot.commands.intake.IntakePneumaticsDown;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
 

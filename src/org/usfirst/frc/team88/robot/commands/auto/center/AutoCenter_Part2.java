@@ -1,7 +1,6 @@
 package org.usfirst.frc.team88.robot.commands.auto.center;
 
 import org.usfirst.frc.team88.robot.commands.PowerUpConditionalCommand;
-import org.usfirst.frc.team88.robot.commands.auto.AutoDriveDistance;
 import org.usfirst.frc.team88.robot.commands.auto.AutoDriveDistanceAngleFast;
 import org.usfirst.frc.team88.robot.commands.intake.IntakeIntakeCube;
 

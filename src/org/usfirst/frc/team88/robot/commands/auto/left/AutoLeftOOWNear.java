@@ -1,13 +1,10 @@
 package org.usfirst.frc.team88.robot.commands.auto.left;
 
-import org.usfirst.frc.team88.robot.commands.HaveCubeConditionalCommand;
-import org.usfirst.frc.team88.robot.commands.StepConditionalCommand;
 import org.usfirst.frc.team88.robot.commands.arm.ArmDown;
 import org.usfirst.frc.team88.robot.commands.auto.AutoDriveDistanceAngleFast;
 import org.usfirst.frc.team88.robot.commands.drive.DriveRotateToAngle;
 import org.usfirst.frc.team88.robot.commands.drive.DriveZeroYaw;
 import org.usfirst.frc.team88.robot.commands.intake.IntakeEjectCube;
-import org.usfirst.frc.team88.robot.commands.intake.IntakeIntakeCube;
 import org.usfirst.frc.team88.robot.commands.lift.LiftGotoPosition;
 import org.usfirst.frc.team88.robot.subsystems.Lift;
 
