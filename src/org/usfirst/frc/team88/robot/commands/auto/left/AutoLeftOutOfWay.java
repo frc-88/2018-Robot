@@ -6,7 +6,7 @@ public class AutoLeftOutOfWay extends PowerUpConditionalCommand {
 
 	public AutoLeftOutOfWay() {
 		super(new AutoLeftOOWNear(), // LL
-				new AutoLeftOOWFar(), // LR
+				new AutoLeftSideSwitch(), // LR
 				new AutoLeftOOWNear(), // RL
 				new AutoLeftOOWFar()); // RR
 	}
