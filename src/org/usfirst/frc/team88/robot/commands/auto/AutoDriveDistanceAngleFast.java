@@ -80,7 +80,7 @@ public class AutoDriveDistanceAngleFast extends Command {
 		}
 		
 		state = PREP;
-		speed = 0.0;
+		speed = 0.1;
 		acceleration = prefs.getDouble("ADDAF_accel", ACCELERATION_DFT);
 	}
 
