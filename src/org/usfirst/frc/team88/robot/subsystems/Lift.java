@@ -58,7 +58,7 @@ public class Lift extends Subsystem {
 	private static final int POS_SAFE_BOTTOM_BASE = 180;
 	private static final int UP_OFFSET = 220; // TODO
 
-	private static final int DISTANCE_THRESHOLD = 50;
+	private static final int DISTANCE_THRESHOLD = 100;
 
 	private int posReverseLimit;
 	private int posForwardLimit;

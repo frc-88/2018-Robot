@@ -86,7 +86,7 @@ public class AutoDriveDistanceAngleFast extends Command {
 
 	// Called repeatedly when this Command is scheduled to run
 	protected void execute() {
-		double curve = (targetHeading - (Robot.drive.getYaw())) * 0.02;
+		double curve = (targetHeading - (Robot.drive.getYaw())) * 0.018;
 
 		switch (state){
 		case PREP:
@@ -142,7 +142,7 @@ public class AutoDriveDistanceAngleFast extends Command {
 			Robot.drive.driveCurve(speed * direction, curve);
 		}
 
-		TJUtility.log(String.format("ADDAF:execute:%d,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f",
+		TJUtility.log(String.format("ADDAF:execute:%d,%.2f,%.2f,%.2f,%.2f,%.2f",
 				state,
 				Robot.drive.getAvgVelocity(),
 				Robot.drive.getAvgPosition(), 
