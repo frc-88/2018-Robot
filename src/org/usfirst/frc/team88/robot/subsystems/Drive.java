@@ -253,31 +253,20 @@ public class Drive extends Subsystem implements PIDOutput {
 	 *            your robot. Conversely, turn radius r = -ln(curve)*w for a given
 	 *            value of curve and wheelbase w.
 	 */
-	public void driveCurveLockHeading(double outputMagnitude, double heading) {
-		driveCurve(outputMagnitude, 0, DFT_SENSITIVITY, true, heading);
-	}
-	
 	public void driveCurve(double outputMagnitude, double curve) {
-		driveCurve(outputMagnitude, curve, DFT_SENSITIVITY, false, 0);
+		driveCurve(outputMagnitude, curve, DFT_SENSITIVITY);
 	}
 
 	public void driveCurve(double outputMagnitude, double curve, double sensitivity) {
-		driveCurve(outputMagnitude, curve, sensitivity, false, 0);
-	}
-	
-	public void driveCurve(double outputMagnitude, double curve, double sensitivity, boolean lockHeading, double heading) {
 		double leftOutput;
 		double rightOutput;
 
-		if (lockHeading && !headingController.isEnabled()) {
-			headingController.reset();
-			headingController.enable();
-			headingController.setSetpoint(heading);
-		}
-		
-		if (lockHeading) {
-			curve = headingCorrection.getHeadingCorrection();
-		} else if (outputMagnitude == 0) {
+		SmartDashboard.putNumber("Drive Curve", curve);
+		SmartDashboard.putNumber("Drive Magnitude", outputMagnitude);
+		SmartDashboard.putNumber("Drive Count", headingCount);
+		SmartDashboard.putBoolean("Drive Stabilize", headingController.isEnabled());
+
+		if (outputMagnitude == 0) {
 			headingController.disable();
 			headingCount = 0;
 		} else if (headingController.isEnabled() && curve == 0) {
@@ -313,7 +302,7 @@ public class Drive extends Subsystem implements PIDOutput {
 			leftOutput = outputMagnitude;
 			rightOutput = outputMagnitude / ratio;
 		} else {
-			if (headingCount++ > 4 && !lockHeading && !headingController.isEnabled()) {
+			if (headingCount++ > 4) {
 				headingController.reset();
 				headingController.enable();
 				headingController.setSetpoint(getYaw());
