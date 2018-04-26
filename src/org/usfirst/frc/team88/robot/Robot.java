@@ -171,7 +171,7 @@ public class Robot extends TimedRobot {
 			autonomousCommand.cancel();
 		}
 		Robot.drive.setNeutralMode(NeutralMode.Coast);
-		Robot.intake.cradleDown();
+		Robot.dingleball.ballsDown();
 	}
 
 	/**

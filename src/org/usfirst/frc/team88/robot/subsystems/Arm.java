@@ -33,7 +33,7 @@ public class Arm extends Subsystem {
 	private static final double MAX_SPEED = 300;
 	private static final int CRUISE_VELOCITY = 300; // TODO
 	private static final int ACCELERATION = 250; // TODO
-	private static final double P = 3.0; // TODO
+	private static final double P = 2.0; // TODO
 	private static final double I = 0.0; // TODO - probably 0
 	private static final double D = 0.0; // TODO
 	private static final double F = (1023 / MAX_SPEED);
