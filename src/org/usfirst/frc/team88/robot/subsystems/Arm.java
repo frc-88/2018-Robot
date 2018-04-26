@@ -30,8 +30,8 @@ public class Arm extends Subsystem {
 	private static final int SLOTIDX = 0;
 	private static final int TIMEOUTMS = 0;
 	private static final double RAMPRATE = .30;
-	private static final double MAX_SPEED = 200;
-	private static final int CRUISE_VELOCITY = 200; // TODO
+	private static final double MAX_SPEED = 300;
+	private static final int CRUISE_VELOCITY = 300; // TODO
 	private static final int ACCELERATION = 250; // TODO
 	private static final double P = 3.0; // TODO
 	private static final double I = 0.0; // TODO - probably 0
@@ -63,11 +63,13 @@ public class Arm extends Subsystem {
 		master.configNeutralDeadband(0.04, TIMEOUTMS);
 		master.configClosedloopRamp(RAMPRATE, TIMEOUTMS);
 
-		master.configPeakCurrentLimit(15, TIMEOUTMS);
-		master.configPeakCurrentDuration(0, TIMEOUTMS);
-		master.configContinuousCurrentLimit(14, TIMEOUTMS);
-		master.enableCurrentLimit(true);
-
+		if (!BASIC_CONTROL) {
+			master.configPeakCurrentLimit(40, TIMEOUTMS);
+			master.configPeakCurrentDuration(200, TIMEOUTMS);
+			master.configContinuousCurrentLimit(20, TIMEOUTMS);
+			master.enableCurrentLimit(true);
+		}
+		
 		master.setSensorPhase(true);
 		master.setInverted(true);
 		master.setNeutralMode(NeutralMode.Brake);

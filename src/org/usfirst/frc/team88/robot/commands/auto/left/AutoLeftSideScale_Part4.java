@@ -18,7 +18,7 @@ public class AutoLeftSideScale_Part4 extends CommandGroup {
 		
 		//addParallel(new DriveRotateToAngle("LeftScaleAngle_4"));
 		addSequential(new LiftGotoPosition(Lift.POS_MID_SCALE));
-		addSequential(new ArmUp());
+		//addSequential(new ArmUp());
 		addSequential(new IntakeEjectCube(Lift.POS_MID_SCALE));
 		addParallel(new ArmDown());
 
