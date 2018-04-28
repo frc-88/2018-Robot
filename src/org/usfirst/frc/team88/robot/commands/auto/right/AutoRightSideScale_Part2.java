@@ -1,5 +1,6 @@
 package org.usfirst.frc.team88.robot.commands.auto.right;
 
+import org.usfirst.frc.team88.robot.commands.Delay;
 import org.usfirst.frc.team88.robot.commands.arm.ArmDown;
 import org.usfirst.frc.team88.robot.commands.auto.AutoDriveDistanceAngleFast;
 import org.usfirst.frc.team88.robot.commands.drive.DriveRotateToAngle;
@@ -20,8 +21,10 @@ public class AutoRightSideScale_Part2 extends CommandGroup {
 
     	addParallel(new LiftGotoPosition(Lift.POS_HI_SCALE));
 		addSequential(new DriveRotateToAngle(-40));
+		addSequential(new DriveRotateToAngle(-40));
 		addSequential(new IntakeEjectCube(Lift.POS_HI_SCALE));
 		addParallel(new ArmDown());
+		addSequential(new Delay(25));
 //		addSequential(new DriveRotateToAngle("RightScaleAngle_2"));
 		addParallel(new AutoDriveDistanceAngleFast("RightScaleDist_2", "RightScaleAngle_2"));
 		addSequential(new IntakeIntakeCube(4));

@@ -118,7 +118,7 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void disabledInit() {
-
+		Robot.drive.setNeutralMode(NeutralMode.Coast);
 	}
 
 	@Override

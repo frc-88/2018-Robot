@@ -129,9 +129,9 @@ public class Drive extends Subsystem implements PIDOutput {
 		leftMaster.configOpenloopRamp(RAMPRATE, TIMEOUTMS);
 		leftMaster.configClosedloopRamp(RAMPRATE, TIMEOUTMS);
 
-		leftMaster.configPeakCurrentLimit(30, TIMEOUTMS);
+		leftMaster.configPeakCurrentLimit(25, TIMEOUTMS);
 		leftMaster.configPeakCurrentDuration(0, TIMEOUTMS);
-		leftMaster.configContinuousCurrentLimit(30, TIMEOUTMS);
+		leftMaster.configContinuousCurrentLimit(25, TIMEOUTMS);
 		leftMaster.enableCurrentLimit(true);
 		
 		leftMaster.setSensorPhase(false);
@@ -155,9 +155,9 @@ public class Drive extends Subsystem implements PIDOutput {
 		rightMaster.configOpenloopRamp(RAMPRATE, TIMEOUTMS);
 		rightMaster.configClosedloopRamp(RAMPRATE, TIMEOUTMS);
 
-		rightMaster.configPeakCurrentLimit(30, TIMEOUTMS);
+		rightMaster.configPeakCurrentLimit(25, TIMEOUTMS);
 		rightMaster.configPeakCurrentDuration(0, TIMEOUTMS);
-		rightMaster.configContinuousCurrentLimit(30, TIMEOUTMS);
+		rightMaster.configContinuousCurrentLimit(25, TIMEOUTMS);
 		rightMaster.enableCurrentLimit(true);
 		
 		rightMaster.setSensorPhase(false);
