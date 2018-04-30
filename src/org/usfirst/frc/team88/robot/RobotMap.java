@@ -14,7 +14,7 @@ package org.usfirst.frc.team88.robot;
  * floating around.
  */
 public class RobotMap {
-	public static final boolean isTripleStack = false;
+	public static final boolean isTripleStack = true;
 
 	// Drive - CAN
 	public static final int driveLeftMaster = isTripleStack ? 6 : 10;
@@ -28,8 +28,8 @@ public class RobotMap {
 	public static final int liftFollower2 = 1;
 
 	// Intake - CAN
-	public static final int intakeLeft = 3;
-	public static final int intakeRight = 2;
+	public static final int intakeLeft = isTripleStack ? 3 : 2;
+	public static final int intakeRight = isTripleStack ? 2 : 3;
 	// Intake - Analog inputs
 	public static final int intakeLeftIR = 0;
 	public static final int intakeRightIR = 3;

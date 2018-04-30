@@ -12,6 +12,7 @@ public class IntakeIntakeCube extends Command {
 	int count;
 	boolean isDone;
 	int counts;
+	int hasCubeCount;
 
 	public IntakeIntakeCube(int s) {
 		// Use requires() here to declare subsystem dependencies
@@ -23,6 +24,7 @@ public class IntakeIntakeCube extends Command {
 	// Called just before this Command runs the first time
 	protected void initialize() {
 		count = 0;
+		hasCubeCount = 0;
 		isDone = false;
 		Robot.intake.cradleDown();
 		Robot.intake.wheelSpeed(-1.0);
@@ -32,8 +34,10 @@ public class IntakeIntakeCube extends Command {
 	protected void execute() {
 
 		count++;
-
-		if (count > counts || Robot.intake.haveCube()) {
+		if(Robot.intake.haveCube() && hasCubeCount++ > 10){
+			isDone = true;
+		}
+		if (count > counts) {
 			isDone = true;
 		}
 	}
@@ -45,7 +49,7 @@ public class IntakeIntakeCube extends Command {
 
 	// Called once after isFinished returns true
 	protected void end() {
-		Robot.intake.wheelSpeed(0.0);
+		Robot.intake.wheelSpeed(-0.15);
 	}
 
 	// Called when another command which requires one or more of the same

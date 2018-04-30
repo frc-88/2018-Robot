@@ -118,7 +118,7 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void disabledInit() {
-
+		Robot.drive.setNeutralMode(NeutralMode.Coast);
 	}
 
 	@Override
@@ -171,7 +171,7 @@ public class Robot extends TimedRobot {
 			autonomousCommand.cancel();
 		}
 		Robot.drive.setNeutralMode(NeutralMode.Coast);
-		Robot.intake.cradleDown();
+		Robot.dingleball.ballsDown();
 	}
 
 	/**

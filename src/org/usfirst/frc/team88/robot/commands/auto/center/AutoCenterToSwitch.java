@@ -72,12 +72,12 @@ public class AutoCenterToSwitch extends Command {
 			stageTwoYaw = -90;
 			stageTwoDistanceInches = 45;
 			stageThreeYaw = 20;
-			stageThreeDistance = 85;
+			stageThreeDistance = 80;
 		} else if (gameData.charAt(0) == 'R') {
 			stageTwoYaw = 75;
 			stageTwoDistanceInches = 50;
 			stageThreeYaw = -20;
-			stageThreeDistance = 80;
+			stageThreeDistance = 75;
 		}
 		targetDistanceCounts = (STAGE_ONE + stageTwoDistanceInches + stageThreeDistance) * COUNTS_PER_INCH;
 	}
@@ -114,6 +114,7 @@ public class AutoCenterToSwitch extends Command {
 		case PREP:
 			Robot.drive.resetEncoders();
 			Robot.drive.resetDisplacement();
+	    	Robot.intake.wheelSpeed(-0.15);
 			
 			if (Math.abs(Robot.drive.getAvgPosition()) < 100) {
 				state = ACCELERATE;

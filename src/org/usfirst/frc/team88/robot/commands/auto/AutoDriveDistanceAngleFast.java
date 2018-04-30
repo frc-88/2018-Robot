@@ -80,12 +80,14 @@ public class AutoDriveDistanceAngleFast extends Command {
 		}
 		
 		state = PREP;
-		speed = 0.0;
+		speed = 0.1;
 		acceleration = prefs.getDouble("ADDAF_accel", ACCELERATION_DFT);
 	}
 
 	// Called repeatedly when this Command is scheduled to run
 	protected void execute() {
+		double curve = (targetHeading - (Robot.drive.getYaw())) * 0.018;
+
 		switch (state){
 		case PREP:
 			Robot.drive.resetEncoders();
@@ -134,18 +136,20 @@ public class AutoDriveDistanceAngleFast extends Command {
 
 			break;
 		}
+		SmartDashboard.putNumber("State", state);
 
 		if(state != PREP){
-			Robot.drive.driveCurveLockHeading(speed * direction, targetHeading);
+			Robot.drive.driveCurve(speed * direction, curve);
 		}
 
-		TJUtility.log(String.format("ADDAF:execute:%d,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f",
+		TJUtility.log(String.format("ADDAF:execute:%d,%.2f,%.2f,%.2f,%.2f,%.2f",
 				state,
 				Robot.drive.getAvgVelocity(),
 				Robot.drive.getAvgPosition(), 
 				Robot.drive.getYaw(), 
 				targetHeading,
-				speed));
+				speed,
+				curve));
 
 	}
 

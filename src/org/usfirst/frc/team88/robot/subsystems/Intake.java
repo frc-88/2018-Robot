@@ -95,6 +95,10 @@ public class Intake extends Subsystem {
 			rightSpeed = speed * MAX_EJECT_SPEED;
 		}
 
+		if (!RobotMap.isTripleStack) {
+			rightSpeed = -rightSpeed;
+		}
+		
 		rightSide.set(ControlMode.PercentOutput, rightSpeed, TIMEOUT);
 		leftSide.set(ControlMode.PercentOutput, leftSpeed, TIMEOUT);
 	}
