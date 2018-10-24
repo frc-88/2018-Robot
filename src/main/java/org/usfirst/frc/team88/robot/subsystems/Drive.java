@@ -58,8 +58,8 @@ public class Drive extends Subsystem implements PIDOutput {
 	private final static double HEADING_D = 0.0;
 	private final static double HEADING_F = 0.0;
 	private final static double HEADING_TOLERANCE = 0.5;
-	private final static double OFFANGLETHRESHOLDDEGREES = 20;
-	private final static double ONANGLETHRESHOLDDEGREES = 15; 
+	private final static double OFFANGLETHRESHOLDDEGREES = 8;
+	private final static double ONANGLETHRESHOLDDEGREES = 12; 
 	private AHRS navX;
 	
 	private double lastAccelX = 0;
@@ -187,21 +187,21 @@ public class Drive extends Subsystem implements PIDOutput {
 			rightMaster.configOpenloopRamp(ramprate, TIMEOUTMS);
 			rightMaster.configClosedloopRamp(ramprate, TIMEOUTMS);
 		}
+		
 		double pitchAngleDegrees = navX.getPitch();
+
 		if ( !autoBalanceXMode && 
-				(Math.abs(pitchAngleDegrees) >= 
-				Math.abs(OFFANGLETHRESHOLDDEGREES))) {
+				(Math.abs(pitchAngleDegrees) >= Math.abs(ONANGLETHRESHOLDDEGREES))) {
 			autoBalanceXMode = true;
 		}else if ( autoBalanceXMode && 
-				(Math.abs(pitchAngleDegrees) <= 
-				Math.abs(ONANGLETHRESHOLDDEGREES))) {
+				(Math.abs(pitchAngleDegrees) <= Math.abs(OFFANGLETHRESHOLDDEGREES))) {
 			autoBalanceXMode = false;
 		}
 
 		if(autoBalanceXMode){
 
 			double pitchAngleRadians = pitchAngleDegrees * (Math.PI / 180.0);
-			right = left = Math.sin(pitchAngleRadians) * -1;
+			right = left = Math.sin(pitchAngleRadians * 6) * -1;
 			
 			SmartDashboard.putNumber("Drive Left Input", left);
 			SmartDashboard.putNumber("Drive Right Input", right);
