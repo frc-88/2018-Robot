@@ -97,7 +97,7 @@ public class AutoDriveDistanceAngleFast extends Command {
 			break;
 			
 		case ACCELERATE:
-			speed = speed + acceleration;
+			speed = speed + (acceleration * (Robot.drive.getAvgVelocity()/-13000)/speed);
 			if(Math.abs(Robot.drive.getAvgPosition())> 3*targetDistance/7){
 				state = DECELERATE;	
 				accelerateDistance = Math.abs(Robot.drive.getAvgPosition()); 
@@ -117,7 +117,7 @@ public class AutoDriveDistanceAngleFast extends Command {
 			break;
 			
 		case DECELERATE:
-			speed = speed - acceleration;
+			speed = speed - (acceleration * (speed/(Robot.drive.getAvgVelocity()/-13000)));
 			if (speed < 0) {
 				speed = 0.0;
 				state = STOP;
